@@ -3,6 +3,7 @@ import globals from "globals";
 import pluginReact from "eslint-plugin-react";
 import { defineConfig } from "eslint/config";
 
+// We should specify the version of React we're using here.
 export default defineConfig([
   {
     files: ["**/*.{js,mjs,cjs,jsx}"],
@@ -15,9 +16,13 @@ export default defineConfig([
   },
   pluginReact.configs.flat.recommended,
   {
+    settings: {
+      react: {
+        version: "detect",
+      },
+    },
     rules: {
       "react/prop-types": "off",
-      "react/react-in-jsx-scope": "off",
       "react/no-unescaped-entities": "off",
     },
   },

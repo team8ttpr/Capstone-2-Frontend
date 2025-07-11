@@ -6,6 +6,7 @@
     "start": "webpack --mode production",
     "build": "webpack --mode production",
     "vercel-build": "npm run build",
+    "lint": "eslint src/**/*.{js,jsx}",
     "start-dev": "webpack serve --mode development --open"
   },
   "keywords": [],

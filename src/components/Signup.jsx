@@ -4,7 +4,7 @@ import axios from "axios";
 import "./AuthStyles.css";
 import { API_URL } from "../shared";
 
-const Signup = ({ setUser, onAuth0Login }) => {
+const Signup = ({ setUser }) => {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -145,18 +145,6 @@ const Signup = ({ setUser, onAuth0Login }) => {
             {isLoading ? "Creating account..." : "Sign Up"}
           </button>
         </form>
-
-        <div className="auth-divider">
-          <span>or</span>
-        </div>
-
-        <button
-          type="button"
-          onClick={onAuth0Login}
-          className="auth0-login-btn"
-        >
-          Sign up with Auth0
-        </button>
 
         <p className="auth-link">
           Already have an account? <Link to="/login">Login</Link>
