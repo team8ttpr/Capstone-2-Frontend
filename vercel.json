@@ -3,8 +3,8 @@
   "routes": [
     { "src": "/main.js", "dest": "/main.js" },
     { "src": "/favicon.ico", "dest": "/favicon.ico" },
-    { "src": "/react-logo.svg", "dest": "/react-logo.svg" }
-    { "src": "/(.*)", "dest": "/index.html" },
+    { "src": "/react-logo.svg", "dest": "/react-logo.svg" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ],
   "outputDirectory": "dist"
 }
