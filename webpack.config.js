@@ -12,12 +12,9 @@ module.exports = {
   },
   devtool: "source-map",
   plugins: [
-    new webpack.EnvironmentPlugin([
-      "API_URL",
-      "REACT_APP_AUTH0_DOMAIN",
-      "REACT_APP_AUTH0_CLIENT_ID",
-      "REACT_APP_AUTH0_AUDIENCE",
-    ]),
+    new webpack.EnvironmentPlugin({
+      API_URL: "http://localhost:8080",
+    }),
   ],
   module: {
     rules: [
