@@ -6,12 +6,10 @@ import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-route
 import { API_URL } from "./shared";
 import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
 import { auth0Config } from "./auth0-config";
-
 import NavBar from "./components/NavBar";
-import Login from "./components/Login";
-import Signup from "./components/Signup";
 import Home from "./components/Home";
 import NotFound from "./components/NotFound";
+import AuthPage from "./pages/auth";
 import SpotifyConnect from "./components/SpotifyConnect";
 import SpotifyCallback from "./components/SpotifyCallback"; 
 
@@ -116,8 +114,7 @@ const App = () => {
       <NavBar user={user} onLogout={handleLogout} />
       <div className="app">
         <Routes>
-          <Route path="/login" element={<Login setUser={setUser} />} />
-          <Route path="/signup" element={<Signup setUser={setUser} />} />
+          <Route path="/auth" element={<AuthPage setUser={setUser} />} />
           <Route path="/" element={<Home />} />
           <Route path="/spotify" element={<SpotifyConnect />} />
           <Route path="/callback/spotify" element={<SpotifyCallback />} /> 
