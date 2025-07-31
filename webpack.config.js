@@ -18,7 +18,7 @@ module.exports = {
       REACT_APP_AUTH0_DOMAIN:
         process.env.REACT_APP_AUTH0_DOMAIN || "franccescopetta.us.auth0.com",
       REACT_APP_AUTH0_CLIENT_ID:
-        process.env.REACT_APP_AUTH0_CLIENT_ID,
+        process.env.REACT_APP_AUTH0_CLIENT_ID || "h1SYjGM6qWwIZMRTOSI7yjdjEzp3iAkS",
       REACT_APP_AUTH0_AUDIENCE:
         process.env.REACT_APP_AUTH0_AUDIENCE ||
         "https://franccescopetta.us.auth0.com/api/v2/",
