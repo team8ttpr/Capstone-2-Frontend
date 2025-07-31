@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { API_URL } from "../shared";
 import "./AuthStyles.css";
@@ -118,10 +118,6 @@ const Login = ({ setUser }) => {
             {isLoading ? "Logging in..." : "Login"}
           </button>
         </form>
-
-        <p className="auth-link">
-          Don't have an account? <Link to="/signup">Sign up</Link>
-        </p>
       </div>
     </div>
   );
