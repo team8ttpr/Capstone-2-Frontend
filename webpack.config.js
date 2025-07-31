@@ -14,7 +14,7 @@ module.exports = {
   plugins: [
     new webpack.EnvironmentPlugin({
       API_URL:
-        process.env.API_URL || " https://capstone-2-backend-three.vercel.app",
+        process.env.API_URL || "https://capstone-2-backend-three.vercel.app",
       REACT_APP_AUTH0_DOMAIN:
         process.env.REACT_APP_AUTH0_DOMAIN || "franccescopetta.us.auth0.com",
       REACT_APP_AUTH0_CLIENT_ID:
