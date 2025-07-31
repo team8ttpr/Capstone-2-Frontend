@@ -12,6 +12,8 @@ const Login = () => {
     confirmPassword: '',
     rememberMe: false
   });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const carouselData = [
     {
@@ -61,9 +63,49 @@ const Login = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  // Helper to switch between login and signup
+  const handleAuth = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
+    setError("");
+    setLoading(true);
+    try {
+      if (isLogin) {
+        // Login
+        const response = await fetch("/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({
+            username: formData.email,
+            password: formData.password,
+          }),
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "Login failed");
+        // Handle successful login (e.g., redirect, set user state)
+        setError("");
+        // ...user state logic here
+      } else {
+        // Signup
+        const response = await fetch("/signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({
+            username: formData.email,
+            password: formData.password,
+          }),
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "Signup failed");
+        setError("");
+        // ...user state logic here
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const nextSlide = () => {
@@ -123,7 +165,7 @@ const Login = () => {
           </div>
 
           {/* Form */}
-          <div className="form-section">
+          <form className="form-section" onSubmit={handleAuth}>
             <div className="input-group">
               <input
                 type="email"
@@ -135,7 +177,6 @@ const Login = () => {
                 required
               />
             </div>
-
             <div className="input-group">
               <div className="password-input-wrapper">
                 <input
@@ -160,7 +201,6 @@ const Login = () => {
                 </button>
               </div>
             </div>
-
             {!isLogin && (
               <div className="input-group">
                 <input
@@ -174,18 +214,18 @@ const Login = () => {
                 />
               </div>
             )}
-
             <div className="form-options">
-              {/* Removed remember me and forgot password */}
+              
             </div>
-
+            {error && <div className="error-message">{error}</div>}
             <button
-              onClick={handleSubmit}
+              type="submit"
               className="submit-btn"
+              disabled={loading}
             >
-              {isLogin ? 'Log In' : 'Sign Up Free'}
+              {loading ? (isLogin ? "Logging in..." : "Signing up...") : (isLogin ? "Log In" : "Sign Up Free")}
             </button>
-          </div>
+          </form>
 
           {/* Switch between login/signup */}
           <div className="auth-switch">
