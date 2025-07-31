@@ -12,6 +12,9 @@ const NavBar = ({ user, onLogout }) => {
       <div className="nav-links">
         {user ? (
           <div className="user-section">
+            <Link to="/spotify" className="nav-link">
+              Spotify
+            </Link>
             <span className="username">Welcome, {user.username}!</span>
             <button onClick={onLogout} className="logout-btn">
               Logout

@@ -14,6 +14,7 @@ const Login = () => {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [auth0Loading, setAuth0Loading] = useState(false);
 
   const carouselData = [
     {
@@ -119,6 +120,19 @@ const Login = () => {
   const goToSlide = (index) => {
     setCurrentSlide(index);
   };
+
+  const handleAuth0Login = () => {
+    loginWithRedirect();
+  };
+
+  if (auth0Loading) {
+    return (
+      <div className="auth-container">
+        <div>Loading...</div>
+      </div>
+    );
+  }
+
 
   return (
     <div className="login-container">
