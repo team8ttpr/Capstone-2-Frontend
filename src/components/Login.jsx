@@ -93,7 +93,7 @@ const Login = () => {
 
           {/* Title */}
           <h1 className="auth-title">
-            {isLogin ? 'Log in ' : 'Create your Account'}
+            {isLogin ? 'Log in ' : 'Sign Up'}
           </h1>
           <p className="auth-subtitle">
             {isLogin ? 'Welcome back! Select method to log in:' : 'Join us today! Select method to sign up:'}
