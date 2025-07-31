@@ -1,8 +1,10 @@
-import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, Link, useLocation } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 import { API_URL } from "../shared";
-import "./AuthStyles.css";
+import "./CSS/AuthStyles.css";
+import { auth0Config } from "../auth0-config";
 
 const Login = ({ setUser }) => {
   const [formData, setFormData] = useState({
@@ -11,7 +13,23 @@ const Login = ({ setUser }) => {
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
+  const { loginWithRedirect, isAuthenticated, user: auth0User, isLoading: auth0Loading } = useAuth0();
+
+  useEffect(() =>{
+    if(!auth0Loading && isAuthenticated && auth0User){
+      navigate("/");
+    }
+  }, [isAuthenticated, auth0User, auth0Loading, navigate]);
+
+  useEffect(() => {
+    if (location.state?.message) {
+      setSuccessMessage(location.state.message);
+      window.history.replaceState({}, document.title);
+    }
+  }, [location]);
 
   const validateForm = () => {
     const newErrors = {};
@@ -40,14 +58,22 @@ const Login = ({ setUser }) => {
     }
 
     setIsLoading(true);
+    setSuccessMessage("");
+    
     try {
       const response = await axios.post(`${API_URL}/auth/login`, formData, {
         withCredentials: true,
       });
 
+      if (response.data.token) {
+        localStorage.setItem('token', response.data.token);
+      }
+
       setUser(response.data.user);
+
       navigate("/");
     } catch (error) {
+      console.error("Login error:", error);
       if (error.response?.data?.error) {
         setErrors({ general: error.response.data.error });
       } else {
@@ -65,7 +91,6 @@ const Login = ({ setUser }) => {
       [name]: value,
     }));
 
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
@@ -74,10 +99,27 @@ const Login = ({ setUser }) => {
     }
   };
 
+  const handleAuth0Login = () => {
+    loginWithRedirect();
+  };
+
+ if (auth0Loading) {
+    return (
+      <div className="auth-container">
+        <div>Loading...</div>
+      </div>
+    );
+  }
+
+
   return (
     <div className="auth-container">
       <div className="auth-form">
         <h2>Login</h2>
+
+        {successMessage && (
+          <div className="success-message">{successMessage}</div>
+        )}
 
         {errors.general && (
           <div className="error-message">{errors.general}</div>
@@ -93,6 +135,7 @@ const Login = ({ setUser }) => {
               value={formData.username}
               onChange={handleChange}
               className={errors.username ? "error" : ""}
+              placeholder="Enter your username"
             />
             {errors.username && (
               <span className="error-text">{errors.username}</span>
@@ -108,16 +151,30 @@ const Login = ({ setUser }) => {
               value={formData.password}
               onChange={handleChange}
               className={errors.password ? "error" : ""}
+              placeholder="Enter your password"
             />
             {errors.password && (
               <span className="error-text">{errors.password}</span>
             )}
           </div>
 
-          <button type="submit" disabled={isLoading}>
+          <button type="submit" disabled={isLoading} className="submit-btn">
             {isLoading ? "Logging in..." : "Login"}
           </button>
         </form>
+
+        <div className="auth-divider">
+          <span>or</span>
+        </div>
+
+        <button
+          type="button"
+          onClick={handleAuth0Login}
+          className="auth0-login-btn"
+          disabled={isLoading}
+        >
+          Continue with Auth0
+        </button>
 
         <p className="auth-link">
           Don't have an account? <Link to="/signup">Sign up</Link>
