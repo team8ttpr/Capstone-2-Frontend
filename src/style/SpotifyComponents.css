@@ -1,0 +1,179 @@
+.spotify-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.spotify-connect-btn, .spotify-btn {
+  background-color: #1db954;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  margin: 0.5rem;
+}
+
+.spotify-connect-btn:hover, .spotify-btn:hover {
+  background-color: #1aa34a;
+}
+
+.spotify-btn.active {
+  background-color: #0f6b2b;
+}
+
+.spotify-btn.disconnect {
+  background-color: #dc3545;
+}
+
+.spotify-btn.disconnect:hover {
+  background-color: #c82333;
+}
+
+.spotify-profile {
+  text-align: center;
+  margin: 1.5rem 0;
+}
+
+.spotify-actions {
+  text-align: center;
+  margin: 1.5rem 0;
+}
+
+.time-range-buttons {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.top-tracks {
+  margin-top: 2rem;
+}
+
+.tracks-list {
+  margin-top: 1rem;
+}
+
+.track-item {
+  padding: 0.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.track-item:last-child {
+  border-bottom: none;
+}
+
+.track-item-detailed {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.2s;
+}
+
+.track-item-detailed:hover {
+  background-color: #f8f9fa;
+}
+
+.track-item-detailed:last-child {
+  border-bottom: none;
+}
+
+.track-number {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #666;
+  width: 40px;
+  text-align: center;
+}
+
+.track-image {
+  margin: 0 1rem;
+}
+
+.track-image img {
+  border-radius: 4px;
+}
+
+.track-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.track-name {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 0.25rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.track-artist {
+  color: #666;
+  font-size: 0.95rem;
+  margin-bottom: 0.25rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.track-album {
+  color: #888;
+  font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.track-popularity {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 100px;
+}
+
+.popularity-bar {
+  width: 60px;
+  height: 8px;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.popularity-fill {
+  height: 100%;
+  background-color: #1db954;
+  transition: width 0.3s ease;
+}
+
+.popularity-text {
+  font-size: 0.85rem;
+  color: #666;
+  min-width: 35px;
+}
+
+.no-tracks {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}
+
+.no-tracks p {
+  margin-bottom: 0.5rem;
+}
+
+.callback-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+  padding: 20px;
+  font-size: 1.2rem;
+}

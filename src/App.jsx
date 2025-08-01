@@ -6,10 +6,12 @@ import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate } from "r
 import { API_URL } from "./shared";
 import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
 import { auth0Config } from "./auth0-config";
+
 import NavBar from "./components/NavBar";
-import Home from "./components/Home";
-import NotFound from "./components/NotFound";
-import AuthPage from "./pages/auth";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Home from "./pages/Home";
+import NotFound from "./pages/NotFound";
 import SpotifyConnect from "./components/SpotifyConnect";
 import SpotifyCallback from "./components/SpotifyCallback"; 
 import Analytics from "./pages/Analytics";
@@ -23,10 +25,6 @@ import MyPlaylist from "./pages/myPlaylist";
 import MyPost from "./pages/myPost";
 import Profile from "./pages/profile";
 
-
-
-
-
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -35,6 +33,37 @@ function App() {
   const {
     isAuthenticated, isLoading: auth0Loading, user: auth0User, logout: auth0Logout,
   } = useAuth0();
+
+  useEffect(() => {
+    const requestInterceptor = axios.interceptors.request.use(
+      (config) => {
+        const token = localStorage.getItem('authToken');
+        if (token && !config.headers.Authorization) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+      },
+      (error) => {
+        return Promise.reject(error);
+      }
+    );
+
+    const responseInterceptor = axios.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response?.status === 401) {
+          localStorage.removeItem('authToken');
+          setUser(null);
+        }
+        return Promise.reject(error);
+      }
+    );
+
+    return () => {
+      axios.interceptors.request.eject(requestInterceptor);
+      axios.interceptors.response.eject(responseInterceptor);
+    };
+  }, []);
 
   const checkAuth = async () => {
     try {
@@ -45,12 +74,10 @@ function App() {
         setUser(response.data.user);
       }
     } catch (error) {
-      console.log("Not authenticated");
       setUser(null);
     }
   };
 
-  // Check authentication status on app load
   useEffect(() => {
     const initAuth = async () => {
       if (!auth0Loading) {
@@ -67,41 +94,43 @@ function App() {
 
   const handleAuth0Login = async () => {
     try {
-      setLoading(true);
+      if (!auth0User) {
+        return;
+      }
+
       const response = await axios.post(
         `${API_URL}/auth/auth0`,
         {
           auth0Id: auth0User.sub,
           email: auth0User.email,
-          username: auth0User.nickname || auth0User.email?.split("@")[0],
+          username: auth0User.nickname || auth0User.name,
         },
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       );
 
       if (response.data.token) {
-        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('authToken', response.data.token);
       }
 
       setUser(response.data.user);
-      navigate("/");
     } catch (error) {
       console.error("Auth0 login error:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
   const handleLogout = async () => {
     try {
-      await axios.post(`${API_URL}/auth/logout`, {}, {
-        withCredentials: true,
-      });
+      await axios.post(
+        `${API_URL}/auth/logout`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
     } catch (error) {
       console.error("Logout error:", error);
     } finally {
-      localStorage.removeItem('token');
+      localStorage.removeItem("authToken");
       setUser(null);
 
       if (isAuthenticated) {
@@ -127,8 +156,9 @@ function App() {
         <Routes>
           <Route path="/auth" element={<AuthPage setUser={setUser} />} />
           <Route path="/" element={<Home />} />
-          <Route path="/spotify" element={<SpotifyConnect />} />
-          <Route path="/callback/spotify" element={<SpotifyCallback />} />
+          <Route path="/spotify" element={<SpotifyConnect user={user} />} />
+          <Route path="/top-tracks" element={<TopTracks user={user} />} />
+          <Route path="/callback/spotify" element={<SpotifyCallback setUser={setUser} />} />
           <Route path="*" element={<NotFound />} />
           <Route path="/dashboard" element={<Navigate to="/dashboard/analytics" replace />} />
           <Route path="/dashboard/analytics" element={<Analytics />} />
