@@ -11,7 +11,6 @@ import {
 import { API_URL } from "./shared";
 import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
 import { auth0Config } from "./auth0-config";
-
 import NavBar from "./components/NavBar";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -153,8 +152,7 @@ const App = () => {
       <NavBar user={user} onLogout={handleLogout} />
       <div className="app">
         <Routes>
-          <Route path="/login" element={<Login setUser={setUser} />} />
-          <Route path="/signup" element={<Signup setUser={setUser} />} />
+          <Route path="/auth" element={<AuthPage setUser={setUser} />} />
           <Route path="/" element={<Home />} />
           <Route path="/spotify" element={<SpotifyConnect user={user} />} />
           <Route path="/top-tracks" element={<TopTracks user={user} />} />
