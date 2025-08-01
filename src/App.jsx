@@ -15,6 +15,16 @@ import SpotifyCallback from "./components/SpotifyCallback";
 import Analytics from "./pages/Analytics";
 import TopArtist from "./pages/topArtist";
 import TopTracks from "./pages/topTracks";
+import Feed from "./pages/feed";
+import Messages from "./pages/messages";
+import Friends from "./pages/friends";
+import Notifications from "./pages/notifications";
+import MyPlaylist from "./pages/myPlaylist";
+import MyPost from "./pages/myPost";
+
+
+
+
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -126,7 +136,14 @@ const App = () => {
           <Route path="/dashboard/analytics" element={<Analytics />} />
           <Route path="/dashboard/topartist" element={<TopArtist />} />
           <Route path="/dashboard/toptracks" element={<TopTracks />} />
-          <Route path="/dashboard/myplaylist" element={<myPlaylist />} />
+          <Route path="/dashboard/myplaylist" element={<MyPlaylist />} />
+          <Route path="/social" element={<Navigate to="/social/feed" replace />} />
+          <Route path="/social/feed" element={<Feed />} />
+          <Route path="/social/messages" element={<Messages />} />
+          <Route path="/social/mypost" element={<MyPost />} />
+          <Route path="/social/friends" element={<Friends />} />
+          <Route path="/social/notifications" element={<Notifications />} />
+
         </Routes>
       </div>
     </div>
