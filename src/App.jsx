@@ -15,15 +15,15 @@ import NotFound from "./pages/NotFound";
 import SpotifyConnect from "./components/SpotifyConnect";
 import SpotifyCallback from "./components/SpotifyCallback"; 
 import Analytics from "./pages/Analytics";
-import TopArtist from "./pages/topArtist";
-import TopTracks from "./pages/topTracks";
-import Feed from "./pages/feed";
-import Messages from "./pages/messages";
-import Friends from "./pages/friends";
-import Notifications from "./pages/notifications";
-import MyPlaylist from "./pages/myPlaylist";
-import MyPost from "./pages/myPost";
-import Profile from "./pages/profile";
+import TopArtist from "./pages/TopArtist"; // Fixed case
+import TopTracks from "./pages/TopTracks"; // Fixed case
+import Feed from "./pages/Feed"; // Fixed case
+import Messages from "./pages/Messages"; // Fixed case
+import Friends from "./pages/Friends"; // Fixed case
+import Notifications from "./pages/Notifications"; // Fixed case
+import MyPlaylist from "./pages/MyPlaylist"; // Fixed case
+import MyPost from "./pages/MyPost"; // Fixed case
+import Profile from "./pages/Profile"; // Fixed case
 
 function App() {
   const [user, setUser] = useState(null);
@@ -154,26 +154,35 @@ function App() {
       <NavBar user={user} onLogout={handleLogout} />
       <div className="app">
         <Routes>
-          <Route path="/auth" element={<AuthPage setUser={setUser} />} />
+          {/* Auth Routes */}
+          <Route path="/login" element={<Login setUser={setUser} />} />
+          <Route path="/signup" element={<Signup setUser={setUser} />} />
+          
+          {/* Main Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/spotify" element={<SpotifyConnect user={user} />} />
           <Route path="/top-tracks" element={<TopTracks user={user} />} />
           <Route path="/callback/spotify" element={<SpotifyCallback setUser={setUser} />} />
-          <Route path="*" element={<NotFound />} />
+          
+          {/* Dashboard Routes */}
           <Route path="/dashboard" element={<Navigate to="/dashboard/analytics" replace />} />
-          <Route path="/dashboard/analytics" element={<Analytics />} />
-          <Route path="/dashboard/topartist" element={<TopArtist />} />
-          <Route path="/dashboard/toptracks" element={<TopTracks />} />
-          <Route path="/dashboard/myplaylist" element={<MyPlaylist />} />
+          <Route path="/dashboard/analytics" element={<Analytics user={user} />} />
+          <Route path="/dashboard/topartist" element={<TopArtist user={user} />} />
+          <Route path="/dashboard/myplaylist" element={<MyPlaylist user={user} />} />
+          
+          {/* Social Routes */}
           <Route path="/social" element={<Navigate to="/social/feed" replace />} />
-          <Route path="/social/feed" element={<Feed />} />
-          <Route path="/social/messages" element={<Messages />} />
-          <Route path="/social/mypost" element={<MyPost />} />
-          <Route path="/social/friends" element={<Friends />} />
-          <Route path="/social/notifications" element={<Notifications />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/social/feed" element={<Feed user={user} />} />
+          <Route path="/social/messages" element={<Messages user={user} />} />
+          <Route path="/social/mypost" element={<MyPost user={user} />} />
+          <Route path="/social/friends" element={<Friends user={user} />} />
+          <Route path="/social/notifications" element={<Notifications user={user} />} />
+          
+          {/* Profile Route */}
+          <Route path="/profile" element={<Profile user={user} />} />
 
-
+          {/* 404 Route */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
     </div>
