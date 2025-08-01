@@ -1,10 +1,15 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import "../style/NavBarStyles.css";
 
 const NavBar = ({ user, onLogout }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpen2, setIsOpen2] = useState(false);
+  const location = useLocation();
+
+  // Check if user is currently on dashboard or social pages
+  const isOnDashboard = location.pathname.startsWith('/dashboard');
+  const isOnSocial = location.pathname.startsWith('/social');
 
 
   
@@ -17,13 +22,13 @@ const NavBar = ({ user, onLogout }) => {
        <div className="dropdown">
       <button 
         className="dropdown-button"
-        onMouseEnter={() => setIsOpen(true)}
+        onMouseEnter={() => !isOnDashboard && setIsOpen(true)}
         onMouseLeave={() => setIsOpen(false)}
       >
         <Link to="/dashboard">Dashboard</Link>
       </button>
       
-      {isOpen && (
+      {isOpen && !isOnDashboard && (
         <div 
           className="dropdown-content"
           onMouseEnter={() => setIsOpen(true)}
@@ -40,13 +45,13 @@ const NavBar = ({ user, onLogout }) => {
      <div className="dropdown">
       <button 
         className="dropdown-button"
-        onMouseEnter={() => setIsOpen2(true)}
+        onMouseEnter={() => !isOnSocial && setIsOpen2(true)}
         onMouseLeave={() => setIsOpen2(false)}
       >
         <Link to="/social">Social</Link>
       </button>
       
-      {isOpen2 && (
+      {isOpen2 && !isOnSocial && (
         <div 
           className="dropdown-content"
           onMouseEnter={() => setIsOpen2(true)}

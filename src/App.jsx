@@ -6,7 +6,6 @@ import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate } from "r
 import { API_URL } from "./shared";
 import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
 import { auth0Config } from "./auth0-config";
-
 import Auth from "./pages/auth";
 import NavBar from "./components/NavBar";
 import Home from "./pages/Home";
@@ -167,6 +166,7 @@ function App() {
           <Route path="/dashboard/analytics" element={<Analytics user={user} />} />
           <Route path="/dashboard/topartist" element={<TopArtist user={user} />} />
           <Route path="/dashboard/myplaylist" element={<MyPlaylist user={user} />} />
+          <Route path="/dashboard/toptracks" element={<TopTracks user={user} />} />
           
           {/* Social Routes */}
           <Route path="/social" element={<Navigate to="/social/feed" replace />} />
