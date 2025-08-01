@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "./NavBarStyles.css";
+import "../style/NavBarStyles.css";
 
 const NavBar = ({ user, onLogout }) => {
   return (
@@ -12,6 +12,9 @@ const NavBar = ({ user, onLogout }) => {
       <div className="nav-links">
         {user ? (
           <div className="user-section">
+            <Link to="/top-tracks" className="nav-link">
+              Top Tracks
+            </Link>
             <Link to="/spotify" className="nav-link">
               Spotify
             </Link>

@@ -1,35 +1,21 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, Link, useLocation } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 import { API_URL } from "../shared";
-import "./CSS/AuthStyles.css";
-import { auth0Config } from "../auth0-config";
+import "../style/Signup.css";
 
-const Login = ({ setUser }) => {
+const Signup = ({ setUser }) => {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
+    confirmPassword: "",
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
-  const location = useLocation();
-  const { loginWithRedirect, isAuthenticated, user: auth0User, isLoading: auth0Loading } = useAuth0();
 
-  useEffect(() =>{
-    if(!auth0Loading && isAuthenticated && auth0User){
-      navigate("/");
-    }
-  }, [isAuthenticated, auth0User, auth0Loading, navigate]);
-
-  useEffect(() => {
-    if (location.state?.message) {
-      setSuccessMessage(location.state.message);
-      window.history.replaceState({}, document.title);
-    }
-  }, [location]);
+  const { loginWithRedirect } = useAuth0();
 
   const validateForm = () => {
     const newErrors = {};
@@ -38,12 +24,20 @@ const Login = ({ setUser }) => {
       newErrors.username = "Username is required";
     } else if (formData.username.length < 3 || formData.username.length > 20) {
       newErrors.username = "Username must be between 3 and 20 characters";
+    } else if (!/^[a-zA-Z0-9_]+$/.test(formData.username)) {
+      newErrors.username = "Username can only contain letters, numbers, and underscores";
     }
 
     if (!formData.password) {
       newErrors.password = "Password is required";
     } else if (formData.password.length < 6) {
       newErrors.password = "Password must be at least 6 characters";
+    }
+
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = "Please confirm your password";
+    } else if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
     }
 
     setErrors(newErrors);
@@ -58,26 +52,36 @@ const Login = ({ setUser }) => {
     }
 
     setIsLoading(true);
-    setSuccessMessage("");
-    
+    setErrors({}); 
+
     try {
-      const response = await axios.post(`${API_URL}/auth/login`, formData, {
+      const response = await axios.post(`${API_URL}/auth/signup`, {
+        username: formData.username,
+        password: formData.password,
+      }, {
         withCredentials: true,
       });
 
       if (response.data.token) {
-        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('authToken', response.data.token);
       }
 
       setUser(response.data.user);
+      navigate("/", { 
+        state: { 
+          message: "Account created successfully! Welcome!" 
+        } 
+      });
 
-      navigate("/");
     } catch (error) {
-      console.error("Login error:", error);
-      if (error.response?.data?.error) {
+      if (error.response?.status === 409) {
+        setErrors({ username: "This username is already taken. Please choose a different one." });
+      } else if (error.response?.data?.error) {
         setErrors({ general: error.response.data.error });
+      } else if (error.response?.status === 400) {
+        setErrors({ general: "Please check your input and try again." });
       } else {
-        setErrors({ general: "An error occurred during login" });
+        setErrors({ general: "An error occurred during signup. Please try again." });
       }
     } finally {
       setIsLoading(false);
@@ -97,29 +101,28 @@ const Login = ({ setUser }) => {
         [name]: "",
       }));
     }
+
+    if (errors.general) {
+      setErrors((prev) => ({
+        ...prev,
+        general: "",
+      }));
+    }
   };
 
-  const handleAuth0Login = () => {
-    loginWithRedirect();
+  const handleAuth0Signup = () => {
+    loginWithRedirect({
+      authorizationParams: {
+        screen_hint: "signup",
+        connection: 'Username-Password-Authentication',
+      },
+    });
   };
-
- if (auth0Loading) {
-    return (
-      <div className="auth-container">
-        <div>Loading...</div>
-      </div>
-    );
-  }
-
 
   return (
     <div className="auth-container">
       <div className="auth-form">
-        <h2>Login</h2>
-
-        {successMessage && (
-          <div className="success-message">{successMessage}</div>
-        )}
+        <h2>Sign Up</h2>
 
         {errors.general && (
           <div className="error-message">{errors.general}</div>
@@ -135,7 +138,7 @@ const Login = ({ setUser }) => {
               value={formData.username}
               onChange={handleChange}
               className={errors.username ? "error" : ""}
-              placeholder="Enter your username"
+              placeholder="Choose a username (3-20 characters)"
             />
             {errors.username && (
               <span className="error-text">{errors.username}</span>
@@ -151,15 +154,31 @@ const Login = ({ setUser }) => {
               value={formData.password}
               onChange={handleChange}
               className={errors.password ? "error" : ""}
-              placeholder="Enter your password"
+              placeholder="Enter a password (minimum 6 characters)"
             />
             {errors.password && (
               <span className="error-text">{errors.password}</span>
             )}
           </div>
 
+          <div className="form-group">
+            <label htmlFor="confirmPassword">Confirm Password:</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              className={errors.confirmPassword ? "error" : ""}
+              placeholder="Confirm your password"
+            />
+            {errors.confirmPassword && (
+              <span className="error-text">{errors.confirmPassword}</span>
+            )}
+          </div>
+
           <button type="submit" disabled={isLoading} className="submit-btn">
-            {isLoading ? "Logging in..." : "Login"}
+            {isLoading ? "Creating Account..." : "Sign Up"}
           </button>
         </form>
 
@@ -169,19 +188,19 @@ const Login = ({ setUser }) => {
 
         <button
           type="button"
-          onClick={handleAuth0Login}
+          onClick={handleAuth0Signup}
           className="auth0-login-btn"
           disabled={isLoading}
         >
-          Continue with Auth0
+          Sign up with Auth0
         </button>
 
         <p className="auth-link">
-          Don't have an account? <Link to="/signup">Sign up</Link>
+          Already have an account? <Link to="/login">Log in</Link>
         </p>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default Signup;

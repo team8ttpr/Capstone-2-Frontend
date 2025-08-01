@@ -1,54 +1,74 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import axios from "axios";
-import { API_URL } from "../shared";
+import React, { useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import axios from 'axios';
+import { API_URL } from '../shared';
 
-const SpotifyCallback = () => {
-  const [searchParams] = useSearchParams();
+const SpotifyCallback = ({ setUser }) => { 
   const navigate = useNavigate();
-  const [status, setStatus] = useState("processing");
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     const handleCallback = async () => {
-      const code = searchParams.get("code");
-      const state = searchParams.get("state");
-      const error = searchParams.get("error");
-
-      if (error) {
-        setStatus("error");
-        setTimeout(() => navigate("/"), 3000);
-        return;
-      }
-
-      if (!code) {
-        setStatus("error");
-        setTimeout(() => navigate("/"), 3000);
-        return;
-      }
-
       try {
-        await axios.post(
+        const code = searchParams.get('code');
+        const state = searchParams.get('state');
+        const error = searchParams.get('error');
+
+        if (error) {
+          navigate('/login?error=access_denied');
+          return;
+        }
+
+        if (!code) {
+          navigate('/login?error=no_code');
+          return;
+        }
+
+        if (state === 'spotify_login') {
+          const response = await axios.post(
+            `${API_URL}/auth/spotify/login`,
+            { code, state },
+            { withCredentials: true }
+          );
+
+          if (response.data.token) {
+            localStorage.setItem('authToken', response.data.token);
+          }
+
+          setUser(response.data.user); 
+          navigate('/?spotify_login=success');
+          return;
+        }
+
+        const token = localStorage.getItem('authToken');
+        
+        if (!token) {
+          navigate('/login?error=no_auth');
+          return;
+        }
+
+        const response = await axios.post(
           `${API_URL}/auth/spotify/callback`,
           { code, state },
-          { withCredentials: true }
+          {
+            withCredentials: true,
+            headers: { Authorization: `Bearer ${token}` }
+          }
         );
-        setStatus("success");
-        setTimeout(() => navigate("/"), 2000);
+
+        navigate('/spotify?success=true');
       } catch (error) {
-        console.error("Spotify callback error:", error);
-        setStatus("error");
-        setTimeout(() => navigate("/"), 3000);
+        navigate('/login?error=callback_failed');
       }
     };
 
     handleCallback();
-  }, [searchParams, navigate]);
+  }, [searchParams, navigate, setUser]);
 
   return (
-    <div className="callback-container">
-      {status === "processing" && <div>Connecting to Spotify...</div>}
-      {status === "success" && <div>✅ Spotify connected successfully! Redirecting...</div>}
-      {status === "error" && <div>❌ Failed to connect Spotify. Redirecting...</div>}
+    <div>
+      <h2>Connecting to Spotify...</h2>
+      <p>Please wait while we complete the connection.</p>
     </div>
   );
 };

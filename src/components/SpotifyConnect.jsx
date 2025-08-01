@@ -2,40 +2,22 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { API_URL } from "../shared";
 import { useNavigate } from "react-router-dom";
+import "../style/SpotifyComponents.css";
 
-const SpotifyConnect = () => {
+const SpotifyConnect = ({ user }) => {
   const [spotifyData, setSpotifyData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [topTracks, setTopTracks] = useState([]);
-  const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    checkUserAuth();
-  }, []);
-
-  useEffect(() => {
-    checkSpotifyConnection();
-  }, []);
-
-  const checkUserAuth = async () => {
-    try {
-      const authResponse = await axios.get(`${API_URL}/auth/me`, {
-        withCredentials: true,
-      });
-
-      if (!authResponse.data.user) {
-        navigate("/login");
-        return;
-      }
-
-      setUser(authResponse.data.user);
-      await checkSpotifyConnection();
-    } catch (error) {
-      console.error("Auth check failed:", error);
-      navigate("/login");
+    if (!user) {
+      navigate("/login", { state: { from: '/spotify' } });
+      return;
     }
-  };
+    
+    checkSpotifyConnection();
+  }, [user, navigate]);
 
   const checkSpotifyConnection = async () => {
     try {
@@ -44,7 +26,10 @@ const SpotifyConnect = () => {
       });
       setSpotifyData(response.data);
     } catch (error) {
-      console.error("Error checking Spotify connection:", error);
+      if (error.response?.status === 401) {
+        navigate("/login", { state: { from: '/spotify' } });
+        return;
+      }
       setSpotifyData({ connected: false });
     } finally {
       setLoading(false);
@@ -58,7 +43,9 @@ const SpotifyConnect = () => {
       });
       window.location.href = response.data.authUrl;
     } catch (error) {
-      console.error("Error getting Spotify auth URL:", error);
+      if (error.response?.status === 401) {
+        navigate("/login", { state: { from: '/spotify' } });
+      }
     }
   };
 
@@ -69,7 +56,9 @@ const SpotifyConnect = () => {
       });
       setTopTracks(response.data.items);
     } catch (error) {
-      console.error("Error getting top tracks:", error);
+      if (error.response?.status === 401) {
+        navigate("/login", { state: { from: '/spotify' } });
+      }
     }
   };
 
@@ -81,15 +70,33 @@ const SpotifyConnect = () => {
       setSpotifyData({ connected: false });
       setTopTracks([]);
     } catch (error) {
-      console.error("Error disconnecting Spotify:", error);
+      if (error.response?.status === 401) {
+        navigate("/login", { state: { from: '/spotify' } });
+      }
     }
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) {
+    return (
+      <div className="spotify-container">
+        <div>Loading...</div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="spotify-container">
+        <h2>Authentication Required</h2>
+        <p>Please log in to connect your Spotify account.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="spotify-container">
       <h2>Spotify Integration</h2>
+      <p>Welcome, {user.username}!</p>
 
       {!spotifyData?.connected ? (
         <div>

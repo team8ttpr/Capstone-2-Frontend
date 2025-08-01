@@ -22,6 +22,8 @@ module.exports = {
       REACT_APP_AUTH0_AUDIENCE:
         process.env.REACT_APP_AUTH0_AUDIENCE ||
         "https://franccescopetta.us.auth0.com/api/v2/",
+      REACT_APP_SPOTIFY_CLIENT_ID:
+        process.env.REACT_APP_SPOTIFY_CLIENT_ID || "e25ed9259cce4bca80c92345f15c4e05",
     }),
   ],
   module: {

@@ -2,18 +2,24 @@ import React, { useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import axios from "axios";
 import "./AppStyles.css";
-import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useNavigate,
+} from "react-router-dom";
 import { API_URL } from "./shared";
 import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
 import { auth0Config } from "./auth0-config";
 
 import NavBar from "./components/NavBar";
-import Login from "./components/Login";
-import Signup from "./components/Signup";
-import Home from "./components/Home";
-import NotFound from "./components/NotFound";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Home from "./pages/Home";
+import NotFound from "./pages/NotFound";
 import SpotifyConnect from "./components/SpotifyConnect";
-import SpotifyCallback from "./components/SpotifyCallback"; 
+import SpotifyCallback from "./components/SpotifyCallback";
+import TopTracks from "./pages/TopTracks";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -27,6 +33,37 @@ const App = () => {
     logout: auth0Logout,
   } = useAuth0();
 
+  useEffect(() => {
+    const requestInterceptor = axios.interceptors.request.use(
+      (config) => {
+        const token = localStorage.getItem('authToken');
+        if (token && !config.headers.Authorization) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+      },
+      (error) => {
+        return Promise.reject(error);
+      }
+    );
+
+    const responseInterceptor = axios.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response?.status === 401) {
+          localStorage.removeItem('authToken');
+          setUser(null);
+        }
+        return Promise.reject(error);
+      }
+    );
+
+    return () => {
+      axios.interceptors.request.eject(requestInterceptor);
+      axios.interceptors.response.eject(responseInterceptor);
+    };
+  }, []);
+
   const checkAuth = async () => {
     try {
       const response = await axios.get(`${API_URL}/auth/me`, {
@@ -36,12 +73,10 @@ const App = () => {
         setUser(response.data.user);
       }
     } catch (error) {
-      console.log("Not authenticated");
       setUser(null);
     }
   };
 
-  // Check authentication status on app load
   useEffect(() => {
     const initAuth = async () => {
       if (!auth0Loading) {
@@ -58,43 +93,45 @@ const App = () => {
 
   const handleAuth0Login = async () => {
     try {
-      setLoading(true);
+      if (!auth0User) {
+        return;
+      }
+
       const response = await axios.post(
         `${API_URL}/auth/auth0`,
         {
           auth0Id: auth0User.sub,
           email: auth0User.email,
-          username: auth0User.nickname || auth0User.email?.split("@")[0],
+          username: auth0User.nickname || auth0User.name,
         },
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       );
 
       if (response.data.token) {
-        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('authToken', response.data.token);
       }
 
       setUser(response.data.user);
-      navigate("/");
     } catch (error) {
       console.error("Auth0 login error:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
   const handleLogout = async () => {
     try {
-      await axios.post(`${API_URL}/auth/logout`, {}, {
-        withCredentials: true,
-      });
+      await axios.post(
+        `${API_URL}/auth/logout`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
     } catch (error) {
       console.error("Logout error:", error);
     } finally {
-      localStorage.removeItem('token');
+      localStorage.removeItem("authToken");
       setUser(null);
-      
+
       if (isAuthenticated) {
         auth0Logout({
           logoutParams: {
@@ -119,8 +156,9 @@ const App = () => {
           <Route path="/login" element={<Login setUser={setUser} />} />
           <Route path="/signup" element={<Signup setUser={setUser} />} />
           <Route path="/" element={<Home />} />
-          <Route path="/spotify" element={<SpotifyConnect />} />
-          <Route path="/callback/spotify" element={<SpotifyCallback />} /> 
+          <Route path="/spotify" element={<SpotifyConnect user={user} />} />
+          <Route path="/top-tracks" element={<TopTracks user={user} />} />
+          <Route path="/callback/spotify" element={<SpotifyCallback setUser={setUser} />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
