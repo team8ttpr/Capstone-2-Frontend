@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import axios from "axios";
 import "./AppStyles.css";
-import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate } from "react-router-dom";
 import { API_URL } from "./shared";
 import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
 import { auth0Config } from "./auth0-config";
@@ -12,6 +12,9 @@ import NotFound from "./components/NotFound";
 import AuthPage from "./pages/auth";
 import SpotifyConnect from "./components/SpotifyConnect";
 import SpotifyCallback from "./components/SpotifyCallback"; 
+import Analytics from "./pages/Analytics";
+import TopArtist from "./pages/topArtist";
+import TopTracks from "./pages/topTracks";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -119,6 +122,11 @@ const App = () => {
           <Route path="/spotify" element={<SpotifyConnect />} />
           <Route path="/callback/spotify" element={<SpotifyCallback />} /> 
           <Route path="*" element={<NotFound />} />
+          <Route path="/dashboard" element={<Navigate to="/dashboard/analytics" replace />} />
+          <Route path="/dashboard/analytics" element={<Analytics />} />
+          <Route path="/dashboard/topartist" element={<TopArtist />} />
+          <Route path="/dashboard/toptracks" element={<TopTracks />} />
+          <Route path="/dashboard/myplaylist" element={<myPlaylist />} />
         </Routes>
       </div>
     </div>
