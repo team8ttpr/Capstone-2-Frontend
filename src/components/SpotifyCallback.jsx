@@ -15,15 +15,17 @@ const SpotifyCallback = ({ setUser }) => {
         const error = searchParams.get('error');
 
         if (error) {
-          navigate('/login?error=access_denied');
+          navigate('/auth?error=access_denied');
           return;
         }
 
         if (!code) {
-          navigate('/login?error=no_code');
+          navigate('/auth?error=no_code');
           return;
         }
 
+        const token = localStorage.getItem('authToken');
+        
         if (state === 'spotify_login') {
           const response = await axios.post(
             `${API_URL}/auth/spotify/login`,
@@ -35,15 +37,13 @@ const SpotifyCallback = ({ setUser }) => {
             localStorage.setItem('authToken', response.data.token);
           }
 
-          setUser(response.data.user); 
-          navigate('/?spotify_login=success');
+          setUser(response.data.user);
+          navigate('/top-tracks?spotify_login=success');
           return;
         }
 
-        const token = localStorage.getItem('authToken');
-        
         if (!token) {
-          navigate('/login?error=no_auth');
+          navigate('/auth?error=no_auth');
           return;
         }
 
@@ -57,8 +57,10 @@ const SpotifyCallback = ({ setUser }) => {
         );
 
         navigate('/spotify?success=true');
+        
       } catch (error) {
-        navigate('/login?error=callback_failed');
+        console.error('Spotify callback error:', error.message);
+        navigate('/auth?error=callback_failed');
       }
     };
 
@@ -66,7 +68,7 @@ const SpotifyCallback = ({ setUser }) => {
   }, [searchParams, navigate, setUser]);
 
   return (
-    <div>
+    <div className="callback-container">
       <h2>Connecting to Spotify...</h2>
       <p>Please wait while we complete the connection.</p>
     </div>

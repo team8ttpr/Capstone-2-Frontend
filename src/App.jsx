@@ -7,23 +7,22 @@ import { API_URL } from "./shared";
 import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
 import { auth0Config } from "./auth0-config";
 
+import Auth from "./pages/auth";
 import NavBar from "./components/NavBar";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import SpotifyConnect from "./components/SpotifyConnect";
 import SpotifyCallback from "./components/SpotifyCallback"; 
 import Analytics from "./pages/Analytics";
-import TopArtist from "./pages/TopArtist"; // Fixed case
-import TopTracks from "./pages/TopTracks"; // Fixed case
-import Feed from "./pages/Feed"; // Fixed case
-import Messages from "./pages/Messages"; // Fixed case
-import Friends from "./pages/Friends"; // Fixed case
-import Notifications from "./pages/Notifications"; // Fixed case
-import MyPlaylist from "./pages/MyPlaylist"; // Fixed case
-import MyPost from "./pages/MyPost"; // Fixed case
-import Profile from "./pages/Profile"; // Fixed case
+import TopArtist from "./pages/TopArtist"; 
+import TopTracks from "./pages/TopTracks"; 
+import Feed from "./pages/Feed"; 
+import Messages from "./pages/Messages"; 
+import Friends from "./pages/Friends"; 
+import Notifications from "./pages/Notifications";
+import MyPlaylist from "./pages/MyPlaylist"; 
+import MyPost from "./pages/MyPost"; 
+import Profile from "./pages/Profile"; 
 
 function App() {
   const [user, setUser] = useState(null);
@@ -155,8 +154,7 @@ function App() {
       <div className="app">
         <Routes>
           {/* Auth Routes */}
-          <Route path="/login" element={<Login setUser={setUser} />} />
-          <Route path="/signup" element={<Signup setUser={setUser} />} />
+          <Route path="/auth" element={<Auth setUser={setUser} />} />
           
           {/* Main Routes */}
           <Route path="/" element={<Home />} />

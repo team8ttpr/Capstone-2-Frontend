@@ -36,18 +36,18 @@ const SpotifyConnect = ({ user }) => {
     }
   };
 
-  const connectSpotify = async () => {
-    try {
-      const response = await axios.get(`${API_URL}/auth/spotify/auth-url`, {
-        withCredentials: true,
-      });
-      window.location.href = response.data.authUrl;
-    } catch (error) {
-      if (error.response?.status === 401) {
-        navigate("/login", { state: { from: '/spotify' } });
-      }
+const connectSpotify = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/auth/spotify/auth-url`, {
+      withCredentials: true,
+    });
+    window.location.href = response.data.authUrl;
+  } catch (error) {
+    if (error.response?.status === 401) {
+      navigate("/login", { state: { from: '/spotify' } });
     }
-  };
+  }
+};
 
   const getTopTracks = async () => {
     try {
