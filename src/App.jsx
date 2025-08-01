@@ -2,37 +2,123 @@ import React, { useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import axios from "axios";
 import "./AppStyles.css";
-import NavBar from "./components/NavBar";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Login from "./components/Login";
-import Signup from "./components/Signup";
-import Home from "./components/Home";
-import NotFound from "./components/NotFound";
+import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate } from "react-router-dom";
 import { API_URL } from "./shared";
+import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
+import { auth0Config } from "./auth0-config";
 
-const App = () => {
+import Auth from "./pages/auth";
+import NavBar from "./components/NavBar";
+import Home from "./pages/Home";
+import NotFound from "./pages/NotFound";
+import SpotifyConnect from "./components/SpotifyConnect";
+import SpotifyCallback from "./components/SpotifyCallback"; 
+import Analytics from "./pages/Analytics";
+import TopArtist from "./pages/TopArtist"; 
+import TopTracks from "./pages/TopTracks"; 
+import Feed from "./pages/Feed"; 
+import Messages from "./pages/Messages"; 
+import Friends from "./pages/Friends"; 
+import Notifications from "./pages/Notifications";
+import MyPlaylist from "./pages/MyPlaylist"; 
+import MyPost from "./pages/MyPost"; 
+import Profile from "./pages/Profile"; 
+
+function App() {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  const {
+    isAuthenticated, isLoading: auth0Loading, user: auth0User, logout: auth0Logout,
+  } = useAuth0();
+
+  useEffect(() => {
+    const requestInterceptor = axios.interceptors.request.use(
+      (config) => {
+        const token = localStorage.getItem('authToken');
+        if (token && !config.headers.Authorization) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+      },
+      (error) => {
+        return Promise.reject(error);
+      }
+    );
+
+    const responseInterceptor = axios.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response?.status === 401) {
+          localStorage.removeItem('authToken');
+          setUser(null);
+        }
+        return Promise.reject(error);
+      }
+    );
+
+    return () => {
+      axios.interceptors.request.eject(requestInterceptor);
+      axios.interceptors.response.eject(responseInterceptor);
+    };
+  }, []);
 
   const checkAuth = async () => {
     try {
       const response = await axios.get(`${API_URL}/auth/me`, {
         withCredentials: true,
       });
-      setUser(response.data.user);
-    } catch {
-      console.log("Not authenticated");
+      if (response.data.user) {
+        setUser(response.data.user);
+      }
+    } catch (error) {
       setUser(null);
     }
   };
 
-  // Check authentication status on app load
   useEffect(() => {
-    checkAuth();
-  }, []);
+    const initAuth = async () => {
+      if (!auth0Loading) {
+        if (isAuthenticated && auth0User) {
+          await handleAuth0Login();
+        } else {
+          await checkAuth();
+        }
+        setLoading(false);
+      }
+    };
+    initAuth();
+  }, [isAuthenticated, auth0User, auth0Loading]);
+
+  const handleAuth0Login = async () => {
+    try {
+      if (!auth0User) {
+        return;
+      }
+
+      const response = await axios.post(
+        `${API_URL}/auth/auth0`,
+        {
+          auth0Id: auth0User.sub,
+          email: auth0User.email,
+          username: auth0User.nickname || auth0User.name,
+        },
+        { withCredentials: true }
+      );
+
+      if (response.data.token) {
+        localStorage.setItem('authToken', response.data.token);
+      }
+
+      setUser(response.data.user);
+    } catch (error) {
+      console.error("Auth0 login error:", error);
+    }
+  };
 
   const handleLogout = async () => {
     try {
-      // Logout from our backend
       await axios.post(
         `${API_URL}/auth/logout`,
         {},
@@ -40,32 +126,74 @@ const App = () => {
           withCredentials: true,
         }
       );
-      setUser(null);
     } catch (error) {
       console.error("Logout error:", error);
+    } finally {
+      localStorage.removeItem("authToken");
+      setUser(null);
+
+      if (isAuthenticated) {
+        auth0Logout({
+          logoutParams: {
+            returnTo: window.location.origin,
+          },
+        });
+      } else {
+        navigate("/auth");
+      }
     }
   };
+
+  if (loading || auth0Loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
       <NavBar user={user} onLogout={handleLogout} />
       <div className="app">
         <Routes>
-          <Route path="/login" element={<Login setUser={setUser} />} />
-          <Route path="/signup" element={<Signup setUser={setUser} />} />
-          <Route exact path="/" element={<Home />} />
+          {/* Auth Routes */}
+          <Route path="/auth" element={<Auth setUser={setUser} />} />
+          
+          {/* Main Routes */}
+          <Route path="/" element={<Home />} />
+          <Route path="/spotify" element={<SpotifyConnect user={user} />} />
+          <Route path="/top-tracks" element={<TopTracks user={user} />} />
+          <Route path="/callback/spotify" element={<SpotifyCallback setUser={setUser} />} />
+          
+          {/* Dashboard Routes */}
+          <Route path="/dashboard" element={<Navigate to="/dashboard/analytics" replace />} />
+          <Route path="/dashboard/analytics" element={<Analytics user={user} />} />
+          <Route path="/dashboard/topartist" element={<TopArtist user={user} />} />
+          <Route path="/dashboard/myplaylist" element={<MyPlaylist user={user} />} />
+          
+          {/* Social Routes */}
+          <Route path="/social" element={<Navigate to="/social/feed" replace />} />
+          <Route path="/social/feed" element={<Feed user={user} />} />
+          <Route path="/social/messages" element={<Messages user={user} />} />
+          <Route path="/social/mypost" element={<MyPost user={user} />} />
+          <Route path="/social/friends" element={<Friends user={user} />} />
+          <Route path="/social/notifications" element={<Notifications user={user} />} />
+          
+          {/* Profile Route */}
+          <Route path="/profile" element={<Profile user={user} />} />
+
+          {/* 404 Route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
     </div>
   );
-};
+}
 
 const Root = () => {
   return (
-    <Router>
-      <App />
-    </Router>
+    <Auth0Provider {...auth0Config}>
+      <Router>
+        <App />
+      </Router>
+    </Auth0Provider>
   );
 };
 

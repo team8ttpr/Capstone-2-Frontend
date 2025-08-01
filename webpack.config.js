@@ -13,10 +13,17 @@ module.exports = {
   devtool: "source-map",
   plugins: [
     new webpack.EnvironmentPlugin({
-      API_URL: "http://localhost:8080",
-      REACT_APP_AUTH0_DOMAIN: "",
-      REACT_APP_AUTH0_CLIENT_ID: "",
-      REACT_APP_AUTH0_AUDIENCE: "",
+      API_URL:
+        process.env.API_URL || "https://capstone-2-backend-three.vercel.app",
+      REACT_APP_AUTH0_DOMAIN:
+        process.env.REACT_APP_AUTH0_DOMAIN || "franccescopetta.us.auth0.com",
+      REACT_APP_AUTH0_CLIENT_ID:
+        process.env.REACT_APP_AUTH0_CLIENT_ID || "h1SYjGM6qWwIZMRTOSI7yjdjEzp3iAkS",
+      REACT_APP_AUTH0_AUDIENCE:
+        process.env.REACT_APP_AUTH0_AUDIENCE ||
+        "https://franccescopetta.us.auth0.com/api/v2/",
+      REACT_APP_SPOTIFY_CLIENT_ID:
+        process.env.REACT_APP_SPOTIFY_CLIENT_ID || "e25ed9259cce4bca80c92345f15c4e05",
     }),
   ],
   module: {

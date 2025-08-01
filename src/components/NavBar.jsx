@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import "./NavBarStyles.css";
+import "../style/NavBarStyles.css";
 
 const NavBar = ({ user, onLogout }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -72,6 +72,12 @@ const NavBar = ({ user, onLogout }) => {
       <div className="nav-links">
         {user ? (
           <div className="user-section">
+            <Link to="/top-tracks" className="nav-link">
+              Top Tracks
+            </Link>
+            <Link to="/spotify" className="nav-link">
+              Spotify
+            </Link>
             <span className="username">Welcome, {user.username}!</span>
             <button onClick={onLogout} className="logout-btn">
               Logout
@@ -79,11 +85,8 @@ const NavBar = ({ user, onLogout }) => {
           </div>
         ) : (
           <div className="auth-links">
-            <Link to="/login" className="nav-link">
-              Login
-            </Link>
-            <Link to="/signup" className="nav-link">
-              Sign Up
+            <Link to="/auth" className="nav-link">
+              Log In
             </Link>
           </div>
         )}
