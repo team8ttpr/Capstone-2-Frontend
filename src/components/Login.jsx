@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Eye, EyeOff, ChevronLeft, ChevronRight, Users, Zap, Shield, Globe, Smartphone, Music } from 'lucide-react';
+import axios from "axios";
 import '../style/Login.css';
+import { API_URL } from '../shared';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -15,6 +18,7 @@ const Login = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [auth0Loading, setAuth0Loading] = useState(false);
+  const navigate = useNavigate();
 
   const carouselData = [
     {
@@ -70,40 +74,33 @@ const Login = () => {
     setError("");
     setLoading(true);
     try {
+      // accept either email or username
+      const identifier = formData.email.trim();
+      if (!identifier) throw new Error("Email or username is required");
       if (isLogin) {
         // Login
-        const response = await fetch("/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({
-            username: formData.email,
-            password: formData.password,
-          }),
-        });
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error || "Login failed");
-        // Handle successful login (e.g., redirect, set user state)
+        const response = await axios.post(`${API_URL}/auth/login`, {
+          username: identifier,
+          password: formData.password,
+        }, { withCredentials: true });
+        if (response.data.error) throw new Error(response.data.error);
         setError("");
-        // ...user state logic here
+        // Redirect to /analytics after successful login
+        navigate('/analytics');
       } else {
         // Signup
-        const response = await fetch("/signup", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({
-            username: formData.email,
-            password: formData.password,
-          }),
-        });
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error || "Signup failed");
+        const response = await axios.post(`${API_URL}/auth/signup`, {
+          username: identifier,
+          email: identifier,
+          password: formData.password,
+        }, { withCredentials: true });
+        if (response.data.error) throw new Error(response.data.error);
         setError("");
-        // ...user state logic here
+        // Redirect to login form after successful signup
+        setIsLogin(true);
       }
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.error || err.message);
     } finally {
       setLoading(false);
     }
@@ -182,7 +179,7 @@ const Login = () => {
           <form className="form-section" onSubmit={handleAuth}>
             <div className="input-group">
               <input
-                type="email"
+                type="text"
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
