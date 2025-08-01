@@ -21,21 +21,19 @@ import Friends from "./pages/friends";
 import Notifications from "./pages/notifications";
 import MyPlaylist from "./pages/myPlaylist";
 import MyPost from "./pages/myPost";
+import Profile from "./pages/profile";
 
 
 
 
 
-const App = () => {
+function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   const {
-    isAuthenticated,
-    isLoading: auth0Loading,
-    user: auth0User,
-    logout: auth0Logout,
+    isAuthenticated, isLoading: auth0Loading, user: auth0User, logout: auth0Logout,
   } = useAuth0();
 
   const checkAuth = async () => {
@@ -105,7 +103,7 @@ const App = () => {
     } finally {
       localStorage.removeItem('token');
       setUser(null);
-      
+
       if (isAuthenticated) {
         auth0Logout({
           logoutParams: {
@@ -130,7 +128,7 @@ const App = () => {
           <Route path="/auth" element={<AuthPage setUser={setUser} />} />
           <Route path="/" element={<Home />} />
           <Route path="/spotify" element={<SpotifyConnect />} />
-          <Route path="/callback/spotify" element={<SpotifyCallback />} /> 
+          <Route path="/callback/spotify" element={<SpotifyCallback />} />
           <Route path="*" element={<NotFound />} />
           <Route path="/dashboard" element={<Navigate to="/dashboard/analytics" replace />} />
           <Route path="/dashboard/analytics" element={<Analytics />} />
@@ -143,12 +141,14 @@ const App = () => {
           <Route path="/social/mypost" element={<MyPost />} />
           <Route path="/social/friends" element={<Friends />} />
           <Route path="/social/notifications" element={<Notifications />} />
+          <Route path="/profile" element={<Profile />} />
+
 
         </Routes>
       </div>
     </div>
   );
-};
+}
 
 const Root = () => {
   return (
