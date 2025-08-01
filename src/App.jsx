@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import axios from "axios";
 import "./AppStyles.css";
-import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate } from "react-router-dom";
 import { API_URL } from "./shared";
 import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
 import { auth0Config } from "./auth0-config";
@@ -12,17 +12,28 @@ import NotFound from "./components/NotFound";
 import AuthPage from "./pages/auth";
 import SpotifyConnect from "./components/SpotifyConnect";
 import SpotifyCallback from "./components/SpotifyCallback"; 
+import Analytics from "./pages/Analytics";
+import TopArtist from "./pages/topArtist";
+import TopTracks from "./pages/topTracks";
+import Feed from "./pages/feed";
+import Messages from "./pages/messages";
+import Friends from "./pages/friends";
+import Notifications from "./pages/notifications";
+import MyPlaylist from "./pages/myPlaylist";
+import MyPost from "./pages/myPost";
+import Profile from "./pages/profile";
 
-const App = () => {
+
+
+
+
+function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   const {
-    isAuthenticated,
-    isLoading: auth0Loading,
-    user: auth0User,
-    logout: auth0Logout,
+    isAuthenticated, isLoading: auth0Loading, user: auth0User, logout: auth0Logout,
   } = useAuth0();
 
   const checkAuth = async () => {
@@ -92,7 +103,7 @@ const App = () => {
     } finally {
       localStorage.removeItem('token');
       setUser(null);
-      
+
       if (isAuthenticated) {
         auth0Logout({
           logoutParams: {
@@ -117,13 +128,27 @@ const App = () => {
           <Route path="/auth" element={<AuthPage setUser={setUser} />} />
           <Route path="/" element={<Home />} />
           <Route path="/spotify" element={<SpotifyConnect />} />
-          <Route path="/callback/spotify" element={<SpotifyCallback />} /> 
+          <Route path="/callback/spotify" element={<SpotifyCallback />} />
           <Route path="*" element={<NotFound />} />
+          <Route path="/dashboard" element={<Navigate to="/dashboard/analytics" replace />} />
+          <Route path="/dashboard/analytics" element={<Analytics />} />
+          <Route path="/dashboard/topartist" element={<TopArtist />} />
+          <Route path="/dashboard/toptracks" element={<TopTracks />} />
+          <Route path="/dashboard/myplaylist" element={<MyPlaylist />} />
+          <Route path="/social" element={<Navigate to="/social/feed" replace />} />
+          <Route path="/social/feed" element={<Feed />} />
+          <Route path="/social/messages" element={<Messages />} />
+          <Route path="/social/mypost" element={<MyPost />} />
+          <Route path="/social/friends" element={<Friends />} />
+          <Route path="/social/notifications" element={<Notifications />} />
+          <Route path="/profile" element={<Profile />} />
+
+
         </Routes>
       </div>
     </div>
   );
-};
+}
 
 const Root = () => {
   return (
