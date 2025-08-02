@@ -4,22 +4,53 @@ import '../style/MiniDrawer.css';
 import {
   ChevronLeft,
   ChevronRight,
-  Inbox,
-  Mail
+  Analytics,
+  MusicNote,
+  Person,
+  QueueMusic,
+  Feed,
+  People,
+  Message,
+  Notifications
 } from '@mui/icons-material';
 
-const menuItems = [
-  { text: 'Analytics', path: '/dashboard/analytics' },
-  { text: 'Top Tracks', path: '/dashboard/toptracks' },
-  { text: 'Top Artist', path: '/dashboard/topartist' },
-  { text: 'My Playlist', path: '/dashboard/myplaylist' }
+const dashboardMenuItems = [
+  { text: 'Analytics', path: '/dashboard/analytics', icon: 'Analytics' },
+  { text: 'Top Tracks', path: '/dashboard/toptracks', icon: 'MusicNote' },
+  { text: 'Top Artist', path: '/dashboard/topartist', icon: 'Person' },
+  { text: 'My Playlist', path: '/dashboard/myplaylist', icon: 'QueueMusic' }
 ];
 
-export default function MiniDrawer() {
+const socialMenuItems = [
+  { text: 'Feed', path: '/social/feed', icon: 'Feed' },
+  { text: 'Friends', path: '/social/friends', icon: 'People' },
+  { text: 'My Posts', path: '/social/mypost', icon: 'Message' },
+  { text: 'Notifications', path: '/social/notifications', icon: 'Notifications' }
+];
+
+const iconComponents = {
+  Analytics,
+  MusicNote,
+  Person,
+  QueueMusic,
+  Feed,
+  People,
+  Message,
+  Notifications
+};
+
+export default function MiniDrawer({ menuType = 'dashboard' }) {
   const [open, setOpen] = useState(true);
+  
+  const menuItems = menuType === 'social' ? socialMenuItems : dashboardMenuItems;
 
   const handleDrawerToggle = () => {
     setOpen(!open);
+  };
+
+  const getIcon = (iconName) => {
+    const IconComponent = iconComponents[iconName];
+    return IconComponent ? <IconComponent /> : <Analytics />;
   };
 
   return (
@@ -39,7 +70,7 @@ export default function MiniDrawer() {
                 className={`sidebar-list-button ${!open ? 'collapsed' : ''}`}
               >
                 <div className={`sidebar-list-icon ${!open ? 'collapsed' : ''}`}>
-                  {index % 2 === 0 ? <Inbox /> : <Mail />}
+                  {getIcon(item.icon)}
                 </div>
                 <span className={`sidebar-list-text ${!open ? 'collapsed' : ''}`}>
                   {item.text}

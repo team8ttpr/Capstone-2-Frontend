@@ -7,7 +7,7 @@ const NavBar = ({ user, onLogout }) => {
   const [isOpen2, setIsOpen2] = useState(false);
   const location = useLocation();
 
-  // Check if user is currently on dashboard or social pages
+  // check if user is currently on dashboard or social pages
   const isOnDashboard = location.pathname.startsWith('/dashboard');
   const isOnSocial = location.pathname.startsWith('/social');
 
