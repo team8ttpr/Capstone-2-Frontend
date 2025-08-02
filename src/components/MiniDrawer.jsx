@@ -11,7 +11,8 @@ import {
   Feed,
   People,
   Message,
-  Notifications
+  Notifications,
+  Article
 } from '@mui/icons-material';
 
 const dashboardMenuItems = [
@@ -24,7 +25,8 @@ const dashboardMenuItems = [
 const socialMenuItems = [
   { text: 'Feed', path: '/social/feed', icon: 'Feed' },
   { text: 'Friends', path: '/social/friends', icon: 'People' },
-  { text: 'My Posts', path: '/social/mypost', icon: 'Message' },
+  { text: 'Messages', path: '/social/messages', icon: 'Message' },
+  { text: 'My Posts', path: '/social/mypost', icon: 'Article' },
   { text: 'Notifications', path: '/social/notifications', icon: 'Notifications' }
 ];
 
@@ -36,7 +38,8 @@ const iconComponents = {
   Feed,
   People,
   Message,
-  Notifications
+  Notifications,
+  Article
 };
 
 export default function MiniDrawer({ menuType = 'dashboard' }) {
