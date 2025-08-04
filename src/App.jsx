@@ -15,13 +15,13 @@ import SpotifyConnect from "./components/SpotifyConnect";
 import SpotifyCallback from "./components/SpotifyCallback"; 
 import Analytics from "./pages/Analytics";
 import TopArtist from "./pages/TopArtist"; 
-import TopTracks from "./pages/TopTracks"; 
+import TopTracks from "./pages/topTracks"; 
 import Feed from "./pages/Feed"; 
 import Messages from "./pages/Messages"; 
 import Friends from "./pages/Friends"; 
 import Notifications from "./pages/Notifications";
 import MyPlaylist from "./pages/MyPlaylist"; 
-import MyPost from "./pages/MyPost"; 
+import MyPost from "./pages/myPost"; 
 import Profile from "./pages/Profile"; 
 
 function App() {
