@@ -1,10 +1,9 @@
-import React from "react";
-import MiniDrawer from '../components/MiniDrawer';
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { API_URL } from "../shared";
 import { useNavigate } from "react-router-dom";
 import "../style/TopTracks.css";
+import MiniDrawer from "../components/MiniDrawer";
 
 const TopTracks = ({ user }) => {
   const [topTracks, setTopTracks] = useState([]);
@@ -49,7 +48,8 @@ const TopTracks = ({ user }) => {
     medium_term: "Last 6 Months", 
     long_term: "All Time"
   };
-  
+
+  // Extract Spotify track ID from the URI or external URL
   const getSpotifyTrackId = (track) => {
     if (track.uri) {
       return track.uri.split(':')[2];
@@ -64,19 +64,25 @@ const TopTracks = ({ user }) => {
 
   if (loading) {
     return (
+      <div className="dashboard-layout">
+      <MiniDrawer />
       <div className="top-tracks-container">
         <div className="loading">Loading your top tracks...</div>
+      </div>
       </div>
     );
   }
 
   if (!user) {
     return (
+      <div className="dashboard-layout">
+      <MiniDrawer />
       <div className="top-tracks-container">
         <div className="auth-required">
           <h2>Authentication Required</h2>
           <p>Please log in to view your top tracks.</p>
         </div>
+      </div>
       </div>
     );
   }
@@ -84,12 +90,6 @@ const TopTracks = ({ user }) => {
   return (
     <div className="dashboard-layout">
       <MiniDrawer />
-      <div className="dashboard-main-content">
-        <div className="dashboard-summary">
-          <h1>Top Tracks</h1>
-          <p>This is the page to display user's top tracks.</p>
-        </div>
-      </div>
     <div className="top-tracks-container">
       <div className="header-section">
         <h1>Your Top Tracks</h1>
@@ -171,6 +171,7 @@ const TopTracks = ({ user }) => {
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 };

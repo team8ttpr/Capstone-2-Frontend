@@ -1,10 +1,9 @@
-import React from "react";
-import MiniDrawer from '../components/MiniDrawer';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_URL } from '../shared';
 import { useNavigate } from 'react-router-dom';
 import '../style/MyPlaylist.css';
+import MiniDrawer from '../components/MiniDrawer';
 
 const MyPlaylist = ({ user }) => {
   const [playlists, setPlaylists] = useState([]);
@@ -25,8 +24,8 @@ const MyPlaylist = ({ user }) => {
       setLoading(true);
       setError('');
       
-      const response = await axios.get(`${API_URL}/auth/spotify/playlists`, { 
-        withCredentials: true 
+      const response = await axios.get(`${API_URL}/auth/spotify/playlists`, {
+        withCredentials: true
       });
 
       setPlaylists(response.data.items || []);
@@ -42,31 +41,47 @@ const MyPlaylist = ({ user }) => {
     }
   };
 
+  // Extract Spotify playlist ID from the URI or external URL
+  const getSpotifyPlaylistId = (playlist) => {
+    if (playlist.uri) {
+      return playlist.uri.split(':')[2];
+    }
+    if (playlist.external_urls?.spotify) {
+      const url = playlist.external_urls.spotify;
+      const match = url.match(/playlist\/([a-zA-Z0-9]+)/);
+      return match ? match[1] : null;
+    }
+    return null;
+  };
+
   if (loading) {
     return (
+      <div className="dashboard-layout">
+            <MiniDrawer />
       <div className="my-playlist-container">
         <div className="loading">Loading your playlists...</div>
+      </div>
       </div>
     );
   }
 
   if (!user) {
     return (
+      <div className="dashboard-layout">
+            <MiniDrawer />
       <div className="my-playlist-container">
-        <h2>Authentication Required</h2>
-        <p>Please log in to view your playlists.</p>
+        <div className="auth-required">
+          <h2>Authentication Required</h2>
+          <p>Please log in to view your playlists.</p>
+        </div>
+      </div>
       </div>
     );
   }
 
   return (
     <div className="dashboard-layout">
-      <MiniDrawer />
-      <div className="dashboard-main-content">
-        <div className="dashboard-summary">
-          <h1>My Playlists</h1>
-          <p>This is the page to display user's current existing playlists.</p>
-        </div>
+          <MiniDrawer />
     <div className="my-playlist-container">
       <div className="header-section">
         <h1>My Playlists</h1>
@@ -84,55 +99,57 @@ const MyPlaylist = ({ user }) => {
 
       <div className="playlists-section">
         {playlists.length > 0 ? (
-          <div className="playlists-grid">
-            {playlists.map((playlist) => (
-              <div key={playlist.id} className="playlist-card">
-                <div className="playlist-image">
-                  {playlist.images?.[0] ? (
-                    <img 
-                      src={playlist.images[0].url} 
-                      alt={playlist.name}
-                      onError={(e) => {
-                        e.target.style.display = 'none';
-                        e.target.nextSibling.style.display = 'flex';
-                      }}
+          <div className="playlists-embed-list">
+            {playlists.map((playlist, index) => {
+              const playlistId = getSpotifyPlaylistId(playlist);
+              
+              return (
+                <div key={playlist.id} className="playlist-embed-item">
+                  <div className="playlist-number">{index + 1}</div>
+                  {playlistId ? (
+                    <iframe
+                      src={`https://open.spotify.com/embed/playlist/${playlistId}?utm_source=generator&theme=0`}
+                      width="100%"
+                      height="352"
+                      frameBorder="0"
+                      allowFullScreen=""
+                      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                      loading="lazy"
+                      title={playlist.name}
                     />
-                  ) : null}
-                  <div className="playlist-placeholder" style={{ display: playlist.images?.[0] ? 'none' : 'flex' }}>
-                    <span>♪</span>
-                  </div>
-                </div>
-                <div className="playlist-info">
-                  <h3 className="playlist-name">{playlist.name}</h3>
-                  <p className="playlist-description">
-                    {playlist.description || 'No description'}
-                  </p>
-                  <div className="playlist-meta">
-                    <span className="track-count">{playlist.tracks.total} tracks</span>
-                    <span className="owner">by {playlist.owner.display_name}</span>
-                  </div>
-                  {playlist.external_urls?.spotify && (
-                    <a 
-                      href={playlist.external_urls.spotify} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="spotify-link"
-                    >
-                      Open in Spotify
-                    </a>
+                  ) : (
+                    <div className="embed-fallback">
+                      <div className="fallback-content">
+                        <h4>{playlist.name}</h4>
+                        <p>{playlist.description || 'No description available'}</p>
+                        <p className="track-count">{playlist.tracks.total} tracks</p>
+                        <p className="owner">By: {playlist.owner.display_name}</p>
+                        {playlist.external_urls?.spotify && (
+                          <a 
+                            href={playlist.external_urls.spotify} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="spotify-link"
+                          >
+                            Open in Spotify
+                          </a>
+                        )}
+                      </div>
+                    </div>
                   )}
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         ) : (
           <div className="no-data">
             <h3>No Playlists Found</h3>
-            <p>You don't have any playlists yet, or they couldn't be loaded.</p>
-            <p>Try connecting your Spotify account or creating some playlists!</p>
+            <p>You don't have any playlists yet.</p>
+            <p>Create some playlists on Spotify and they'll appear here!</p>
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 };

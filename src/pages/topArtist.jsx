@@ -1,10 +1,9 @@
-import React from "react";
-import MiniDrawer from '../components/MiniDrawer';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_URL } from '../shared';
 import { useNavigate } from 'react-router-dom';
 import '../style/TopArtist.css';
+import MiniDrawer from '../components/MiniDrawer';
 
 const TopArtist = ({ user }) => {
   const [topArtists, setTopArtists] = useState([]);
@@ -65,32 +64,32 @@ const TopArtist = ({ user }) => {
 
   if (loading) {
     return (
+      <div className="dashboard-layout">
+            <MiniDrawer />
       <div className="top-artist-container">
         <div className="loading">Loading your top artists...</div>
+      </div>
       </div>
     );
   }
 
   if (!user) {
     return (
+      <div className="dashboard-layout">
+            <MiniDrawer />
       <div className="top-artist-container">
         <div className="auth-required">
           <h2>Authentication Required</h2>
           <p>Please log in to view your top artists.</p>
         </div>
       </div>
+      </div>
     );
   }
 
   return (
     <div className="dashboard-layout">
-      <MiniDrawer />
-      <div className="dashboard-main-content">
-        <div className="dashboard-summary">
-          <h1>Top Artists</h1>
-          <p>This is the page to display user's top artists.</p>
-        </div>
-      </div>
+          <MiniDrawer />
     <div className="top-artist-container">
       <div className="header-section">
         <h1>Your Top Artists</h1>
@@ -133,8 +132,8 @@ const TopArtist = ({ user }) => {
                   {artistId ? (
                     <iframe
                       src={`https://open.spotify.com/embed/artist/${artistId}?utm_source=generator&theme=0`}
-                      width="100%"
-                      height="152"
+                      width="80%"
+                      height="352"
                       frameBorder="0"
                       allowFullScreen=""
                       allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
@@ -179,6 +178,7 @@ const TopArtist = ({ user }) => {
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 };
