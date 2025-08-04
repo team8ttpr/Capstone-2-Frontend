@@ -10,18 +10,17 @@ import Auth from "./pages/auth";
 import NavBar from "./components/NavBar";
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
-import SpotifyConnect from "./components/SpotifyConnect";
 import SpotifyCallback from "./components/SpotifyCallback"; 
 import Analytics from "./pages/Analytics";
 import TopArtist from "./pages/topArtist"; 
 import TopTracks from "./pages/topTracks"; 
-import Feed from "./pages/feed"; 
-import Messages from "./pages/messages"; 
-import Friends from "./pages/friends"; 
-import Notifications from "./pages/notifications";
-import MyPlaylist from "./pages/myPlaylist"; 
-import MyPost from "./pages/myPost"; 
-import Profile from "./pages/profile"; 
+import Feed from "./pages/Feed"; 
+import Messages from "./pages/Messages"; 
+import Friends from "./pages/Friends"; 
+import Notifications from "./pages/Notifications";
+import MyPlaylist from "./pages/MyPlaylist"; 
+import MyPost from "./pages/MyPost"; 
+import Profile from "./pages/Profile"; 
 
 function App() {
   const [user, setUser] = useState(null);
@@ -157,14 +156,13 @@ function App() {
           
           {/* Main Routes */}
           <Route path="/" element={<Home />} />
-          <Route path="/spotify" element={<SpotifyConnect user={user} />} />
-          <Route path="/top-tracks" element={<TopTracks user={user} />} />
           <Route path="/callback/spotify" element={<SpotifyCallback setUser={setUser} />} />
           
           {/* Dashboard Routes */}
           <Route path="/dashboard" element={<Navigate to="/dashboard/analytics" replace />} />
           <Route path="/dashboard/analytics" element={<Analytics user={user} />} />
           <Route path="/dashboard/topartist" element={<TopArtist user={user} />} />
+          <Route path="/dashboard/toptracks" element={<TopTracks user={user} />} />
           <Route path="/dashboard/myplaylist" element={<MyPlaylist user={user} />} />
           <Route path="/dashboard/toptracks" element={<TopTracks user={user} />} />
           
