@@ -48,6 +48,19 @@ const TopArtist = ({ user }) => {
     long_term: "All Time"
   };
 
+  // Extract Spotify artist ID from the URI or external URL
+  const getSpotifyArtistId = (artist) => {
+    if (artist.uri) {
+      return artist.uri.split(':')[2];
+    }
+    if (artist.external_urls?.spotify) {
+      const url = artist.external_urls.spotify;
+      const match = url.match(/artist\/([a-zA-Z0-9]+)/);
+      return match ? match[1] : null;
+    }
+    return null;
+  };
+
   if (loading) {
     return (
       <div className="top-artist-container">
@@ -59,8 +72,10 @@ const TopArtist = ({ user }) => {
   if (!user) {
     return (
       <div className="top-artist-container">
-        <h2>Authentication Required</h2>
-        <p>Please log in to view your top artists.</p>
+        <div className="auth-required">
+          <h2>Authentication Required</h2>
+          <p>Please log in to view your top artists.</p>
+        </div>
       </div>
     );
   }
@@ -98,55 +113,53 @@ const TopArtist = ({ user }) => {
 
       <div className="artists-section">
         {topArtists.length > 0 ? (
-          <div className="artists-grid">
-            {topArtists.map((artist, index) => (
-              <div key={artist.id} className="artist-card">
-                <div className="artist-rank">#{index + 1}</div>
-                <div className="artist-image">
-                  {artist.images?.[0] ? (
-                    <img 
-                      src={artist.images[0].url} 
-                      alt={artist.name}
-                      onError={(e) => {
-                        e.target.style.display = 'none';
-                        e.target.nextSibling.style.display = 'flex';
-                      }}
+          <div className="artists-embed-list">
+            {topArtists.map((artist, index) => {
+              const artistId = getSpotifyArtistId(artist);
+              
+              return (
+                <div key={artist.id} className="artist-embed-item">
+                  <div className="artist-rank">#{index + 1}</div>
+                  {artistId ? (
+                    <iframe
+                      src={`https://open.spotify.com/embed/artist/${artistId}?utm_source=generator&theme=0`}
+                      width="100%"
+                      height="152"
+                      frameBorder="0"
+                      allowFullScreen=""
+                      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                      loading="lazy"
+                      title={`${artist.name}`}
                     />
-                  ) : null}
-                  <div className="artist-placeholder" style={{ display: artist.images?.[0] ? 'none' : 'flex' }}>
-                    <span>♫</span>
-                  </div>
-                </div>
-                <div className="artist-info">
-                  <h3 className="artist-name">{artist.name}</h3>
-                  <div className="artist-genres">
-                    {artist.genres.slice(0, 3).map((genre, idx) => (
-                      <span key={idx} className="genre-tag">
-                        {genre}
-                      </span>
-                    ))}
-                  </div>
-                  <div className="artist-meta">
-                    <span className="popularity">
-                      Popularity: {artist.popularity}%
-                    </span>
-                    <span className="followers">
-                      {artist.followers.total.toLocaleString()} followers
-                    </span>
-                  </div>
-                  {artist.external_urls?.spotify && (
-                    <a 
-                      href={artist.external_urls.spotify} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="spotify-link"
-                    >
-                      Open in Spotify
-                    </a>
+                  ) : (
+                    <div className="embed-fallback">
+                      <div className="fallback-content">
+                        <h4>{artist.name}</h4>
+                        <div className="artist-genres">
+                          {artist.genres.slice(0, 3).map((genre, idx) => (
+                            <span key={idx} className="genre-tag">
+                              {genre}
+                            </span>
+                          ))}
+                        </div>
+                        <p className="popularity">Popularity: {artist.popularity}%</p>
+                        <p className="followers">{artist.followers.total.toLocaleString()} followers</p>
+                        {artist.external_urls?.spotify && (
+                          <a 
+                            href={artist.external_urls.spotify} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="spotify-link"
+                          >
+                            Open in Spotify
+                          </a>
+                        )}
+                      </div>
+                    </div>
                   )}
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         ) : (
           <div className="no-data">
