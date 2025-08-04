@@ -11,7 +11,6 @@ import Auth from "./pages/auth";
 import NavBar from "./components/NavBar";
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
-import SpotifyConnect from "./components/SpotifyConnect";
 import SpotifyCallback from "./components/SpotifyCallback"; 
 import Analytics from "./pages/Analytics";
 import TopArtist from "./pages/TopArtist"; 
@@ -158,14 +157,13 @@ function App() {
           
           {/* Main Routes */}
           <Route path="/" element={<Home />} />
-          <Route path="/spotify" element={<SpotifyConnect user={user} />} />
-          <Route path="/top-tracks" element={<TopTracks user={user} />} />
           <Route path="/callback/spotify" element={<SpotifyCallback setUser={setUser} />} />
           
           {/* Dashboard Routes */}
           <Route path="/dashboard" element={<Navigate to="/dashboard/analytics" replace />} />
           <Route path="/dashboard/analytics" element={<Analytics user={user} />} />
           <Route path="/dashboard/topartist" element={<TopArtist user={user} />} />
+          <Route path="/dashboard/toptracks" element={<TopTracks user={user} />} />
           <Route path="/dashboard/myplaylist" element={<MyPlaylist user={user} />} />
           
           {/* Social Routes */}
