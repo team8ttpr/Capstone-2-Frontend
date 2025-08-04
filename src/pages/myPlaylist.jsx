@@ -1,3 +1,5 @@
+import React from "react";
+import MiniDrawer from '../components/MiniDrawer';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_URL } from '../shared';
@@ -58,6 +60,13 @@ const MyPlaylist = ({ user }) => {
   }
 
   return (
+    <div className="dashboard-layout">
+      <MiniDrawer />
+      <div className="dashboard-main-content">
+        <div className="dashboard-summary">
+          <h1>My Playlists</h1>
+          <p>This is the page to display user's current existing playlists.</p>
+        </div>
     <div className="my-playlist-container">
       <div className="header-section">
         <h1>My Playlists</h1>

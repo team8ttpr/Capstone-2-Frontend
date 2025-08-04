@@ -1,3 +1,5 @@
+import React from "react";
+import MiniDrawer from '../components/MiniDrawer';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_URL } from '../shared';
@@ -81,6 +83,14 @@ const TopArtist = ({ user }) => {
   }
 
   return (
+    <div className="dashboard-layout">
+      <MiniDrawer />
+      <div className="dashboard-main-content">
+        <div className="dashboard-summary">
+          <h1>Top Artists</h1>
+          <p>This is the page to display user's top artists.</p>
+        </div>
+      </div>
     <div className="top-artist-container">
       <div className="header-section">
         <h1>Your Top Artists</h1>

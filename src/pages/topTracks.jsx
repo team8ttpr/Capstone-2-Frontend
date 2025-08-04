@@ -1,3 +1,5 @@
+import React from "react";
+import MiniDrawer from '../components/MiniDrawer';
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { API_URL } from "../shared";
@@ -80,6 +82,14 @@ const TopTracks = ({ user }) => {
   }
 
   return (
+    <div className="dashboard-layout">
+      <MiniDrawer />
+      <div className="dashboard-main-content">
+        <div className="dashboard-summary">
+          <h1>Top Tracks</h1>
+          <p>This is the page to display user's top tracks.</p>
+        </div>
+      </div>
     <div className="top-tracks-container">
       <div className="header-section">
         <h1>Your Top Tracks</h1>
