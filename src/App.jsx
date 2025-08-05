@@ -6,15 +6,13 @@ import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate } from "r
 import { API_URL } from "./shared";
 import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
 import { auth0Config } from "./auth0-config";
-
 import Auth from "./pages/auth";
 import NavBar from "./components/NavBar";
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
-import SpotifyConnect from "./components/SpotifyConnect";
 import SpotifyCallback from "./components/SpotifyCallback"; 
 import Analytics from "./pages/Analytics";
-import TopArtist from "./pages/TopArtist"; 
+import TopArtist from "./pages/topArtist"; 
 import TopTracks from "./pages/topTracks"; 
 import Feed from "./pages/Feed"; 
 import Messages from "./pages/Messages"; 
@@ -158,15 +156,15 @@ function App() {
           
           {/* Main Routes */}
           <Route path="/" element={<Home />} />
-          <Route path="/spotify" element={<SpotifyConnect user={user} />} />
-          <Route path="/top-tracks" element={<TopTracks user={user} />} />
           <Route path="/callback/spotify" element={<SpotifyCallback setUser={setUser} />} />
           
           {/* Dashboard Routes */}
           <Route path="/dashboard" element={<Navigate to="/dashboard/analytics" replace />} />
           <Route path="/dashboard/analytics" element={<Analytics user={user} />} />
           <Route path="/dashboard/topartist" element={<TopArtist user={user} />} />
+          <Route path="/dashboard/toptracks" element={<TopTracks user={user} />} />
           <Route path="/dashboard/myplaylist" element={<MyPlaylist user={user} />} />
+          <Route path="/dashboard/toptracks" element={<TopTracks user={user} />} />
           
           {/* Social Routes */}
           <Route path="/social" element={<Navigate to="/social/feed" replace />} />
