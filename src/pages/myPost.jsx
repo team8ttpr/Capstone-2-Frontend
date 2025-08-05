@@ -1,28 +1,51 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import PostCard from "../components/PostCard"; // ✅ Make sure this path is correct
 
 const MyPost = () => {
   const [posts, setPosts] = useState([]);
+  const [filter, setFilter] = useState("all"); // 'all', 'draft', or 'published'
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
+    // Fetch current user
+    axios
+      .get("http://localhost:8080/auth/me", { withCredentials: true })
+      .then((res) => {
+        setCurrentUser(res.data.user);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch current user:", err);
+      });
+
+    // Fetch logged-in user's posts
     axios
       .get("http://localhost:8080/api/posts/mine", { withCredentials: true })
       .then((res) => setPosts(res.data))
       .catch((err) => console.error("Failed to fetch my posts:", err));
   }, []);
 
+  const filteredPosts = posts.filter((post) => {
+    if (filter === "all") return true;
+    return post.status === filter;
+  });
+
   return (
     <div className="dashboard-summary">
       <h1>My Posts</h1>
-      {posts.length === 0 ? (
-        <p>You haven't created any posts yet.</p>
+
+      {/* Filter Buttons */}
+      <div style={{ marginBottom: "1rem" }}>
+        <button onClick={() => setFilter("all")}>All</button>
+        <button onClick={() => setFilter("published")}>Published</button>
+        <button onClick={() => setFilter("draft")}>Draft</button>
+      </div>
+
+      {filteredPosts.length === 0 ? (
+        <p>No posts found for selected filter.</p>
       ) : (
-        posts.map((post) => (
-          <div key={post.id} className="post-card">
-            <h3>{post.title}</h3>
-            <p>{post.description}</p>
-            <p>Status: {post.status}</p>
-          </div>
+        filteredPosts.map((post) => (
+          <PostCard key={post.id} post={post} currentUser={currentUser} />
         ))
       )}
     </div>

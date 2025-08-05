@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import PostCard from "../components/PostCard";
+import style from "../style/PostCard.css";
 
 const Feed = () => {
   const [posts, setPosts] = useState([]);
@@ -16,16 +18,11 @@ const Feed = () => {
 
   return (
     <div className="dashboard-summary">
-      <h1>Feed</h1>
+      <h1 style={{ textAlign: "center" }}>Feed</h1>
       {posts.length === 0 ? (
-        <p>No public posts yet.</p>
+        <p style={{ textAlign: "center" }}>No public posts yet.</p>
       ) : (
-        posts.map((post) => (
-          <div key={post.id} className="post-card">
-            <h3>{post.title}</h3>
-            <p>{post.description}</p>
-          </div>
-        ))
+        posts.map((post) => <PostCard key={post.id} post={post} />)
       )}
     </div>
   );
