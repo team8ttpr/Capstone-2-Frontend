@@ -19,7 +19,7 @@ import Messages from "./pages/Messages";
 import Friends from "./pages/Friends"; 
 import Notifications from "./pages/Notifications";
 import MyPlaylist from "./pages/MyPlaylist"; 
-import MyPost from "./pages/MyPost"; 
+import MyPost from "./pages/myPost"; 
 import Profile from "./pages/Profile"; 
 
 function App() {
