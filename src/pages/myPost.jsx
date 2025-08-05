@@ -23,6 +23,7 @@ const myPost = () => {
         </div>
       </div>
     </div>
+    </div>
   );
 };
 
