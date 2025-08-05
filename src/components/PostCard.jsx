@@ -49,7 +49,7 @@ const PostCard = ({ post, user }) => {
   };
 
   return (
-    <div className="post-card">
+    <div className={`post-card ${post.status === "draft" ? "post-draft" : ""}`}>
       {/* Top-right menu positioned here */}
       {isOwner && (
         <div className="post-menu">

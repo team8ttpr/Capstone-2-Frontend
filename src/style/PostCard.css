@@ -132,3 +132,7 @@
 .post-dropdown button:active {
   background-color: #e0e0e0;
 }
+.post-draft {
+  background-color: #f0f0f0; /* light grey */
+  color: #666;               /* slightly dimmed text */
+}
