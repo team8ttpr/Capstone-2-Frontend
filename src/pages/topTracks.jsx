@@ -4,7 +4,7 @@ import { API_URL } from "../shared";
 import { useNavigate } from "react-router-dom";
 import "../style/TopTracks.css";
 import MiniDrawer from "../components/MiniDrawer";
-import SpotifyEmbed from "../components/SpotifyEmbed";
+import SearchComponent from "../components/SearchComponent";
 
 const TopTracks = ({ user }) => {
   const [topTracks, setTopTracks] = useState([]);
@@ -50,7 +50,6 @@ const TopTracks = ({ user }) => {
     long_term: "All Time"
   };
 
-  // Extract Spotify track ID from the URI or external URL
   const getSpotifyTrackId = (track) => {
     if (track.uri) {
       return track.uri.split(':')[2];
@@ -66,10 +65,12 @@ const TopTracks = ({ user }) => {
   if (loading) {
     return (
       <div className="dashboard-layout">
-      <MiniDrawer />
-      <div className="top-tracks-container">
-        <div className="loading">Loading your top tracks...</div>
-      </div>
+        <MiniDrawer />
+        <div className="dashboard-main-content">
+          <div className="top-tracks-container">
+            <div className="loading">Loading your top tracks...</div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -77,13 +78,15 @@ const TopTracks = ({ user }) => {
   if (!user) {
     return (
       <div className="dashboard-layout">
-      <MiniDrawer />
-      <div className="top-tracks-container">
-        <div className="auth-required">
-          <h2>Authentication Required</h2>
-          <p>Please log in to view your top tracks.</p>
+        <MiniDrawer />
+        <div className="dashboard-main-content">
+          <div className="top-tracks-container">
+            <div className="auth-required">
+              <h2>Authentication Required</h2>
+              <p>Please log in to view your top tracks.</p>
+            </div>
+          </div>
         </div>
-      </div>
       </div>
     );
   }
@@ -91,85 +94,90 @@ const TopTracks = ({ user }) => {
   return (
     <div className="dashboard-layout">
       <MiniDrawer />
-    <div className="top-tracks-container">
-      <div className="header-section">
-        <h1>Your Top Tracks</h1>
-        <p>Your most played songs, {user.username}!</p>
-      </div>
+      <div className="dashboard-main-content">
+        <div className="top-tracks-container">
+          <div className="header-section">
+            <h1>Your Top Tracks</h1>
+            <p>Your most played songs, {user.username}!</p>
+          </div>
 
-      {error && (
-        <div className="error-message">
-          <p>{error}</p>
-          <button onClick={fetchTopTracks} className="retry-btn">
-            Try Again
-          </button>
-        </div>
-      )}
+          {error && (
+            <div className="error-message">
+              <p>{error}</p>
+              <button onClick={fetchTopTracks} className="retry-btn">
+                Try Again
+              </button>
+            </div>
+          )}
 
-      <div className="time-range-selector">
-        <h3>Time Period:</h3>
-        <div className="time-range-buttons">
-          {Object.entries(timeRangeLabels).map(([value, label]) => (
-            <button
-              key={value}
-              className={`time-range-btn ${timeRange === value ? 'active' : ''}`}
-              onClick={() => setTimeRange(value)}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-      </div>
+          <div className="time-range-selector">
+            <h3>Time Period:</h3>
+            <div className="time-range-buttons">
+              {Object.entries(timeRangeLabels).map(([value, label]) => (
+                <button
+                  key={value}
+                  className={`time-range-btn ${timeRange === value ? 'active' : ''}`}
+                  onClick={() => setTimeRange(value)}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
 
-      <div className="tracks-section">
-        {topTracks.length > 0 ? (
-          <div className="tracks-embed-list">
-            {topTracks.map((track, index) => {
-              const trackId = getSpotifyTrackId(track);
-              
-              return (
-                <div key={track.id} className="track-embed-item">
-                  <div className="track-rank">#{index + 1}</div>
-                  {trackId ? (
-                    // tran refactored
-                    <SpotifyEmbed 
-                      type="track"
-                      id={trackId}
-                      width="100%"
-                      height={152}
-                    />
-                  ) : (
-                    <div className="embed-fallback">
-                      <div className="fallback-content">
-                        <h4>{track.name}</h4>
-                        <p>{track.artists.map(artist => artist.name).join(', ')}</p>
-                        <p className="album-name">{track.album.name}</p>
-                        {track.external_urls?.spotify && (
-                          <a 
-                            href={track.external_urls.spotify} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="spotify-link"
-                          >
-                            Open in Spotify
-                          </a>
-                        )}
-                      </div>
+          <div className="tracks-section">
+            {topTracks.length > 0 ? (
+              <div className="tracks-embed-list">
+                {topTracks.map((track, index) => {
+                  const trackId = getSpotifyTrackId(track);
+                  
+                  return (
+                    <div key={track.id} className="track-embed-item">
+                      <div className="track-rank">#{index + 1}</div>
+                      {trackId ? (
+                        <iframe
+                          src={`https://open.spotify.com/embed/track/${trackId}?utm_source=generator&theme=0`}
+                          width="100%"
+                          height="152"
+                          frameBorder="0"
+                          allowFullScreen=""
+                          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                          loading="lazy"
+                          title={`${track.name} by ${track.artists.map(a => a.name).join(', ')}`}
+                        />
+                      ) : (
+                        <div className="embed-fallback">
+                          <div className="fallback-content">
+                            <h4>{track.name}</h4>
+                            <p>{track.artists.map(artist => artist.name).join(', ')}</p>
+                            <p className="album-name">{track.album.name}</p>
+                            {track.external_urls?.spotify && (
+                              <a 
+                                href={track.external_urls.spotify} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="spotify-link"
+                              >
+                                Open in Spotify
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              );
-            })}
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="no-data">
+                <h3>No Top Tracks Found</h3>
+                <p>You don't have enough listening history to show top tracks for this time period.</p>
+                <p>Try selecting a different time range or listen to more music on Spotify!</p>
+              </div>
+            )}
           </div>
-        ) : (
-          <div className="no-data">
-            <h3>No Top Tracks Found</h3>
-            <p>You don't have enough listening history to show top tracks for this time period.</p>
-            <p>Try selecting a different time range or listen to more music on Spotify!</p>
-          </div>
-        )}
+        </div>
       </div>
-    </div>
     </div>
   );
 };
