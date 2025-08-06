@@ -2,74 +2,83 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
+  background-color: #121212;
 }
 
 .header-section {
   text-align: center;
   margin-bottom: 2rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #333;
 }
 
 .header-section h1 {
   margin-bottom: 0.5rem;
   font-size: 2rem;
+  color: #ffffff;
 }
 
 .header-section p {
-  color: #666;
+  color: #b3b3b3;
   margin: 0;
 }
 
 .create-post-section {
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  background: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 12px;
   padding: 2rem;
   margin-bottom: 2rem;
   text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .create-post-section h2 {
   margin-bottom: 0.5rem;
   font-size: 1.5rem;
+  color: #ffffff;
 }
 
 .create-post-section p {
-  color: #666;
+  color: #b3b3b3;
   margin-bottom: 2rem;
 }
 
 .create-post-btn {
-  background: #007bff;
-  color: white;
+  background: #1db954;
+  color: #000000;
   border: none;
   padding: 1rem 2rem;
   border-radius: 6px;
   cursor: pointer;
   font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
 }
 
 .create-post-btn:hover {
-  background: #0056b3;
+  background: #1ed760;
+  transform: translateY(-1px);
 }
 
 .posts-list-section {
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  background: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 12px;
   padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .posts-list-section h2 {
   margin-bottom: 1rem;
   font-size: 1.5rem;
+  color: #ffffff;
 }
 
 .posts-placeholder {
   text-align: center;
   padding: 2rem;
-  color: #666;
+  color: #b3b3b3;
 }
 
 /* Responsive */

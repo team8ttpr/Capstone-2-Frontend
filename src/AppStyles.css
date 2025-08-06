@@ -6,7 +6,8 @@
 }
 
 body {
-  background-color: #fff;
+  background-color: #121212;
+  color: #ffffff;
 }
 
 .title {
@@ -23,6 +24,7 @@ body {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
+  background-color: #121212;
 }
 
 @keyframes spin {
@@ -38,4 +40,31 @@ body {
   width: 100px;
   height: 100px;
   animation: spin 15s linear infinite;
+}
+
+/* Dark theme utility classes */
+.dark-card {
+  background-color: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 8px;
+}
+
+.dark-text-primary {
+  color: #ffffff;
+}
+
+.dark-text-secondary {
+  color: #b3b3b3;
+}
+
+.dark-text-muted {
+  color: #666;
+}
+
+.spotify-green {
+  color: #1db954;
+}
+
+.spotify-green-bg {
+  background-color: #1db954;
 }
