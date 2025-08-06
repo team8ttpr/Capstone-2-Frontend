@@ -4,6 +4,7 @@ import { API_URL } from '../shared';
 import { useNavigate } from 'react-router-dom';
 import '../style/TopArtist.css';
 import MiniDrawer from '../components/MiniDrawer';
+import SpotifyEmbed from '../components/SpotifyEmbed';
 
 const TopArtist = ({ user }) => {
   const [topArtists, setTopArtists] = useState([]);
@@ -134,15 +135,11 @@ const TopArtist = ({ user }) => {
                     <div key={artist.id} className="artist-embed-item">
                       <div className="artist-rank">#{index + 1}</div>
                       {artistId ? (
-                        <iframe
-                          src={`https://open.spotify.com/embed/artist/${artistId}?utm_source=generator&theme=0`}
-                          width="80%"
-                          height="352"
-                          frameBorder="0"
-                          allowFullScreen=""
-                          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                          loading="lazy"
-                          title={`${artist.name}`}
+                        <SpotifyEmbed 
+                          type="artist" 
+                          id={artistId} 
+                          width="80%" 
+                          height="352" 
                         />
                       ) : (
                         <div className="embed-fallback">

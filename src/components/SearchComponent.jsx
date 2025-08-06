@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_URL } from '../shared';
+import SpotifyEmbed from './SpotifyEmbed';
 import '../style/SearchComponent.css';
 
 const SearchComponent = ({ onResultSelect, placeholder = "Search for music..." }) => {
@@ -16,7 +17,6 @@ const SearchComponent = ({ onResultSelect, placeholder = "Search for music..." }
   const [activeTab, setActiveTab] = useState('tracks');
   const [hasSearched, setHasSearched] = useState(false);
 
-  // Debounce search
   useEffect(() => {
     if (!query.trim()) {
       setResults({ tracks: [], artists: [], albums: [], playlists: [] });
@@ -38,12 +38,12 @@ const SearchComponent = ({ onResultSelect, placeholder = "Search for music..." }
       setError('');
       setHasSearched(true);
 
-      console.log('Searching for:', searchQuery); 
-      console.log('API URL:', API_URL); 
+      console.log('Searching for:', searchQuery);
+      console.log('API URL:', API_URL);
 
       const response = await axios.get(`${API_URL}/api/search-songs`, {
         params: { q: searchQuery.trim() },
-        timeout: 10000 
+        timeout: 10000
       });
 
       console.log('Search response:', response.data);
@@ -137,50 +137,12 @@ const SearchComponent = ({ onResultSelect, placeholder = "Search for music..." }
         <div className="result-actions">
           {spotifyId && (
             <div className="spotify-embed-mini">
-              {item.type === 'track' && (
-                <iframe
-                  src={`https://open.spotify.com/embed/track/${spotifyId}?utm_source=generator&theme=0`}
-                  width="300"
-                  height="80"
-                  frameBorder="0"
-                  allowtransparency="true"
-                  allow="encrypted-media"
-                  title={item.name}
-                />
-              )}
-              {item.type === 'artist' && (
-                <iframe
-                  src={`https://open.spotify.com/embed/artist/${spotifyId}?utm_source=generator&theme=0`}
-                  width="300"
-                  height="80"
-                  frameBorder="0"
-                  allowtransparency="true"
-                  allow="encrypted-media"
-                  title={item.name}
-                />
-              )}
-              {item.type === 'album' && (
-                <iframe
-                  src={`https://open.spotify.com/embed/album/${spotifyId}?utm_source=generator&theme=0`}
-                  width="300"
-                  height="80"
-                  frameBorder="0"
-                  allowtransparency="true"
-                  allow="encrypted-media"
-                  title={item.name}
-                />
-              )}
-              {item.type === 'playlist' && (
-                <iframe
-                  src={`https://open.spotify.com/embed/playlist/${spotifyId}?utm_source=generator&theme=0`}
-                  width="300"
-                  height="80"
-                  frameBorder="0"
-                  allowtransparency="true"
-                  allow="encrypted-media"
-                  title={item.name}
-                />
-              )}
+              <SpotifyEmbed 
+                type={item.type} 
+                id={spotifyId} 
+                width="300" 
+                height="80" 
+              />
             </div>
           )}
         </div>
