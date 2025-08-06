@@ -41,7 +41,6 @@ const MyPlaylist = ({ user }) => {
     }
   };
 
-  // Extract Spotify playlist ID from the URI or external URL
   const getSpotifyPlaylistId = (playlist) => {
     if (playlist.uri) {
       return playlist.uri.split(':')[2];
@@ -57,10 +56,12 @@ const MyPlaylist = ({ user }) => {
   if (loading) {
     return (
       <div className="dashboard-layout">
-            <MiniDrawer />
-      <div className="my-playlist-container">
-        <div className="loading">Loading your playlists...</div>
-      </div>
+        <MiniDrawer />
+        <div className="dashboard-main-content">
+          <div className="my-playlist-container">
+            <div className="loading">Loading your playlists...</div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -68,88 +69,92 @@ const MyPlaylist = ({ user }) => {
   if (!user) {
     return (
       <div className="dashboard-layout">
-            <MiniDrawer />
-      <div className="my-playlist-container">
-        <div className="auth-required">
-          <h2>Authentication Required</h2>
-          <p>Please log in to view your playlists.</p>
+        <MiniDrawer />
+        <div className="dashboard-main-content">
+          <div className="my-playlist-container">
+            <div className="auth-required">
+              <h2>Authentication Required</h2>
+              <p>Please log in to view your playlists.</p>
+            </div>
+          </div>
         </div>
-      </div>
       </div>
     );
   }
 
   return (
     <div className="dashboard-layout">
-          <MiniDrawer />
-    <div className="my-playlist-container">
-      <div className="header-section">
-        <h1>My Playlists</h1>
-        <p>Your personal music collections, {user.username}!</p>
-      </div>
+      <MiniDrawer />
+      <div className="dashboard-main-content">
+        <div className="my-playlist-container">
+          <div className="header-section">
+            <h1>My Playlists</h1>
+            <p>Your personal music collections, {user.username}!</p>
+          </div>
 
-      {error && (
-        <div className="error-message">
-          <p>{error}</p>
-          <button onClick={fetchPlaylists} className="retry-btn">
-            Try Again
-          </button>
-        </div>
-      )}
+          {error && (
+            <div className="error-message">
+              <p>{error}</p>
+              <button onClick={fetchPlaylists} className="retry-btn">
+                Try Again
+              </button>
+            </div>
+          )}
 
-      <div className="playlists-section">
-        {playlists.length > 0 ? (
-          <div className="playlists-embed-list">
-            {playlists.map((playlist, index) => {
-              const playlistId = getSpotifyPlaylistId(playlist);
-              
-              return (
-                <div key={playlist.id} className="playlist-embed-item">
-                  <div className="playlist-number">{index + 1}</div>
-                  {playlistId ? (
-                    <iframe
-                      src={`https://open.spotify.com/embed/playlist/${playlistId}?utm_source=generator&theme=0`}
-                      width="100%"
-                      height="352"
-                      frameBorder="0"
-                      allowFullScreen=""
-                      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                      loading="lazy"
-                      title={playlist.name}
-                    />
-                  ) : (
-                    <div className="embed-fallback">
-                      <div className="fallback-content">
-                        <h4>{playlist.name}</h4>
-                        <p>{playlist.description || 'No description available'}</p>
-                        <p className="track-count">{playlist.tracks.total} tracks</p>
-                        <p className="owner">By: {playlist.owner.display_name}</p>
-                        {playlist.external_urls?.spotify && (
-                          <a 
-                            href={playlist.external_urls.spotify} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="spotify-link"
-                          >
-                            Open in Spotify
-                          </a>
-                        )}
-                      </div>
+          <div className="playlists-section">
+            {playlists.length > 0 ? (
+              <div className="playlists-embed-list">
+                {playlists.map((playlist, index) => {
+                  const playlistId = getSpotifyPlaylistId(playlist);
+                  
+                  return (
+                    <div key={playlist.id} className="playlist-embed-item">
+                      <div className="playlist-number">{index + 1}</div>
+                      {playlistId ? (
+                        <iframe
+                          src={`https://open.spotify.com/embed/playlist/${playlistId}?utm_source=generator&theme=0`}
+                          width="100%"
+                          height="352"
+                          frameBorder="0"
+                          allowFullScreen=""
+                          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                          loading="lazy"
+                          title={playlist.name}
+                        />
+                      ) : (
+                        <div className="embed-fallback">
+                          <div className="fallback-content">
+                            <h4>{playlist.name}</h4>
+                            <p>{playlist.description || 'No description available'}</p>
+                            <p className="track-count">{playlist.tracks.total} tracks</p>
+                            <p className="owner">By: {playlist.owner.display_name}</p>
+                            {playlist.external_urls?.spotify && (
+                              <a 
+                                href={playlist.external_urls.spotify} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="spotify-link"
+                              >
+                                Open in Spotify
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              );
-            })}
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="no-data">
+                <h3>No Playlists Found</h3>
+                <p>You don't have any playlists yet.</p>
+                <p>Create some playlists on Spotify and they'll appear here!</p>
+              </div>
+            )}
           </div>
-        ) : (
-          <div className="no-data">
-            <h3>No Playlists Found</h3>
-            <p>You don't have any playlists yet.</p>
-            <p>Create some playlists on Spotify and they'll appear here!</p>
-          </div>
-        )}
+        </div>
       </div>
-    </div>
     </div>
   );
 };

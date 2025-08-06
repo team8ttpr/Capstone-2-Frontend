@@ -49,7 +49,6 @@ const TopArtist = ({ user }) => {
     long_term: "All Time"
   };
 
-  // Extract Spotify artist ID from the URI or external URL
   const getSpotifyArtistId = (artist) => {
     if (artist.uri) {
       return artist.uri.split(':')[2];
@@ -65,10 +64,12 @@ const TopArtist = ({ user }) => {
   if (loading) {
     return (
       <div className="dashboard-layout">
-            <MiniDrawer />
-      <div className="top-artist-container">
-        <div className="loading">Loading your top artists...</div>
-      </div>
+        <MiniDrawer />
+        <div className="dashboard-main-content">
+          <div className="top-artist-container">
+            <div className="loading">Loading your top artists...</div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -76,109 +77,113 @@ const TopArtist = ({ user }) => {
   if (!user) {
     return (
       <div className="dashboard-layout">
-            <MiniDrawer />
-      <div className="top-artist-container">
-        <div className="auth-required">
-          <h2>Authentication Required</h2>
-          <p>Please log in to view your top artists.</p>
+        <MiniDrawer />
+        <div className="dashboard-main-content">
+          <div className="top-artist-container">
+            <div className="auth-required">
+              <h2>Authentication Required</h2>
+              <p>Please log in to view your top artists.</p>
+            </div>
+          </div>
         </div>
-      </div>
       </div>
     );
   }
 
   return (
     <div className="dashboard-layout">
-          <MiniDrawer />
-    <div className="top-artist-container">
-      <div className="header-section">
-        <h1>Your Top Artists</h1>
-        <p>Discover your most listened to artists, {user.username}!</p>
-      </div>
+      <MiniDrawer />
+      <div className="dashboard-main-content">
+        <div className="top-artist-container">
+          <div className="header-section">
+            <h1>Your Top Artists</h1>
+            <p>Discover your most listened to artists, {user.username}!</p>
+          </div>
 
-      {error && (
-        <div className="error-message">
-          <p>{error}</p>
-          <button onClick={fetchTopArtists} className="retry-btn">
-            Try Again
-          </button>
-        </div>
-      )}
+          {error && (
+            <div className="error-message">
+              <p>{error}</p>
+              <button onClick={fetchTopArtists} className="retry-btn">
+                Try Again
+              </button>
+            </div>
+          )}
 
-      <div className="time-range-selector">
-        <h3>Time Period:</h3>
-        <div className="time-range-buttons">
-          {Object.entries(timeRangeLabels).map(([value, label]) => (
-            <button
-              key={value}
-              className={`time-range-btn ${timeRange === value ? 'active' : ''}`}
-              onClick={() => setTimeRange(value)}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-      </div>
+          <div className="time-range-selector">
+            <h3>Time Period:</h3>
+            <div className="time-range-buttons">
+              {Object.entries(timeRangeLabels).map(([value, label]) => (
+                <button
+                  key={value}
+                  className={`time-range-btn ${timeRange === value ? 'active' : ''}`}
+                  onClick={() => setTimeRange(value)}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
 
-      <div className="artists-section">
-        {topArtists.length > 0 ? (
-          <div className="artists-embed-list">
-            {topArtists.map((artist, index) => {
-              const artistId = getSpotifyArtistId(artist);
-              
-              return (
-                <div key={artist.id} className="artist-embed-item">
-                  <div className="artist-rank">#{index + 1}</div>
-                  {artistId ? (
-                    <iframe
-                      src={`https://open.spotify.com/embed/artist/${artistId}?utm_source=generator&theme=0`}
-                      width="80%"
-                      height="352"
-                      frameBorder="0"
-                      allowFullScreen=""
-                      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                      loading="lazy"
-                      title={`${artist.name}`}
-                    />
-                  ) : (
-                    <div className="embed-fallback">
-                      <div className="fallback-content">
-                        <h4>{artist.name}</h4>
-                        <div className="artist-genres">
-                          {artist.genres.slice(0, 3).map((genre, idx) => (
-                            <span key={idx} className="genre-tag">
-                              {genre}
-                            </span>
-                          ))}
+          <div className="artists-section">
+            {topArtists.length > 0 ? (
+              <div className="artists-embed-list">
+                {topArtists.map((artist, index) => {
+                  const artistId = getSpotifyArtistId(artist);
+                  
+                  return (
+                    <div key={artist.id} className="artist-embed-item">
+                      <div className="artist-rank">#{index + 1}</div>
+                      {artistId ? (
+                        <iframe
+                          src={`https://open.spotify.com/embed/artist/${artistId}?utm_source=generator&theme=0`}
+                          width="80%"
+                          height="352"
+                          frameBorder="0"
+                          allowFullScreen=""
+                          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                          loading="lazy"
+                          title={`${artist.name}`}
+                        />
+                      ) : (
+                        <div className="embed-fallback">
+                          <div className="fallback-content">
+                            <h4>{artist.name}</h4>
+                            <div className="artist-genres">
+                              {artist.genres.slice(0, 3).map((genre, idx) => (
+                                <span key={idx} className="genre-tag">
+                                  {genre}
+                                </span>
+                              ))}
+                            </div>
+                            <p className="popularity">Popularity: {artist.popularity}%</p>
+                            <p className="followers">{artist.followers.total.toLocaleString()} followers</p>
+                            {artist.external_urls?.spotify && (
+                              <a 
+                                href={artist.external_urls.spotify} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="spotify-link"
+                              >
+                                Open in Spotify
+                              </a>
+                            )}
+                          </div>
                         </div>
-                        <p className="popularity">Popularity: {artist.popularity}%</p>
-                        <p className="followers">{artist.followers.total.toLocaleString()} followers</p>
-                        {artist.external_urls?.spotify && (
-                          <a 
-                            href={artist.external_urls.spotify} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="spotify-link"
-                          >
-                            Open in Spotify
-                          </a>
-                        )}
-                      </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              );
-            })}
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="no-data">
+                <h3>No Top Artists Found</h3>
+                <p>You don't have enough listening history to show top artists for this time period.</p>
+                <p>Try selecting a different time range or listen to more music on Spotify!</p>
+              </div>
+            )}
           </div>
-        ) : (
-          <div className="no-data">
-            <h3>No Top Artists Found</h3>
-            <p>You don't have enough listening history to show top artists for this time period.</p>
-            <p>Try selecting a different time range or listen to more music on Spotify!</p>
-          </div>
-        )}
+        </div>
       </div>
-    </div>
     </div>
   );
 };
