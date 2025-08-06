@@ -4,6 +4,7 @@ import { API_URL } from '../shared';
 import { useNavigate } from 'react-router-dom';
 import '../style/MyPlaylist.css';
 import MiniDrawer from '../components/MiniDrawer';
+import SpotifyEmbed from '../components/SpotifyEmbed';
 
 const MyPlaylist = ({ user }) => {
   const [playlists, setPlaylists] = useState([]);
@@ -107,15 +108,12 @@ const MyPlaylist = ({ user }) => {
                 <div key={playlist.id} className="playlist-embed-item">
                   <div className="playlist-number">{index + 1}</div>
                   {playlistId ? (
-                    <iframe
-                      src={`https://open.spotify.com/embed/playlist/${playlistId}?utm_source=generator&theme=0`}
+                    // tran to shared spotify embed component 
+                    <SpotifyEmbed 
+                      type="playlist"
+                      id={playlistId}
                       width="100%"
-                      height="352"
-                      frameBorder="0"
-                      allowFullScreen=""
-                      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                      loading="lazy"
-                      title={playlist.name}
+                      height={352}
                     />
                   ) : (
                     <div className="embed-fallback">
