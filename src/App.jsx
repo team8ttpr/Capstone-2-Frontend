@@ -2,7 +2,13 @@ import React, { useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import axios from "axios";
 import "./AppStyles.css";
-import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useNavigate,
+  Navigate,
+} from "react-router-dom";
 import { API_URL } from "./shared";
 import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
 import { auth0Config } from "./auth0-config";
@@ -10,17 +16,18 @@ import Auth from "./pages/auth";
 import NavBar from "./components/NavBar";
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
-import SpotifyCallback from "./components/SpotifyCallback"; 
+import SpotifyCallback from "./components/SpotifyCallback";
 import Analytics from "./pages/Analytics";
-import TopArtist from "./pages/topArtist"; 
-import TopTracks from "./pages/topTracks"; 
-import Feed from "./pages/Feed"; 
-import Messages from "./pages/Messages"; 
-import Friends from "./pages/Friends"; 
+import TopArtist from "./pages/topArtist";
+import TopTracks from "./pages/topTracks";
+import Feed from "./pages/feed";
+import Messages from "./pages/Messages";
+import Friends from "./pages/Friends";
 import Notifications from "./pages/Notifications";
-import MyPlaylist from "./pages/MyPlaylist"; 
-import MyPost from "./pages/myPost"; 
-import Profile from "./pages/Profile"; 
+import MyPlaylist from "./pages/MyPlaylist";
+import MyPost from "./pages/myPost";
+import Profile from "./pages/Profile";
+import PostCard from "./components/PostCard";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -28,13 +35,16 @@ function App() {
   const navigate = useNavigate();
 
   const {
-    isAuthenticated, isLoading: auth0Loading, user: auth0User, logout: auth0Logout,
+    isAuthenticated,
+    isLoading: auth0Loading,
+    user: auth0User,
+    logout: auth0Logout,
   } = useAuth0();
 
   useEffect(() => {
     const requestInterceptor = axios.interceptors.request.use(
       (config) => {
-        const token = localStorage.getItem('authToken');
+        const token = localStorage.getItem("authToken");
         if (token && !config.headers.Authorization) {
           config.headers.Authorization = `Bearer ${token}`;
         }
@@ -49,7 +59,7 @@ function App() {
       (response) => response,
       (error) => {
         if (error.response?.status === 401) {
-          localStorage.removeItem('authToken');
+          localStorage.removeItem("authToken");
           setUser(null);
         }
         return Promise.reject(error);
@@ -106,7 +116,7 @@ function App() {
       );
 
       if (response.data.token) {
-        localStorage.setItem('authToken', response.data.token);
+        localStorage.setItem("authToken", response.data.token);
       }
 
       setUser(response.data.user);
@@ -153,27 +163,54 @@ function App() {
         <Routes>
           {/* Auth Routes */}
           <Route path="/auth" element={<Auth setUser={setUser} />} />
-          
+
           {/* Main Routes */}
           <Route path="/" element={<Home />} />
-          <Route path="/callback/spotify" element={<SpotifyCallback setUser={setUser} />} />
-          
+          <Route
+            path="/callback/spotify"
+            element={<SpotifyCallback setUser={setUser} />}
+          />
+
           {/* Dashboard Routes */}
-          <Route path="/dashboard" element={<Navigate to="/dashboard/analytics" replace />} />
-          <Route path="/dashboard/analytics" element={<Analytics user={user} />} />
-          <Route path="/dashboard/topartist" element={<TopArtist user={user} />} />
-          <Route path="/dashboard/toptracks" element={<TopTracks user={user} />} />
-          <Route path="/dashboard/myplaylist" element={<MyPlaylist user={user} />} />
-          <Route path="/dashboard/toptracks" element={<TopTracks user={user} />} />
-          
+          <Route
+            path="/dashboard"
+            element={<Navigate to="/dashboard/analytics" replace />}
+          />
+          <Route
+            path="/dashboard/analytics"
+            element={<Analytics user={user} />}
+          />
+          <Route
+            path="/dashboard/topartist"
+            element={<TopArtist user={user} />}
+          />
+          <Route
+            path="/dashboard/toptracks"
+            element={<TopTracks user={user} />}
+          />
+          <Route
+            path="/dashboard/myplaylist"
+            element={<MyPlaylist user={user} />}
+          />
+          <Route
+            path="/dashboard/toptracks"
+            element={<TopTracks user={user} />}
+          />
+
           {/* Social Routes */}
-          <Route path="/social" element={<Navigate to="/social/feed" replace />} />
+          <Route
+            path="/social"
+            element={<Navigate to="/social/feed" replace />}
+          />
           <Route path="/social/feed" element={<Feed user={user} />} />
           <Route path="/social/messages" element={<Messages user={user} />} />
           <Route path="/social/mypost" element={<MyPost user={user} />} />
           <Route path="/social/friends" element={<Friends user={user} />} />
-          <Route path="/social/notifications" element={<Notifications user={user} />} />
-          
+          <Route
+            path="/social/notifications"
+            element={<Notifications user={user} />}
+          />
+
           {/* Profile Route */}
           <Route path="/profile" element={<Profile user={user} />} />
 

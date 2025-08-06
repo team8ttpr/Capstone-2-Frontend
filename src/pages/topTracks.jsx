@@ -10,8 +10,8 @@ import SpotifyEmbed from "../components/SpotifyEmbed";
 const TopTracks = ({ user }) => {
   const [topTracks, setTopTracks] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [timeRange, setTimeRange] = useState('medium_term');
+  const [error, setError] = useState("");
+  const [timeRange, setTimeRange] = useState("medium_term");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,21 +25,23 @@ const TopTracks = ({ user }) => {
   const fetchTopTracks = async () => {
     try {
       setLoading(true);
-      setError('');
-      
+      setError("");
+
       const response = await axios.get(`${API_URL}/auth/spotify/top-tracks`, {
         params: { time_range: timeRange },
         withCredentials: true,
       });
-      
+
       setTopTracks(response.data.items || []);
     } catch (error) {
       if (error.response?.status === 401) {
         navigate("/auth");
         return;
       }
-      setError('Failed to load top tracks. Please make sure Spotify is connected.');
-      console.error('Error fetching top tracks:', error);
+      setError(
+        "Failed to load top tracks. Please make sure Spotify is connected."
+      );
+      console.error("Error fetching top tracks:", error);
     } finally {
       setLoading(false);
     }
@@ -47,13 +49,13 @@ const TopTracks = ({ user }) => {
 
   const timeRangeLabels = {
     short_term: "Last 4 Weeks",
-    medium_term: "Last 6 Months", 
-    long_term: "All Time"
+    medium_term: "Last 6 Months",
+    long_term: "All Time",
   };
 
   const getSpotifyTrackId = (track) => {
     if (track.uri) {
-      return track.uri.split(':')[2];
+      return track.uri.split(":")[2];
     }
     if (track.external_urls?.spotify) {
       const url = track.external_urls.spotify;
@@ -64,7 +66,7 @@ const TopTracks = ({ user }) => {
   };
 
   const handleResultSelect = (result) => {
-    console.log('Selected:', result);
+    console.log("Selected:", result);
   };
 
   if (loading) {
@@ -115,7 +117,7 @@ const TopTracks = ({ user }) => {
             </div>
           )}
 
-          <SearchComponent 
+          <SearchComponent
             onResultSelect={handleResultSelect}
             placeholder="Search for songs, artists, albums, or playlists..."
           />
@@ -126,7 +128,9 @@ const TopTracks = ({ user }) => {
               {Object.entries(timeRangeLabels).map(([value, label]) => (
                 <button
                   key={value}
-                  className={`time-range-btn ${timeRange === value ? 'active' : ''}`}
+                  className={`time-range-btn ${
+                    timeRange === value ? "active" : ""
+                  }`}
                   onClick={() => setTimeRange(value)}
                 >
                   {label}
@@ -140,27 +144,31 @@ const TopTracks = ({ user }) => {
               <div className="tracks-embed-list">
                 {topTracks.map((track, index) => {
                   const trackId = getSpotifyTrackId(track);
-                  
+
                   return (
                     <div key={track.id} className="track-embed-item">
                       <div className="track-rank">#{index + 1}</div>
                       {trackId ? (
-                        <SpotifyEmbed 
-                          type="track" 
-                          id={trackId} 
-                          width="100%" 
-                          height="152" 
+                        <SpotifyEmbed
+                          type="track"
+                          id={trackId}
+                          width="100%"
+                          height="152"
                         />
                       ) : (
                         <div className="embed-fallback">
                           <div className="fallback-content">
                             <h4>{track.name}</h4>
-                            <p>{track.artists.map(artist => artist.name).join(', ')}</p>
+                            <p>
+                              {track.artists
+                                .map((artist) => artist.name)
+                                .join(", ")}
+                            </p>
                             <p className="album-name">{track.album.name}</p>
                             {track.external_urls?.spotify && (
-                              <a 
-                                href={track.external_urls.spotify} 
-                                target="_blank" 
+                              <a
+                                href={track.external_urls.spotify}
+                                target="_blank"
                                 rel="noopener noreferrer"
                                 className="spotify-link"
                               >
@@ -177,8 +185,14 @@ const TopTracks = ({ user }) => {
             ) : (
               <div className="no-data">
                 <h3>No Top Tracks Found</h3>
-                <p>You don't have enough listening history to show top tracks for this time period.</p>
-                <p>Try selecting a different time range or listen to more music on Spotify!</p>
+                <p>
+                  You don't have enough listening history to show top tracks for
+                  this time period.
+                </p>
+                <p>
+                  Try selecting a different time range or listen to more music
+                  on Spotify!
+                </p>
               </div>
             )}
           </div>
