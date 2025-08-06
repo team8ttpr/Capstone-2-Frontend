@@ -1,48 +1,63 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import PostCard from "../components/PostCard";
 import Modal from "../components/PostForm";
 import MiniDrawer from "../components/MiniDrawer";
-import "../style/MyPost.css";
 
 const MyPost = () => {
+  const [posts, setPosts] = useState([]);
+  const [filter, setFilter] = useState("all"); // 'all', 'draft', or 'published'
+  const [currentUser, setCurrentUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
 
+  useEffect(() => {
+    // Fetch current user
+    axios
+      .get("http://localhost:8080/auth/me", { withCredentials: true })
+      .then((res) => setCurrentUser(res.data.user))
+      .catch((err) => console.error("Failed to fetch current user:", err));
+
+    // Fetch logged-in user's posts
+    axios
+      .get("http://localhost:8080/api/posts/mine", { withCredentials: true })
+      .then((res) => setPosts(res.data))
+      .catch((err) => console.error("Failed to fetch my posts:", err));
+  }, []);
+
+  const filteredPosts = posts.filter((post) => {
+    if (filter === "all") return true;
+    return post.status === filter;
+  });
+
   return (
-    <div className="dashboard-layout">
+    <div className="dashboard-summary">
       <MiniDrawer menuType="social" />
       <div className="dashboard-main-content">
-        <div className="my-post-container">
-          <div className="header-section">
-            <h1>My Posts</h1>
-            <p>Create and manage your posts and drafts.</p>
+        <div className="dashboard-summary">
+          <h1>My Posts</h1>
+          <p>This is the page for user's posts and drafts.</p>
+
+          {/* Filter Buttons */}
+          <div style={{ marginBottom: "1rem" }}>
+            <button onClick={() => setFilter("all")}>All</button>
+            <button onClick={() => setFilter("published")}>Published</button>
+            <button onClick={() => setFilter("draft")}>Draft</button>
+            <button onClick={toggleModal}>+ Create Post</button>
           </div>
 
-          <div className="create-post-section">
-            <div className="post-form-container">
-              <h2>Share Your Music</h2>
-              <p>
-                Create a post and add your favorite music to share with the
-                community.
-              </p>
+          <Modal modal={isModalOpen} toggleModal={toggleModal} />
 
-              <div className="modal-trigger-section">
-                <Modal modal={isModalOpen} toggleModal={toggleModal} />
-              </div>
-            </div>
-          </div>
-
-          <div className="posts-list-section">
-            <h2>Your Posts</h2>
-            <div className="posts-placeholder">
-              <p>
-                Your created posts will appear here once the backend routes are
-                implemented.
-              </p>
-            </div>
-          </div>
+          {filteredPosts.length === 0 ? (
+            <p>No posts found for selected filter.</p>
+          ) : (
+            filteredPosts.map((post) => (
+              <PostCard key={post.id} post={post} currentUser={currentUser} />
+            ))
+          )}
         </div>
       </div>
     </div>
