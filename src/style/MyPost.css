@@ -1,0 +1,85 @@
+.my-post-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.header-section {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.header-section h1 {
+  margin-bottom: 0.5rem;
+  font-size: 2rem;
+}
+
+.header-section p {
+  color: #666;
+  margin: 0;
+}
+
+.create-post-section {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.create-post-section h2 {
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+}
+
+.create-post-section p {
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.create-post-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.create-post-btn:hover {
+  background: #0056b3;
+}
+
+.posts-list-section {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 2rem;
+}
+
+.posts-list-section h2 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.posts-placeholder {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .my-post-container {
+    padding: 1rem;
+  }
+  
+  .create-post-section,
+  .posts-list-section {
+    padding: 1rem;
+  }
+}

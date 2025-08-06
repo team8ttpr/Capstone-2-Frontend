@@ -1,0 +1,397 @@
+.top-artist-container {
+  max-width: 1800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  min-height: 500px;
+}
+
+.header-section {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.header-section h1 {
+  color: #333;
+  margin-bottom: 0.5rem;
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.header-section p {
+  color: #666;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 2rem;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.auth-required {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #666;
+}
+
+.auth-required h2 {
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.error-message {
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  color: #721c24;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.retry-btn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  transition: background 0.2s ease;
+}
+
+.retry-btn:hover {
+  background: #c82333;
+}
+
+.time-range-selector {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.time-range-selector h3 {
+  color: #333;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.time-range-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.time-range-btn {
+  background: #ffffff;
+  border: 2px solid #e9ecef;
+  padding: 0.75rem 1.5rem;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #495057;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  min-width: 120px;
+  text-align: center;
+  font-family: inherit;
+  outline: none;
+}
+
+.time-range-btn:hover {
+  background: #f8f9fa;
+  border-color: #1db954;
+  color: #1db954;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.time-range-btn.active {
+  background: #1db954;
+  border-color: #1db954;
+  color: white;
+  box-shadow: 0 2px 8px rgba(29, 185, 84, 0.3);
+}
+
+.time-range-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(29, 185, 84, 0.2);
+}
+
+.artists-section {
+  width: 100%;
+}
+
+.artists-embed-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.artist-embed-item {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
+  transition: all 0.2s ease;
+  min-height: 220px;
+  width: 100%;
+}
+
+.artist-embed-item:hover {
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.artist-rank {
+  font-weight: bold;
+  font-size: 1.4rem;
+  color: #1db954;
+  min-width: 60px;
+  text-align: center;
+  flex-shrink: 0;
+  background: white;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #1db954;
+}
+
+.artist-embed-item iframe {
+  width: 800px;
+  height: 180px;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.embed-fallback {
+  width: 800px;
+  height: 180px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  flex-shrink: 0;
+}
+
+.fallback-content {
+  text-align: center;
+  padding: 1rem;
+}
+
+.fallback-content h4 {
+  color: #333;
+  margin-bottom: 0.75rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.artist-genres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  justify-content: center;
+}
+
+.genre-tag {
+  background: #e9ecef;
+  color: #495057;
+  padding: 0.25rem 0.75rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.fallback-content p {
+  color: #666;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.popularity {
+  font-weight: 500;
+  color: #1db954 !important;
+}
+
+.followers {
+  color: #888 !important;
+  font-style: italic;
+}
+
+.spotify-link {
+  display: inline-block;
+  background: #1db954;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-top: 0.75rem;
+  transition: all 0.2s ease;
+}
+
+.spotify-link:hover {
+  background: #1aa34a;
+  color: white;
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
+.no-data {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #666;
+}
+
+.no-data h3 {
+  color: #333;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.no-data p {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+@media (max-width: 1600px) {
+  .top-artist-container {
+    max-width: 1400px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .top-artist-container {
+    max-width: 1000px;
+  }
+  
+  .artist-embed-item iframe {
+    width: 600px;
+    height: 160px;
+  }
+  
+  .embed-fallback {
+    width: 600px;
+    height: 160px;
+  }
+}
+
+@media (max-width: 900px) {
+  .artist-embed-item iframe {
+    width: 500px;
+    height: 152px;
+  }
+  
+  .embed-fallback {
+    width: 500px;
+    height: 152px;
+  }
+}
+
+@media (max-width: 768px) {
+  .top-artist-container {
+    margin: 1rem;
+    padding: 1rem;
+    max-width: none;
+  }
+  
+  .header-section h1 {
+    font-size: 2rem;
+  }
+  
+  .time-range-buttons {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .time-range-btn {
+    width: 200px;
+    min-width: 200px;
+  }
+  
+  .artist-embed-item {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+    padding: 1.5rem;
+  }
+  
+  .artist-rank {
+    align-self: center;
+    width: 50px;
+    height: 50px;
+    font-size: 1.2rem;
+  }
+  
+  .artist-embed-item iframe {
+    width: 100%;
+    max-width: 400px;
+    height: 152px;
+  }
+  
+  .embed-fallback {
+    width: 100%;
+    max-width: 400px;
+    height: 152px;
+  }
+}
+
+@media (max-width: 480px) {
+  .time-range-btn {
+    width: 100%;
+    min-width: auto;
+  }
+  
+  .artists-embed-list {
+    gap: 1rem;
+  }
+  
+  .artist-embed-item {
+    padding: 1rem;
+  }
+  
+  .artist-rank {
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+  }
+  
+  .artist-embed-item iframe {
+    width: 100%;
+    max-width: 300px;
+    height: 152px;
+  }
+  
+  .embed-fallback {
+    width: 100%;
+    max-width: 300px;
+    height: 152px;
+  }
+}
