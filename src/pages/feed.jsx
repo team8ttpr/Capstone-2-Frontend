@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import MiniDrawer from "../components/MiniDrawer";
-import PostCard from "../components/PostCard"; // ✅ Make sure this path is correct
 import axios from "axios";
 import PostCard from "../components/PostCard";
 import style from "../style/PostCard.css";
-import MiniDrawer from "../components/MiniDrawer";
 
 const Feed = () => {
   const [posts, setPosts] = useState([]);
