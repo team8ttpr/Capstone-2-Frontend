@@ -20,7 +20,7 @@ import SpotifyCallback from "./components/SpotifyCallback";
 import Analytics from "./pages/Analytics";
 import TopArtist from "./pages/topArtist";
 import TopTracks from "./pages/topTracks";
-import Feed from "./pages/Feed";
+import Feed from "./pages/feed";
 import Messages from "./pages/Messages";
 import Friends from "./pages/Friends";
 import Notifications from "./pages/Notifications";

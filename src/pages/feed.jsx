@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import MiniDrawer from "../components/MiniDrawer";
+import PostCard from "../components/PostCard"; // ✅ Make sure this path is correct
+import axios from "axios";
 
 const Feed = () => {
   const [posts, setPosts] = useState([]);
@@ -19,8 +21,12 @@ const Feed = () => {
       <MiniDrawer menuType="social" />
       <div className="dashboard-main-content">
         <div className="dashboard-summary">
-          <h1>Social Feed</h1>
-          <p>This is the page for user's feed.</p>
+          <h1 style={{ textAlign: "center" }}>Feed</h1>
+          {posts.length === 0 ? (
+            <p style={{ textAlign: "center" }}>No public posts yet.</p>
+          ) : (
+            posts.map((post) => <PostCard key={post.id} post={post} />)
+          )}
         </div>
       </div>
     </div>
