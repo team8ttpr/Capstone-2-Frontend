@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import '../style/MiniDrawer.css';
 import {
   ChevronLeft,
@@ -44,6 +44,7 @@ const iconComponents = {
 
 export default function MiniDrawer({ menuType = 'dashboard' }) {
   const [open, setOpen] = useState(true);
+  const location = useLocation();
   
   const menuItems = menuType === 'social' ? socialMenuItems : dashboardMenuItems;
 
@@ -70,7 +71,7 @@ export default function MiniDrawer({ menuType = 'dashboard' }) {
             <li key={item.text} className="sidebar-list-item">
               <Link
                 to={item.path}
-                className={`sidebar-list-button ${!open ? 'collapsed' : ''}`}
+                className={`sidebar-list-button ${!open ? 'collapsed' : ''} ${location.pathname === item.path ? 'active' : ''}`}
               >
                 <div className={`sidebar-list-icon ${!open ? 'collapsed' : ''}`}>
                   {getIcon(item.icon)}
