@@ -22,9 +22,6 @@ const NavBar = ({ user, onLogout }) => {
           <Link to="/ai-playlist" className="nav-link">AI Playlist</Link>
         </div>
 
-        <div className="nav-section">
-          <Link to="/profile" className="nav-link">My Profile</Link>
-        </div>
       </div>
 
       <div className="nav-links">
