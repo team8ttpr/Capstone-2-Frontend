@@ -27,7 +27,6 @@ import Notifications from "./pages/Notifications";
 import MyPlaylist from "./pages/MyPlaylist";
 import MyPost from "./pages/myPost";
 import Profile from "./pages/Profile";
-import PostCard from "./components/PostCard";
 
 function App() {
   const [user, setUser] = useState(null);
