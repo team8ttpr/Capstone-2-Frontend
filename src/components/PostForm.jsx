@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import SearchComponent from './SearchComponent';
 import SpotifyEmbed from './SpotifyEmbed';
 import "../style/PostForm.css";
+import axios from "axios";
+import { API_URL } from "../shared";
 
 export default function Modal({ toggleModal }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,7 +42,7 @@ export default function Modal({ toggleModal }) {
     setSelectedEmbed(null);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     const postData = {
@@ -49,8 +51,12 @@ export default function Modal({ toggleModal }) {
       spotifyType: selectedEmbed ? selectedEmbed.type : null,
       embedData: selectedEmbed || null
     };
-    
-    console.log("Form submitted:", postData);
+
+    await axios.post(`${API_URL}/api/posts`, postData, {
+          payload: {
+            withCredentials: true
+          }
+        });
 
     setFormData({ title: "", description: "" });
     setSelectedEmbed(null);
