@@ -57,7 +57,8 @@
 .title {
   font-weight: 600;
   font-size: 16px;
-  margin-bottom: 4px;
+  color: #111; /* ✅ visible dark color */
+  margin-bottom: 6px;
 }
 
 .description {
