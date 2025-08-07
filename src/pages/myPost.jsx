@@ -3,6 +3,7 @@ import axios from "axios";
 import PostCard from "../components/PostCard";
 import Modal from "../components/PostForm";
 import MiniDrawer from "../components/MiniDrawer";
+import { use } from "react";
 
 const MyPost = () => {
   const [posts, setPosts] = useState([]);
@@ -28,10 +29,25 @@ const MyPost = () => {
       .catch((err) => console.error("Failed to fetch my posts:", err));
   }, []);
 
-  const filteredPosts = posts.filter((post) => {
-    if (filter === "all") return true;
-    return post.status === filter;
-  });
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        let url = "http://localhost:8080/api/posts/mine";
+
+        if (filter === "draft") {
+          url = "http://localhost:8080/api/posts/drafts";
+        } else if (filter === "published") {
+          url = "http://localhost:8080/api/posts/published";
+        }
+        const response = await axios.get(url, { withCredentials: true });
+        setPosts(response.data);
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      }
+    };
+
+    fetchPosts();
+  }, [filter]);
 
   return (
     <div className="dashboard-summary">
@@ -51,10 +67,10 @@ const MyPost = () => {
 
           <Modal modal={isModalOpen} toggleModal={toggleModal} />
 
-          {filteredPosts.length === 0 ? (
+          {posts.length === 0 ? (
             <p>No posts found for selected filter.</p>
           ) : (
-            filteredPosts.map((post) => (
+            posts.map((post) => (
               <PostCard key={post.id} post={post} currentUser={currentUser} />
             ))
           )}
