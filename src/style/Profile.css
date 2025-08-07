@@ -1,0 +1,502 @@
+/* Profile Page Styles */
+.profile-container {
+  max-width: 1400px; /* Increased from 1000px to make it much wider */
+  margin: 0 auto;
+  padding: 30px;
+  width: 100%;
+  min-width: 300px; /* Prevent container from becoming too skinny */
+  box-sizing: border-box;
+}
+
+.profile-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  padding: 50px;
+  margin-top: 30px;
+  min-height: 400px; /* Reduced from 600px to make it less tall */
+  width: 100%;
+  min-width: 280px; /* Prevent card from becoming too skinny */
+  box-sizing: border-box;
+}
+
+/* Profile Header */
+.profile-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px; /* Reduced from 25px */
+  gap: 30px; /* Increased gap for wider layout */
+}
+
+.profile-avatar {
+  width: 90px; /* Slightly larger avatar */
+  height: 90px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #1976d2;
+}
+
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #1976d2, #42a5f5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px; /* Slightly larger for bigger avatar */
+  font-weight: bold;
+  color: white;
+}
+
+.profile-info h2 {
+  margin: 0 0 5px 0;
+  font-size: 26px; /* Slightly larger */
+  color: #333;
+  font-weight: 600;
+}
+
+.profile-email {
+  color: #666;
+  font-size: 15px; /* Slightly larger */
+  margin: 0;
+}
+
+/* Profile Stats - Count Bar */
+.profile-stats {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px; /* Reduced from 25px */
+  padding: 18px; /* Slightly more padding */
+  background: #f8f9fa;
+  border-radius: 10px; /* Slightly more rounded */
+  border: 1px solid #e9ecef;
+}
+
+.stat-item {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-value {
+  font-size: 20px;
+  font-weight: bold;
+  color: #1976d2;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #666;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Profile Bio */
+.profile-bio {
+  margin-bottom: 30px; /* Reduced from 40px */
+}
+
+.profile-bio h3 {
+  margin-bottom: 12px; /* Reduced from 15px */
+  color: #333;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.profile-bio p {
+  color: #666;
+  line-height: 1.6; /* Slightly more compact */
+  font-size: 18px;
+  background: #f8f9fa;
+  padding: 18px; /* Slightly reduced padding */
+  border-radius: 8px;
+  border-left: 4px solid #1976d2;
+}
+
+/* Profile Actions */
+.profile-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.edit-profile-btn {
+  background: #1976d2;
+  color: white;
+  border: none;
+  padding: 16px 32px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+}
+
+.edit-profile-btn:hover {
+  background: #1565c0;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(25, 118, 210, 0.4);
+}
+
+/* Loading and Error States */
+.profile-loading,
+.profile-error {
+  text-align: center;
+  padding: 40px;
+  font-size: 18px;
+}
+
+.profile-loading {
+  color: #666;
+}
+
+.profile-error {
+  color: #d32f2f;
+}
+
+/* Spotify Items */
+.spotify-items {
+  margin-bottom: 30px; /* Reduced from 40px */
+}
+
+.spotify-items h3 {
+  margin-bottom: 18px; /* Slightly reduced from 20px */
+  color: #333;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.spotify-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* Display all 5 items in one row */
+  gap: 25px;
+}
+
+.spotify-item {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  border: 2px solid #e9ecef;
+  transition: all 0.2s ease;
+}
+
+.spotify-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  border-color: #1db954;
+}
+
+.spotify-album-cover {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 15px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.album-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #1db954, #1ed760);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  color: white;
+}
+
+.spotify-info h4 {
+  margin: 0 0 5px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.spotify-info p {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+}
+
+/* Responsive */
+/* Large tablets and small desktops */
+@media (max-width: 1200px) {
+  .profile-container {
+    max-width: 1200px;
+    padding: 25px;
+  }
+  
+  .spotify-grid {
+    grid-template-columns: repeat(3, 1fr); /* 3 items per row on medium screens */
+    gap: 20px;
+  }
+}
+
+/* Small tablets */
+@media (max-width: 900px) {
+  .profile-container {
+    max-width: 900px;
+    padding: 20px;
+  }
+  
+  .spotify-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 items per row on smaller screens */
+    gap: 18px;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 15px;
+    max-width: 100%;
+    width: 100%;
+  }
+  
+  .profile-card {
+    padding: 30px 25px;
+    min-height: auto;
+    margin-top: 20px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .profile-avatar {
+    width: 90px;
+    height: 90px;
+  }
+  
+  .avatar-placeholder {
+    font-size: 36px;
+  }
+  
+  .profile-info h2 {
+    font-size: 22px;
+  }
+  
+  .profile-stats {
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .stat-item {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #e9ecef;
+  }
+  
+  .stat-item:last-child {
+    border-bottom: none;
+  }
+  
+  .stat-value {
+    font-size: 24px;
+  }
+  
+  .stat-label {
+    font-size: 14px;
+  }
+  
+  .profile-bio {
+    margin-bottom: 25px;
+  }
+  
+  .profile-bio h3 {
+    font-size: 20px;
+  }
+  
+  .profile-bio p {
+    font-size: 16px;
+    padding: 15px;
+  }
+  
+  .spotify-items {
+    margin-bottom: 25px;
+  }
+  
+  .spotify-items h3 {
+    font-size: 20px;
+  }
+  
+  .spotify-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+  }
+  
+  .spotify-item {
+    padding: 15px;
+  }
+  
+  .spotify-album-cover {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 10px;
+  }
+  
+  .album-placeholder {
+    font-size: 24px;
+  }
+  
+  .edit-profile-btn {
+    width: 100%;
+    padding: 14px 20px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-container {
+    padding: 10px;
+    width: 100%;
+  }
+  
+  .profile-card {
+    padding: 25px 20px;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 100%;
+    margin: 10px 0;
+    box-sizing: border-box;
+  }
+  
+  .profile-header {
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  
+  .profile-avatar {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .avatar-placeholder {
+    font-size: 28px;
+  }
+  
+  .profile-info h2 {
+    font-size: 20px;
+    line-height: 1.2;
+  }
+  
+  .profile-email {
+    font-size: 13px;
+  }
+  
+  .profile-stats {
+    padding: 15px;
+    margin-bottom: 18px;
+  }
+  
+  .stat-item {
+    padding: 8px 0;
+  }
+  
+  .stat-value {
+    font-size: 22px;
+  }
+  
+  .stat-label {
+    font-size: 13px;
+  }
+  
+  .profile-bio h3 {
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+  
+  .profile-bio p {
+    font-size: 15px;
+    padding: 12px;
+    line-height: 1.5;
+  }
+  
+  .spotify-items h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+  }
+  
+  .spotify-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+  }
+  
+  .spotify-item {
+    padding: 15px 10px;
+    min-width: 0;
+  }
+  
+  .spotify-album-cover {
+    width: 55px;
+    height: 55px;
+    margin-bottom: 8px;
+  }
+  
+  .album-placeholder {
+    font-size: 22px;
+  }
+  
+  .spotify-info h4 {
+    font-size: 14px;
+    line-height: 1.3;
+    margin-bottom: 3px;
+  }
+  
+  .spotify-info p {
+    font-size: 12px;
+    line-height: 1.3;
+  }
+  
+  .edit-profile-btn {
+    padding: 12px 20px;
+    font-size: 15px;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+}
+
+/* Extra small screens - ensure minimum width */
+@media (max-width: 360px) {
+  .profile-container {
+    padding: 8px;
+    min-width: 320px;
+  }
+  
+  .profile-card {
+    padding: 20px 15px;
+    min-width: 300px;
+  }
+  
+  .spotify-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .spotify-item {
+    padding: 12px;
+    max-width: 100%;
+  }
+}

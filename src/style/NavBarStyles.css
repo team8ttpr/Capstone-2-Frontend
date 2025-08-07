@@ -72,6 +72,18 @@
   font-weight: 500;
 }
 
+.username-link {
+  color: #666;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.username-link:hover {
+  color: #007bff;
+  text-decoration: underline;
+}
+
 .logout-btn {
   background-color: #dc3545;
   color: white;

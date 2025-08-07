@@ -26,7 +26,7 @@ import Friends from "./pages/Friends";
 import Notifications from "./pages/Notifications";
 import MyPlaylist from "./pages/MyPlaylist";
 import MyPost from "./pages/myPost";
-import Profile from "./pages/Profile";
+import Profile from "./pages/profile";
 import PostCard from "./components/PostCard";
 
 function App() {

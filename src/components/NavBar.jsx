@@ -30,7 +30,9 @@ const NavBar = ({ user, onLogout }) => {
       <div className="nav-links">
         {user ? (
           <div className="user-section">
-            <span className="username">Welcome, {user.username}!</span>
+            <Link to="/profile" className="username-link">
+              Welcome, {user.username}!
+            </Link>
             <button onClick={onLogout} className="logout-btn">
               Logout
             </button>
