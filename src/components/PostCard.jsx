@@ -88,9 +88,28 @@ const PostCard = ({ post, user }) => {
 
       {/* Post Body */}
       <div className="post-body">
-        <p className="title">{post.title}</p>
-        <p className="description">{post.description}</p>
-        <div className="embed-placeholder">Embed coming soon...</div>
+        {/* Left side: title + description */}
+        <div className="post-left">
+          <p className="title">{post.title}</p>
+          <p className="description">{post.description}</p>
+        </div>
+
+        {/* Right side: Spotify Embed */}
+        <div className="post-right">
+          {post.spotifyEmbedUrl ? (
+            <iframe
+              src={post.spotifyEmbedUrl}
+              width="300"
+              height="152"
+              frameBorder="0"
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              allowFullScreen
+              loading="lazy"
+            ></iframe>
+          ) : (
+            <div className="embed-placeholder">Embed coming soon...</div>
+          )}
+        </div>
       </div>
 
       {/* Post Footer */}

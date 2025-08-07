@@ -36,7 +36,22 @@
 }
 
 .post-body {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
   margin-top: 10px;
+  width: 100%;
+}
+
+.post-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.post-right {
+  width: 300px;
+  flex-shrink: 0;
 }
 
 .title {
