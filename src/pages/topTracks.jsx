@@ -117,11 +117,6 @@ const TopTracks = ({ user }) => {
             </div>
           )}
 
-          <SearchComponent
-            onResultSelect={handleResultSelect}
-            placeholder="Search for songs, artists, albums, or playlists..."
-          />
-
           <div className="time-range-selector">
             <h3>Time Period:</h3>
             <div className="time-range-buttons">
