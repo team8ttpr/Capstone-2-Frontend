@@ -1,6 +1,6 @@
 
 .dashboard-drawer {
-  position: fixed;
+  position: absolute;
   left: 0;
   top: 70px;
   width: 240px;
