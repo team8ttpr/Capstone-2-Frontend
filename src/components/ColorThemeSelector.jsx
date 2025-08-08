@@ -3,7 +3,7 @@ import { Palette, Check } from '@mui/icons-material';
 import { colorThemes, themeCategories } from '../utils/themeManager';
 import '../style/ColorThemeSelector.css';
 
-const ColorThemeSelector = ({ currentTheme, onThemeChange, isOpen, onToggle }) => {
+const ColorThemeSelector = ({ currentTheme, onThemeChange, isOpen, onToggle, hideToggleButton = false }) => {
   // helper function to format theme names
   const formatThemeName = (themeId) => {
     return themeId.charAt(0).toUpperCase() + themeId.slice(1).replace(/([A-Z])/g, ' $1');
@@ -27,14 +27,16 @@ const ColorThemeSelector = ({ currentTheme, onThemeChange, isOpen, onToggle }) =
 
   return (
     <div className="color-theme-selector">
-      <button 
-        className="theme-toggle-btn"
-        onClick={onToggle}
-        title="Change profile theme"
-      >
-        <Palette />
-        Theme
-      </button>
+      {!hideToggleButton && (
+        <button 
+          className="theme-toggle-btn"
+          onClick={onToggle}
+          title="Change profile theme"
+        >
+          <Palette />
+          Theme
+        </button>
+      )}
       
       {isOpen && (
         <div className="theme-dropdown">

@@ -237,7 +237,7 @@
   transform: translateY(-1px);
 }
 
-/* Profile buttons Section (edit,theme,view public profile,maybe stickers in the future */
+/* Profile buttons Section (edit,theme,view public profile,maybe stickers in the future) */
 .profile-actions {
   display: flex;
   gap: 12px;
@@ -406,42 +406,145 @@
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
 }
+
+/* Circular Action Buttons REVAMP */
+.profile-action-buttons {
+  position: fixed;
+  top: 8rem;
+  left: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  z-index: 999;
+  transition: left 0.3s ease;
+}
+
+/* where drawer is collapsed */
+.dashboard-layout:has(.dashboard-drawer.collapsed) .profile-action-buttons {
+  left: 100px;
+}
+
+.circular-action-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.circular-action-btn:hover {
+  width: 180px;
+  border-radius: 25px;
+  padding-right: 1rem;
+  justify-content: flex-start;
+  padding-left: 15px;
+  gap: 0.5rem;
+}
+
+.circular-action-btn .btn-tooltip {
+  opacity: 0;
+  white-space: nowrap;
+  font-weight: 600;
+  font-size: 14px;
+  transition: opacity 0.3s ease 0.1s;
+  pointer-events: none;
+}
+
+.circular-action-btn:hover .btn-tooltip {
+  opacity: 1;
+}
+
+.circular-action-btn svg {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+/* Individual button colors */
+.edit-btn {
+  background: rgba(25, 118, 210, 0.9);
+  color: white;
+}
+
+.edit-btn:hover {
+  background: rgba(25, 118, 210, 1);
+  transform: translateX(5px);
+}
+
+.share-btn {
+  background: rgba(46, 125, 50, 0.9);
+  color: white;
+}
+
+.share-btn:hover {
+  background: rgba(46, 125, 50, 1);
+  transform: translateX(5px);
+}
+
+.theme-btn {
+  background: rgba(156, 39, 176, 0.9);
+  color: white;
+}
+
+.theme-btn:hover {
+  background: rgba(156, 39, 176, 1);
+  transform: translateX(5px);
+}
+
+
 @media (max-width: 768px) {
-  .profile-actions-header {
-    justify-content: center;
-    padding: 0 1rem;
+  .profile-action-buttons {
+    left: 80px;
+    top: 6rem;
   }
-  
-  .profile-actions-header .edit-profile-btn,
-  .profile-actions-header .share-profile-btn,
-  .profile-actions-header .back-to-profile-btn,
-  .profile-actions-header .theme-toggle-btn {
-    flex: 1;
-    justify-content: center;
-    max-width: 180px;
-    min-width: 140px;
+
+  .dashboard-layout:has(.dashboard-drawer.collapsed) .profile-action-buttons {
+    left: 20px;
+  }
+
+  .circular-action-btn {
+    width: 45px;
+    height: 45px;
+    padding-left: 12px;
+  }
+
+  .circular-action-btn:hover {
+    width: 150px;
+  }
+
+  .circular-action-btn svg {
+    font-size: 18px;
   }
 }
 
 @media (max-width: 480px) {
-  .profile-actions-header {
-    flex-direction: column;
-    gap: 8px;
-    padding: 0 1rem;
+  .profile-action-buttons {
+    left: 10px;
   }
-  
-  .profile-actions-header .edit-profile-btn,
-  .profile-actions-header .share-profile-btn,
-  .profile-actions-header .back-to-profile-btn,
-  .profile-actions-header .theme-toggle-btn {
-    width: 100%;
-    max-width: none;
-    min-width: auto;
-    justify-content: center;
+
+  .dashboard-layout:has(.dashboard-drawer.collapsed) .profile-action-buttons {
+    left: 10px;
+  }
+
+  .circular-action-btn:hover {
+    width: 120px;
+    padding-left: 10px;
+    padding-right: 0.8rem;
+  }
+
+  .circular-action-btn .btn-tooltip {
+    font-size: 12px;
   }
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .profile-container {
     padding: 1rem;
@@ -497,7 +600,7 @@
     margin-left: 0;
     margin-top: 1rem;
   }
-  
+
   .edit-profile-btn,
   .share-profile-btn,
   .follow-btn {
@@ -535,7 +638,7 @@
     flex-direction: column;
     gap: 8px;
   }
-  
+
   .edit-profile-btn,
   .share-profile-btn,
   .follow-btn {
