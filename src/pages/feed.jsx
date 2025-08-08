@@ -3,19 +3,36 @@ import MiniDrawer from "../components/MiniDrawer";
 import axios from "axios";
 import PostCard from "../components/PostCard";
 import style from "../style/PostCard.css";
+import { API_URL } from "../shared";
 
 const Feed = () => {
   const [posts, setPosts] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/posts", { withCredentials: true })
+      .get(`${API_URL}/auth/me`, { withCredentials: true })
+      .then((res) => setCurrentUser(res.data.user))
+      .catch((err) => console.error("Failed to fetch current user:", err));
+
+    axios
+      .get(`${API_URL}/api/posts`, { withCredentials: true })
       .then((res) => {
         const publicPosts = res.data.filter((post) => post.status !== "draft");
         setPosts(publicPosts);
       })
       .catch((err) => console.error("Failed to fetch posts:", err));
   }, []);
+
+  const handlePostUpdate = () => {
+    axios
+      .get(`${API_URL}/api/posts`, { withCredentials: true })
+      .then((res) => {
+        const publicPosts = res.data.filter((post) => post.status !== "draft");
+        setPosts(publicPosts);
+      })
+      .catch((err) => console.error("Failed to fetch posts:", err));
+  };
 
   return (
     <div className="dashboard-layout">
@@ -26,7 +43,14 @@ const Feed = () => {
           {posts.length === 0 ? (
             <p style={{ textAlign: "center" }}>No public posts yet.</p>
           ) : (
-            posts.map((post) => <PostCard key={post.id} post={post} />)
+            posts.map((post) => (
+              <PostCard 
+                key={post.id} 
+                post={post} 
+                currentUser={currentUser}
+                onPostUpdate={handlePostUpdate}
+              />
+            ))
           )}
         </div>
       </div>
