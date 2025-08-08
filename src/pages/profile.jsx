@@ -5,9 +5,7 @@ import { useNavigate } from "react-router-dom";
 import MiniDrawer from "../components/MiniDrawer";
 import ProfileComponent from "../components/ProfileComponent";
 import EditProfileModal from "../components/EditProfileModal";
-import ColorThemeSelector from "../components/ColorThemeSelector";
 import { saveTheme, loadTheme } from "../utils/themeManager";
-import { Edit, Visibility, Palette } from '@mui/icons-material';
 
 const Profile = ({ user }) => {
   const [profile, setProfile] = useState(null);
@@ -49,13 +47,16 @@ const Profile = ({ user }) => {
       if (showThemeSelector && !event.target.closest('.color-theme-selector')) {
         setShowThemeSelector(false);
       }
+      if (showStickerSelector && !event.target.closest('.sticker-selector')) {
+        setShowStickerSelector(false);
+      }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [showThemeSelector]);
+  }, [showThemeSelector, showStickerSelector]);
 
   const fetchProfile = async () => {
     try {
@@ -137,6 +138,12 @@ const Profile = ({ user }) => {
     setShowStickerSelector(!showStickerSelector);
   };
 
+  const handleStickerSelect = (sticker) => {
+    console.log('Sticker selected:', sticker);
+    // TODO: Add sticker to profile canvas
+    setShowStickerSelector(false);
+  };
+
   if (loading) {
     return (
       <div className="dashboard-layout">
@@ -186,7 +193,9 @@ const Profile = ({ user }) => {
           onToggleTheme={toggleThemeSelector}
           onToggleStickers={toggleStickerSelector}
           showThemeSelector={showThemeSelector}
+          showStickerSelector={showStickerSelector}
           onThemeChange={handleThemeChange}
+          onStickerSelect={handleStickerSelect}
         />
 
         {/* Edit Profile Modal */}

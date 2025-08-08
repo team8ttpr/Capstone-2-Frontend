@@ -1,8 +1,9 @@
 import React from "react";
 import PostCard from "./PostCard";
 import ColorThemeSelector from "./ColorThemeSelector";
+import StickerSelector from "./StickerSelector";
 import '../style/Profile.css';
-import { colorThemes, getTheme } from '../utils/themeManager';
+import { getTheme } from '../utils/themeManager';
 import { 
   Person, 
   CalendarToday,
@@ -25,7 +26,9 @@ const ProfileComponent = ({
   onToggleTheme,
   onToggleStickers,
   showThemeSelector,
-  onThemeChange
+  showStickerSelector,
+  onThemeChange,
+  onStickerSelect
 }) => {
   
   const currentTheme = getTheme(profileTheme);
@@ -310,6 +313,15 @@ const ProfileComponent = ({
           isOpen={showThemeSelector}
           onToggle={onToggleTheme}
           hideToggleButton={true}
+        />
+      )}
+
+      {/* Sticker Selector */}
+      {isOwnProfile && showStickerSelector && (
+        <StickerSelector
+          isOpen={showStickerSelector}
+          onClose={onToggleStickers}
+          onStickerSelect={onStickerSelect}
         />
       )}
     </div>
