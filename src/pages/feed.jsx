@@ -14,20 +14,25 @@ const Feed = () => {
   useEffect(() => {
     axios
       .get(`${API_URL}/auth/me`, { withCredentials: true })
-      .then((res) => setCurrentUser(res.data.user))
+      .then((res) => {
+        console.log("Current user:", res.data.user);
+        setCurrentUser(res.data.user);
+      })
       .catch((err) => console.error("Failed to fetch current user:", err));
 
     axios
-      .get(`${API_URL}/api/posts/feed`)
+      .get(`${API_URL}/api/posts?include=user`, { withCredentials: true })
       .then((res) => {
-        setPosts(res.data);
+        console.log("Feed posts data:", res.data);
+        const publicPosts = res.data.filter((post) => post.status !== "draft");
+        setPosts(publicPosts);
       })
       .catch((err) => console.error("Failed to fetch posts:", err));
   }, []);
 
   const handlePostUpdate = () => {
     axios
-      .get(`${API_URL}/api/posts/feed`)
+      .get(`${API_URL}/api/posts?include=user`, { withCredentials: true })
       .then((res) => {
         setPosts(res.data);
       })

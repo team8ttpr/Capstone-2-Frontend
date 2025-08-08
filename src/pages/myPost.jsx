@@ -4,6 +4,7 @@ import PostCard from "../components/PostCard";
 import PostForm from "../components/PostForm";
 import MiniDrawer from "../components/MiniDrawer";
 import SearchBar from "../components/Searchbar";
+import "../style/MyPost.css";
 import { API_URL } from "../shared";
 
 const MyPost = () => {
@@ -22,13 +23,18 @@ const MyPost = () => {
 
   const fetchPosts = async () => {
     try {
-      let url = `${API_URL}/api/posts/my`;
+      let url = `${API_URL}/api/posts/my?include=user`;
+
       if (filter === "draft") {
-        url = `${API_URL}/api/posts/draft`;
+        url = `${API_URL}/api/posts/draft?include=user`;
       } else if (filter === "published") {
-        url = `${API_URL}/api/posts/published`;
+        url = `${API_URL}/api/posts/published?include=user`;
       }
+
+      console.log(`Fetching posts from: ${url}`);
+
       const response = await axios.get(url, { withCredentials: true });
+      console.log("MyPost posts data:", response.data);
       setPosts(response.data);
     } catch (error) {
       console.error("Error fetching posts:", error);
@@ -38,9 +44,11 @@ const MyPost = () => {
   useEffect(() => {
     axios
       .get(`${API_URL}/auth/me`, { withCredentials: true })
-      .then((res) => setCurrentUser(res.data.user))
+      .then((res) => {
+        console.log("Current user:", res.data.user);
+        setCurrentUser(res.data.user);
+      })
       .catch((err) => console.error("Failed to fetch current user:", err));
-
     fetchPosts();
   }, []);
 
@@ -92,20 +100,6 @@ const MyPost = () => {
               All
             </button>
             <button
-              onClick={() => setFilter("published")}
-              className={filter === "published" ? "active" : ""}
-              style={{
-                padding: "0.5rem 1rem",
-                border: "1px solid #ddd",
-                borderRadius: "6px",
-                background: filter === "published" ? "#007bff" : "white",
-                color: filter === "published" ? "white" : "#333",
-                cursor: "pointer",
-              }}
-            >
-              Published
-            </button>
-            <button
               onClick={() => setFilter("draft")}
               className={filter === "draft" ? "active" : ""}
               style={{
@@ -118,6 +112,20 @@ const MyPost = () => {
               }}
             >
               Draft
+            </button>
+            <button
+              onClick={() => setFilter("published")}
+              className={filter === "published" ? "active" : ""}
+              style={{
+                padding: "0.5rem 1rem",
+                border: "1px solid #ddd",
+                borderRadius: "6px",
+                background: filter === "published" ? "#007bff" : "white",
+                color: filter === "published" ? "white" : "#333",
+                cursor: "pointer",
+              }}
+            >
+              Published
             </button>
             <button
               onClick={toggleModal}
