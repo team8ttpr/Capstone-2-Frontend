@@ -177,14 +177,14 @@
 }
 
 .track-embed-item iframe {
-  width: 800px; /* Fixed width - much wider than default */
-  height: 180px; /* Fixed height */
+  width: 800px;
+  height: 180px; 
   border-radius: 8px;
-  flex-shrink: 0; /* Don't let it shrink */
+  flex-shrink: 0; 
 }
 
 .embed-fallback {
-  width: 800px; /* Match iframe width */
+  width: 800px; 
   height: 180px;
   background: white;
   border-radius: 8px;
@@ -269,7 +269,7 @@
   }
   
   .track-embed-item iframe {
-    width: 600px; /* Smaller on medium screens */
+    width: 600px; 
     height: 160px;
   }
   
@@ -281,7 +281,7 @@
 
 @media (max-width: 900px) {
   .track-embed-item iframe {
-    width: 500px; /* Even smaller */
+    width: 500px; 
     height: 152px;
   }
   
