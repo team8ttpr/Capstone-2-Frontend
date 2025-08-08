@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import PostCard from "../components/PostCard";
-import Modal from "../components/PostForm";
+import PostForm from "../components/PostForm"; 
 import MiniDrawer from "../components/MiniDrawer";
-import { use } from "react";
+import { API_URL } from "../shared";
 
 const MyPost = () => {
   const [posts, setPosts] = useState([]);
-  const [filter, setFilter] = useState("all"); // 'all', 'draft', or 'published'
+  const [filter, setFilter] = useState("all");
   const [currentUser, setCurrentUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -15,42 +15,47 @@ const MyPost = () => {
     setIsModalOpen(!isModalOpen);
   };
 
+  const handlePostCreated = (newPost) => {
+    setPosts(prev => [newPost, ...prev]);
+    fetchPosts();
+  };
+
+  const fetchPosts = async () => {
+    try {
+      let url = `${API_URL}/api/posts/mine`;
+
+      if (filter === "draft") {
+        url = `${API_URL}/api/posts/drafts`;
+      } else if (filter === "published") {
+        url = `${API_URL}/api/posts/published`;
+      }
+      const response = await axios.get(url, { withCredentials: true });
+      setPosts(response.data);
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    }
+  };
+
   useEffect(() => {
-    // Fetch current user
+
     axios
-      .get("http://localhost:8080/auth/me", { withCredentials: true })
+      .get(`${API_URL}/auth/me`, { withCredentials: true })
       .then((res) => setCurrentUser(res.data.user))
       .catch((err) => console.error("Failed to fetch current user:", err));
 
-    // Fetch logged-in user's posts
-    axios
-      .get("http://localhost:8080/api/posts/mine", { withCredentials: true })
-      .then((res) => setPosts(res.data))
-      .catch((err) => console.error("Failed to fetch my posts:", err));
+    fetchPosts();
   }, []);
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        let url = "http://localhost:8080/api/posts/mine";
-
-        if (filter === "draft") {
-          url = "http://localhost:8080/api/posts/drafts";
-        } else if (filter === "published") {
-          url = "http://localhost:8080/api/posts/published";
-        }
-        const response = await axios.get(url, { withCredentials: true });
-        setPosts(response.data);
-      } catch (error) {
-        console.error("Error fetching posts:", error);
-      }
-    };
-
     fetchPosts();
   }, [filter]);
 
+  const handlePostUpdate = () => {
+    fetchPosts(); 
+  };
+
   return (
-    <div className="dashboard-summary">
+    <div className="dashboard-layout">
       <MiniDrawer menuType="social" />
       <div className="dashboard-main-content">
         <div className="dashboard-summary">
@@ -58,22 +63,115 @@ const MyPost = () => {
           <p>This is the page for user's posts and drafts.</p>
 
           {/* Filter Buttons */}
-          <div style={{ marginBottom: "1rem" }}>
-            <button onClick={() => setFilter("all")}>All</button>
-            <button onClick={() => setFilter("published")}>Published</button>
-            <button onClick={() => setFilter("draft")}>Draft</button>
-            <button onClick={toggleModal}>+ Create Post</button>
+          <div className="filter-buttons" style={{ marginBottom: "1rem", display: "flex", gap: "0.5rem" }}>
+            <button 
+              onClick={() => setFilter("all")}
+              className={filter === "all" ? "active" : ""}
+              style={{
+                padding: "0.5rem 1rem",
+                border: "1px solid #ddd",
+                borderRadius: "6px",
+                background: filter === "all" ? "#007bff" : "white",
+                color: filter === "all" ? "white" : "#333",
+                cursor: "pointer"
+              }}
+            >
+              All
+            </button>
+            <button 
+              onClick={() => setFilter("published")}
+              className={filter === "published" ? "active" : ""}
+              style={{
+                padding: "0.5rem 1rem",
+                border: "1px solid #ddd",
+                borderRadius: "6px",
+                background: filter === "published" ? "#007bff" : "white",
+                color: filter === "published" ? "white" : "#333",
+                cursor: "pointer"
+              }}
+            >
+              Published
+            </button>
+            <button 
+              onClick={() => setFilter("draft")}
+              className={filter === "draft" ? "active" : ""}
+              style={{
+                padding: "0.5rem 1rem",
+                border: "1px solid #ddd",
+                borderRadius: "6px",
+                background: filter === "draft" ? "#007bff" : "white",
+                color: filter === "draft" ? "white" : "#333",
+                cursor: "pointer"
+              }}
+            >
+              Draft
+            </button>
+            <button 
+              onClick={toggleModal}
+              style={{
+                padding: "0.5rem 1.5rem",
+                border: "none",
+                borderRadius: "6px",
+                background: "#28a745",
+                color: "white",
+                cursor: "pointer",
+                marginLeft: "auto"
+              }}
+            >
+              + Create Post
+            </button>
           </div>
 
-          <Modal modal={isModalOpen} toggleModal={toggleModal} />
+          {/* Post Form Modal */}
+          <PostForm 
+            isOpen={isModalOpen} 
+            onClose={() => setIsModalOpen(false)}
+            onPostCreated={handlePostCreated}
+          />
 
-          {posts.length === 0 ? (
-            <p>No posts found for selected filter.</p>
-          ) : (
-            posts.map((post) => (
-              <PostCard key={post.id} post={post} currentUser={currentUser} />
-            ))
-          )}
+          {/* Posts List */}
+          <div className="posts-container">
+            {posts.length === 0 ? (
+              <div className="no-posts" style={{
+                textAlign: "center",
+                padding: "3rem",
+                background: "#f8f9fa",
+                borderRadius: "8px",
+                border: "1px solid #e9ecef"
+              }}>
+                <h3>No posts found</h3>
+                <p>
+                  {filter === "all" && "You haven't created any posts yet."}
+                  {filter === "published" && "You don't have any published posts."}
+                  {filter === "draft" && "You don't have any draft posts."}
+                </p>
+                <button 
+                  onClick={toggleModal}
+                  style={{
+                    padding: "0.75rem 1.5rem",
+                    border: "none",
+                    borderRadius: "6px",
+                    background: "#007bff",
+                    color: "white",
+                    cursor: "pointer",
+                    fontSize: "1rem",
+                    marginTop: "1rem"
+                  }}
+                >
+                  Create Your First Post
+                </button>
+              </div>
+            ) : (
+              posts.map((post) => (
+                <PostCard 
+                  key={post.id} 
+                  post={post} 
+                  currentUser={currentUser}
+                  onPostUpdate={handlePostUpdate}
+                />
+              ))
+            )}
+          </div>
         </div>
       </div>
     </div>
