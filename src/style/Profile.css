@@ -499,6 +499,16 @@
   transform: translateX(5px);
 }
 
+.sticker-btn {
+  background: rgba(134, 148, 105, 0.9);
+  color: white;
+}
+
+.sticker-btn:hover {
+  background: rgba(255, 193, 7, 1);
+  transform: translateX(5px);
+}
+
 
 @media (max-width: 768px) {
   .profile-action-buttons {
