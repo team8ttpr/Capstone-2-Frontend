@@ -325,7 +325,6 @@
   }
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .edit-post-modal-content {
     width: 95%;
