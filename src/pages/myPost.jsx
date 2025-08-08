@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import PostCard from "../components/PostCard";
-import PostForm from "../components/PostForm"; 
+import PostForm from "../components/PostForm";
 import MiniDrawer from "../components/MiniDrawer";
 import { API_URL } from "../shared";
 
@@ -16,16 +16,16 @@ const MyPost = () => {
   };
 
   const handlePostCreated = (newPost) => {
-    setPosts(prev => [newPost, ...prev]);
+    setPosts((prev) => [newPost, ...prev]);
     fetchPosts();
   };
 
   const fetchPosts = async () => {
     try {
-      let url = `${API_URL}/api/posts/mine`;
+      let url = `${API_URL}/api/posts/my`;
 
       if (filter === "draft") {
-        url = `${API_URL}/api/posts/drafts`;
+        url = `${API_URL}/api/posts/draft`;
       } else if (filter === "published") {
         url = `${API_URL}/api/posts/published`;
       }
@@ -37,7 +37,6 @@ const MyPost = () => {
   };
 
   useEffect(() => {
-
     axios
       .get(`${API_URL}/auth/me`, { withCredentials: true })
       .then((res) => setCurrentUser(res.data.user))
@@ -51,7 +50,7 @@ const MyPost = () => {
   }, [filter]);
 
   const handlePostUpdate = () => {
-    fetchPosts(); 
+    fetchPosts();
   };
 
   return (
@@ -63,8 +62,11 @@ const MyPost = () => {
           <p>This is the page for user's posts and drafts.</p>
 
           {/* Filter Buttons */}
-          <div className="filter-buttons" style={{ marginBottom: "1rem", display: "flex", gap: "0.5rem" }}>
-            <button 
+          <div
+            className="filter-buttons"
+            style={{ marginBottom: "1rem", display: "flex", gap: "0.5rem" }}
+          >
+            <button
               onClick={() => setFilter("all")}
               className={filter === "all" ? "active" : ""}
               style={{
@@ -73,12 +75,12 @@ const MyPost = () => {
                 borderRadius: "6px",
                 background: filter === "all" ? "#007bff" : "white",
                 color: filter === "all" ? "white" : "#333",
-                cursor: "pointer"
+                cursor: "pointer",
               }}
             >
               All
             </button>
-            <button 
+            <button
               onClick={() => setFilter("published")}
               className={filter === "published" ? "active" : ""}
               style={{
@@ -87,12 +89,12 @@ const MyPost = () => {
                 borderRadius: "6px",
                 background: filter === "published" ? "#007bff" : "white",
                 color: filter === "published" ? "white" : "#333",
-                cursor: "pointer"
+                cursor: "pointer",
               }}
             >
               Published
             </button>
-            <button 
+            <button
               onClick={() => setFilter("draft")}
               className={filter === "draft" ? "active" : ""}
               style={{
@@ -101,12 +103,12 @@ const MyPost = () => {
                 borderRadius: "6px",
                 background: filter === "draft" ? "#007bff" : "white",
                 color: filter === "draft" ? "white" : "#333",
-                cursor: "pointer"
+                cursor: "pointer",
               }}
             >
               Draft
             </button>
-            <button 
+            <button
               onClick={toggleModal}
               style={{
                 padding: "0.5rem 1.5rem",
@@ -115,7 +117,7 @@ const MyPost = () => {
                 background: "#28a745",
                 color: "white",
                 cursor: "pointer",
-                marginLeft: "auto"
+                marginLeft: "auto",
               }}
             >
               + Create Post
@@ -123,8 +125,8 @@ const MyPost = () => {
           </div>
 
           {/* Post Form Modal */}
-          <PostForm 
-            isOpen={isModalOpen} 
+          <PostForm
+            isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)}
             onPostCreated={handlePostCreated}
           />
@@ -132,20 +134,24 @@ const MyPost = () => {
           {/* Posts List */}
           <div className="posts-container">
             {posts.length === 0 ? (
-              <div className="no-posts" style={{
-                textAlign: "center",
-                padding: "3rem",
-                background: "#f8f9fa",
-                borderRadius: "8px",
-                border: "1px solid #e9ecef"
-              }}>
+              <div
+                className="no-posts"
+                style={{
+                  textAlign: "center",
+                  padding: "3rem",
+                  background: "#f8f9fa",
+                  borderRadius: "8px",
+                  border: "1px solid #e9ecef",
+                }}
+              >
                 <h3>No posts found</h3>
                 <p>
                   {filter === "all" && "You haven't created any posts yet."}
-                  {filter === "published" && "You don't have any published posts."}
+                  {filter === "published" &&
+                    "You don't have any published posts."}
                   {filter === "draft" && "You don't have any draft posts."}
                 </p>
-                <button 
+                <button
                   onClick={toggleModal}
                   style={{
                     padding: "0.75rem 1.5rem",
@@ -155,7 +161,7 @@ const MyPost = () => {
                     color: "white",
                     cursor: "pointer",
                     fontSize: "1rem",
-                    marginTop: "1rem"
+                    marginTop: "1rem",
                   }}
                 >
                   Create Your First Post
@@ -163,9 +169,9 @@ const MyPost = () => {
               </div>
             ) : (
               posts.map((post) => (
-                <PostCard 
-                  key={post.id} 
-                  post={post} 
+                <PostCard
+                  key={post.id}
+                  post={post}
                   currentUser={currentUser}
                   onPostUpdate={handlePostUpdate}
                 />
