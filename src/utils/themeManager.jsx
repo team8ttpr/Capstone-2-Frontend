@@ -36,19 +36,19 @@ export const colorThemes = {
     buttonHover: '#1e3c72'
   },
   sunset: {
-    gradient: 'linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%)',
-    primary: '#ff7e5f',
-    secondary: '#feb47b',
-    cardBg: '#2d1b1b',
-    infoBg: '#3d2626',
-    textPrimary: '#fff8e1',
-    textSecondary: '#ffcc80',
-    statsBg: 'rgba(255, 126, 95, 0.15)',
-    statsColor: '#ff7e5f',
-    border: '#ff7e5f',
-    postsBg: '#3d2626',
-    buttonBg: '#ff7e5f',
-    buttonHover: '#feb47b'
+    gradient: 'linear-gradient(135deg, #BE3629 0%, #F94F49 50%, #FF8545 100%)',
+    primary: '#BE3629',
+    secondary: '#FF8545',
+    cardBg: '#1a0f0d',
+    infoBg: '#261712',
+    textPrimary: '#FFBB67',
+    textSecondary: '#DAB79D',
+    statsBg: 'rgba(249, 79, 73, 0.15)',
+    statsColor: '#F94F49',
+    border: '#BE3629',
+    postsBg: '#1f1410',
+    buttonBg: '#F94F49',
+    buttonHover: '#FF8545'
   },
   purple: {
     gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
@@ -125,7 +125,7 @@ export const colorThemes = {
     buttonBg: '#9f7aea',
     buttonHover: '#b794f6'
   },
-  peach: {
+  bananaMilk: {
     gradient: 'linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%)',
     primary: '#e17055',
     secondary: '#fab1a0',
@@ -156,34 +156,34 @@ export const colorThemes = {
     buttonHover: '#6ee7b7'
   },
   cotton: {
-    gradient: 'linear-gradient(135deg, #ddd6fe 0%, #c4b5fd 100%)',
-    primary: '#c4b5fd',
-    secondary: '#ddd6fe',
-    cardBg: '#2a2438',
-    infoBg: '#352e47',
-    textPrimary: '#faf5ff',
-    textSecondary: '#e9d5ff',
-    statsBg: 'rgba(196, 181, 253, 0.15)',
-    statsColor: '#c4b5fd',
-    border: '#c4b5fd',
-    postsBg: '#352e47',
-    buttonBg: '#c4b5fd',
-    buttonHover: '#ddd6fe'
+    gradient: 'linear-gradient(135deg, #ffe4d6 0%, #ffcab0 100%)',
+    primary: '#ff9472',
+    secondary: '#ffb899',
+    cardBg: '#fffaf8',
+    infoBg: '#fff2ed',
+    textPrimary: '#8b2500',
+    textSecondary: '#cc5500',
+    statsBg: 'rgba(255, 148, 114, 0.1)',
+    statsColor: '#ff9472',
+    border: '#ffcab0',
+    postsBg: '#fff2ed',
+    buttonBg: '#ff9472',
+    buttonHover: '#ffb899'
   },
   sky: {
-    gradient: 'linear-gradient(135deg, #bae6fd 0%, #7dd3fc 100%)',
-    primary: '#7dd3fc',
-    secondary: '#bae6fd',
-    cardBg: '#1e293b',
-    infoBg: '#334155',
-    textPrimary: '#f0f9ff',
-    textSecondary: '#bae6fd',
-    statsBg: 'rgba(125, 211, 252, 0.15)',
-    statsColor: '#7dd3fc',
-    border: '#7dd3fc',
-    postsBg: '#334155',
-    buttonBg: '#7dd3fc',
-    buttonHover: '#bae6fd'
+    gradient: 'linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%)',
+    primary: '#81d4fa',
+    secondary: '#4fc3f7',
+    cardBg: '#f8fcff',
+    infoBg: '#f0f9ff',
+    textPrimary: '#0d47a1',
+    textSecondary: '#1976d2',
+    statsBg: 'rgba(129, 212, 250, 0.1)',
+    statsColor: '#81d4fa',
+    border: '#b3e5fc',
+    postsBg: '#f0f9ff',
+    buttonBg: '#81d4fa',
+    buttonHover: '#4fc3f7'
   },
   shadow: {
     gradient: 'linear-gradient(135deg, #1f2937 0%, #4b5563 100%)',
@@ -201,19 +201,19 @@ export const colorThemes = {
     buttonHover: '#9ca3af'
   },
   crimson: {
-    gradient: 'linear-gradient(135deg, #dc2626 0%, #ef4444 100%)',
-    primary: '#dc2626',
-    secondary: '#ef4444',
-    cardBg: '#1f1315',
-    infoBg: '#2a1a1d',
-    textPrimary: '#fef2f2',
-    textSecondary: '#fca5a5',
-    statsBg: 'rgba(220, 38, 38, 0.15)',
-    statsColor: '#dc2626',
-    border: '#dc2626',
-    postsBg: '#2a1a1d',
-    buttonBg: '#dc2626',
-    buttonHover: '#ef4444'
+    gradient: 'linear-gradient(135deg, #8b0000 0%, #b22222 100%)',
+    primary: '#8b0000',
+    secondary: '#a0001c',
+    cardBg: '#1a0000',
+    infoBg: '#2d0808',
+    textPrimary: '#ffebeb',
+    textSecondary: '#ff9999',
+    statsBg: 'rgba(139, 0, 0, 0.2)',
+    statsColor: '#cc3333',
+    border: '#660000',
+    postsBg: '#2d0808',
+    buttonBg: '#8b0000',
+    buttonHover: '#a0001c'
   },
   neon: {
     gradient: 'linear-gradient(135deg, #ff0080 0%, #00ffff 100%)',
@@ -246,26 +246,26 @@ export const colorThemes = {
     buttonHover: '#9933ff'
   },
   electric: {
-    gradient: 'linear-gradient(135deg, #001a33 0%, #0066ff 100%)',
-    primary: '#0099ff',
-    secondary: '#0066ff',
-    cardBg: '#000d1a',
-    infoBg: '#001122',
-    textPrimary: '#e6f7ff',
-    textSecondary: '#b3e0ff',
-    statsBg: 'rgba(0, 153, 255, 0.15)',
-    statsColor: '#0066ff',
-    border: '#0099ff',
-    postsBg: '#001122',
-    buttonBg: '#0099ff',
-    buttonHover: '#0066ff'
-  }
+    gradient: 'linear-gradient(135deg, #000000 0%, #2c2c2c 100%)',
+    primary: '#ffffff',
+    secondary: '#f0f0f0',
+    cardBg: '#0a0a0a',
+    infoBg: '#1a1a1a',
+    textPrimary: '#ffffff',
+    textSecondary: '#cccccc',
+    statsBg: 'rgba(255, 255, 255, 0.1)',
+    statsColor: '#ffffff',
+    border: '#404040',
+    postsBg: '#141414',
+    buttonBg: '#ffffff',
+    buttonHover: '#e6e6e6'
+  },
 };
 
 // Theme categories for better organization
 export const themeCategories = {
   original: ['default', 'ocean', 'sunset', 'purple', 'forest', 'rose'],
-  pastel: ['sakura', 'lavender', 'peach', 'mint', 'cotton', 'sky'],
+  pastel: ['sakura', 'lavender', 'bananaMilk', 'mint', 'cotton', 'sky'],
   dark: ['shadow', 'crimson', 'neon', 'void', 'electric']
 };
 
@@ -308,10 +308,10 @@ export const saveThemeToServer = async (theme) => {
 // Load theme from server
 export const loadThemeFromServer = async () => {
   try {
-    const response = await axios.get(`${API_URL}/api/profile/me/theme`, {
+    const response = await axios.get(`${API_URL}/api/profile/me`, {
       withCredentials: true
     });
-    return response.data.theme || 'default';
+    return response.data.profileTheme || 'default';
   } catch (error) {
     return 'default';
   }
