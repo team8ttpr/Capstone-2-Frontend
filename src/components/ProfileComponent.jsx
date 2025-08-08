@@ -9,7 +9,8 @@ import {
   MusicNote,
   Edit,
   Visibility,
-  Palette
+  Palette,
+  Star
 } from '@mui/icons-material';
 
 const ProfileComponent = ({ 
@@ -22,6 +23,7 @@ const ProfileComponent = ({
   onEditProfile,
   onShareProfile,
   onToggleTheme,
+  onToggleStickers,
   showThemeSelector,
   onThemeChange
 }) => {
@@ -83,6 +85,14 @@ const ProfileComponent = ({
             >
               <Palette />
               <span className="btn-tooltip">Change Theme</span>
+            </button>
+            <button 
+              className="circular-action-btn sticker-btn"
+              onClick={onToggleStickers}
+              data-tooltip="Add Stickers"
+            >
+              <Star />
+              <span className="btn-tooltip">Add Stickers</span>
             </button>
           </div>
         )}

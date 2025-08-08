@@ -18,6 +18,7 @@ const Profile = ({ user }) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [profileTheme, setProfileTheme] = useState('default');
   const [showThemeSelector, setShowThemeSelector] = useState(false);
+  const [showStickerSelector, setShowStickerSelector] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -132,6 +133,10 @@ const Profile = ({ user }) => {
     setShowThemeSelector(!showThemeSelector);
   };
 
+  const toggleStickerSelector = () => {
+    setShowStickerSelector(!showStickerSelector);
+  };
+
   if (loading) {
     return (
       <div className="dashboard-layout">
@@ -179,6 +184,7 @@ const Profile = ({ user }) => {
           onEditProfile={() => setShowEditModal(true)}
           onShareProfile={handleShareProfile}
           onToggleTheme={toggleThemeSelector}
+          onToggleStickers={toggleStickerSelector}
           showThemeSelector={showThemeSelector}
           onThemeChange={handleThemeChange}
         />
