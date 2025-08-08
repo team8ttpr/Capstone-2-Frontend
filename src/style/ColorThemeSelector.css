@@ -1,0 +1,173 @@
+/* Color Theme Selector Styles */
+.color-theme-selector {
+  position: relative;
+  display: inline-block;
+}
+
+.theme-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 25px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: #6c757d;
+  color: white;
+  min-width: 160px;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.theme-toggle-btn:hover {
+  background-color: #5a6268;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+}
+
+.theme-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  min-width: 320px;
+  max-width: 400px;
+  margin-top: 8px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.theme-dropdown-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #333;
+}
+
+.theme-dropdown-header h3 {
+  margin: 0;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.theme-categories {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.theme-category {
+  border-bottom: 1px solid #333;
+}
+
+.theme-category:last-child {
+  border-bottom: none;
+}
+
+.category-title {
+  margin: 0;
+  padding: 12px 20px 8px;
+  color: #1db954;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background-color: #252525;
+  border-bottom: 1px solid #333;
+}
+
+.theme-options {
+  padding: 12px 16px 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.theme-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+  text-align: center;
+}
+
+.theme-option:hover {
+  background-color: #2a2a2a;
+}
+
+.theme-option.active {
+  border-color: #1db954;
+  background-color: rgba(29, 185, 84, 0.1);
+}
+
+.theme-preview {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  margin-bottom: 4px;
+}
+
+.theme-check {
+  color: white;
+  font-size: 18px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  padding: 2px;
+}
+
+.theme-name {
+  color: #fff;
+  font-weight: 500;
+  font-size: 12px;
+  text-align: center;
+  word-wrap: break-word;
+  max-width: 100%;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .theme-dropdown {
+    left: 0;
+    right: auto;
+    min-width: 260px;
+  }
+}
+
+@media (max-width: 480px) {
+  .theme-toggle-btn {
+    width: 100%;
+    min-width: auto;
+  }
+  
+  .theme-dropdown {
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 300px;
+    max-width: 95vw;
+  }
+  
+  .theme-options {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 10px;
+  }
+  
+  .category-title {
+    font-size: 13px;
+    padding: 10px 16px 6px;
+  }
+}

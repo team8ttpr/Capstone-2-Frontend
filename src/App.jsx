@@ -24,9 +24,10 @@ import Feed from "./pages/feed";
 import Messages from "./pages/Messages";
 import Friends from "./pages/Friends";
 import Notifications from "./pages/Notifications";
-import MyPlaylist from "./pages/MyPlaylist";
+import MyPlaylist from "./pages/myPlaylist";
 import MyPost from "./pages/myPost";
-import Profile from "./pages/Profile";
+import Profile from "./pages/profile";
+import PublicProfile from "./pages/publicprofile";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -212,6 +213,7 @@ function App() {
 
           {/* Profile Route */}
           <Route path="/profile" element={<Profile user={user} />} />
+          <Route path="/profile/:username" element={<PublicProfile user={user} />} />
 
           {/* 404 Route */}
           <Route path="*" element={<NotFound />} />
