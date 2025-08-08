@@ -29,9 +29,9 @@
 }
 
 .theme-dropdown {
-  position: absolute;
-  top: 100%;
-  right: 0;
+  position: fixed;
+  top: 8rem;
+  left: 340px;
   background: #1e1e1e;
   border: 1px solid #333;
   border-radius: 12px;
@@ -39,9 +39,9 @@
   z-index: 1000;
   min-width: 320px;
   max-width: 400px;
-  margin-top: 8px;
   max-height: 500px;
   overflow-y: auto;
+  transition: left 0.3s ease;
 }
 
 .theme-dropdown-header {
@@ -139,12 +139,15 @@
   max-width: 100%;
 }
 
-/* Mobile Responsive */
 @media (max-width: 768px) {
   .theme-dropdown {
-    left: 0;
-    right: auto;
+    top: 6rem;
+    left: 140px;
     min-width: 260px;
+  }
+
+  .dashboard-layout:has(.dashboard-drawer.collapsed) .theme-dropdown {
+    left: 80px;
   }
 }
 
@@ -155,10 +158,15 @@
   }
   
   .theme-dropdown {
-    left: 50%;
-    transform: translateX(-50%);
-    min-width: 300px;
-    max-width: 95vw;
+    top: 6rem;
+    left: 60px;
+    transform: none;
+    min-width: 280px;
+    max-width: calc(100vw - 70px);
+  }
+
+  .dashboard-layout:has(.dashboard-drawer.collapsed) .theme-dropdown {
+    left: 60px;
   }
   
   .theme-options {
@@ -170,4 +178,7 @@
     font-size: 13px;
     padding: 10px 16px 6px;
   }
+}
+.dashboard-layout:has(.dashboard-drawer.collapsed) .theme-dropdown {
+  left: 160px;
 }

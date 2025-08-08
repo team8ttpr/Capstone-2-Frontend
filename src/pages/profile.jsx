@@ -7,7 +7,7 @@ import ProfileComponent from "../components/ProfileComponent";
 import EditProfileModal from "../components/EditProfileModal";
 import ColorThemeSelector from "../components/ColorThemeSelector";
 import { saveTheme, loadTheme } from "../utils/themeManager";
-import { Edit, Visibility } from '@mui/icons-material';
+import { Edit, Visibility, Palette } from '@mui/icons-material';
 
 const Profile = ({ user }) => {
   const [profile, setProfile] = useState(null);
@@ -169,30 +169,6 @@ const Profile = ({ user }) => {
     <div className="dashboard-layout">
       <MiniDrawer />
       <div className="dashboard-main-content">
-        {/* Profile Action Buttons - Outside of ProfileComponent */}
-        <div className="profile-actions-header">
-          <button 
-            className="edit-profile-btn"
-            onClick={() => setShowEditModal(true)}
-          >
-            <Edit />
-            Edit Profile
-          </button>
-          <button 
-            className="share-profile-btn"
-            onClick={handleShareProfile}
-          >
-            <Visibility />
-            View Public Profile
-          </button>
-          <ColorThemeSelector
-            currentTheme={profileTheme}
-            onThemeChange={handleThemeChange}
-            isOpen={showThemeSelector}
-            onToggle={toggleThemeSelector}
-          />
-        </div>
-
         <ProfileComponent
           profile={profile}
           posts={posts}
@@ -200,6 +176,11 @@ const Profile = ({ user }) => {
           isOwnProfile={true}
           onNavigateToCreatePost={handleNavigateToCreatePost}
           profileTheme={profileTheme}
+          onEditProfile={() => setShowEditModal(true)}
+          onShareProfile={handleShareProfile}
+          onToggleTheme={toggleThemeSelector}
+          showThemeSelector={showThemeSelector}
+          onThemeChange={handleThemeChange}
         />
 
         {/* Edit Profile Modal */}
@@ -208,15 +189,6 @@ const Profile = ({ user }) => {
             profile={profile}
             onClose={() => setShowEditModal(false)}
             onUpdate={handleProfileUpdate}
-          />
-        )}
-
-        {/* Theme Selectorconditionally rendered */}
-        {showThemeSelector && (
-          <ColorThemeSelector
-            currentTheme={profileTheme}
-            onThemeChange={handleThemeChange}
-            onClose={() => setShowThemeSelector(false)}
           />
         )}
       </div>

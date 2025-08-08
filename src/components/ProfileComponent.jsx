@@ -1,11 +1,15 @@
 import React from "react";
 import PostCard from "./PostCard";
+import ColorThemeSelector from "./ColorThemeSelector";
 import '../style/Profile.css';
 import { colorThemes, getTheme } from '../utils/themeManager';
 import { 
   Person, 
   CalendarToday,
-  MusicNote
+  MusicNote,
+  Edit,
+  Visibility,
+  Palette
 } from '@mui/icons-material';
 
 const ProfileComponent = ({ 
@@ -14,7 +18,12 @@ const ProfileComponent = ({
   postsLoading, 
   isOwnProfile = false, 
   onNavigateToCreatePost,
-  profileTheme = 'default'
+  profileTheme = 'default',
+  onEditProfile,
+  onShareProfile,
+  onToggleTheme,
+  showThemeSelector,
+  onThemeChange
 }) => {
   
   const currentTheme = getTheme(profileTheme);
@@ -48,6 +57,36 @@ const ProfileComponent = ({
     >
       {/* Profile Header */}
       <div className="profile-header">
+        {/* Circular Action Buttons - Only for own profile */}
+        {isOwnProfile && (
+          <div className="profile-action-buttons">
+            <button 
+              className="circular-action-btn edit-btn"
+              onClick={onEditProfile}
+              data-tooltip="Edit Profile"
+            >
+              <Edit />
+              <span className="btn-tooltip">Edit Profile</span>
+            </button>
+            <button 
+              className="circular-action-btn share-btn"
+              onClick={onShareProfile}
+              data-tooltip="View Public Profile"
+            >
+              <Visibility />
+              <span className="btn-tooltip">View Public Profile</span>
+            </button>
+            <button 
+              className="circular-action-btn theme-btn"
+              onClick={onToggleTheme}
+              data-tooltip="Change Theme"
+            >
+              <Palette />
+              <span className="btn-tooltip">Change Theme</span>
+            </button>
+          </div>
+        )}
+
         <div 
           className="profile-cover"
           style={{
@@ -252,6 +291,17 @@ const ProfileComponent = ({
           </div>
         )}
       </div>
+
+      {/* Theme Selector - Only for own profile */}
+      {isOwnProfile && showThemeSelector && (
+        <ColorThemeSelector
+          currentTheme={profileTheme}
+          onThemeChange={onThemeChange}
+          isOpen={showThemeSelector}
+          onToggle={onToggleTheme}
+          hideToggleButton={true}
+        />
+      )}
     </div>
   );
 };
