@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import MiniDrawer from "../components/MiniDrawer";
 import axios from "axios";
 import PostCard from "../components/PostCard";
-import SearchField from "../components/Searchbar";
+import SearchBar from "../components/Searchbar";
 import style from "../style/PostCard.css";
 import { API_URL } from "../shared";
 
@@ -49,7 +49,7 @@ const Feed = () => {
       <div className="dashboard-main-content">
         <div className="dashboard-summary">
           <h1 style={{ textAlign: "center" }}>Feed</h1>
-          <SearchField onSearch={setQuery} />
+          <SearchBar onSearch={setQuery} />
           {filtered.length === 0 ? (
             <p style={{ textAlign: "center" }}>No public posts yet.</p>
           ) : (

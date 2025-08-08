@@ -23,7 +23,6 @@ const MyPost = () => {
   const fetchPosts = async () => {
     try {
       let url = `${API_URL}/api/posts/my`;
-
       if (filter === "draft") {
         url = `${API_URL}/api/posts/draft`;
       } else if (filter === "published") {
@@ -74,7 +73,6 @@ const MyPost = () => {
           <h1>My Posts</h1>
           <p>This is the page for user's posts and drafts.</p>
 
-          {/* Filter Buttons */}
           <div
             className="filter-buttons"
             style={{ marginBottom: "1rem", display: "flex", gap: "0.5rem" }}
@@ -137,7 +135,8 @@ const MyPost = () => {
             </button>
           </div>
 
-          {/* Post Form Modal */}
+          <SearchBar onSearch={setQuery} />
+
           <PostForm
             isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)}
@@ -145,7 +144,7 @@ const MyPost = () => {
           />
 
           <div className="posts-container">
-            {posts.length === 0 ? (
+            {nothingToShow ? (
               <div
                 className="no-posts"
                 style={{
@@ -158,29 +157,34 @@ const MyPost = () => {
               >
                 <h3>No posts found</h3>
                 <p>
-                  {filter === "all" && "You haven't created any posts yet."}
-                  {filter === "published" &&
-                    "You don't have any published posts."}
-                  {filter === "draft" && "You don't have any draft posts."}
+                  {query
+                    ? "No posts match your search."
+                    : filter === "all"
+                    ? "You haven't created any posts yet."
+                    : filter === "published"
+                    ? "You don't have any published posts."
+                    : "You don't have any draft posts."}
                 </p>
-                <button
-                  onClick={toggleModal}
-                  style={{
-                    padding: "0.75rem 1.5rem",
-                    border: "none",
-                    borderRadius: "6px",
-                    background: "#007bff",
-                    color: "white",
-                    cursor: "pointer",
-                    fontSize: "1rem",
-                    marginTop: "1rem",
-                  }}
-                >
-                  Create Your First Post
-                </button>
+                {!query && (
+                  <button
+                    onClick={toggleModal}
+                    style={{
+                      padding: "0.75rem 1.5rem",
+                      border: "none",
+                      borderRadius: "6px",
+                      background: "#007bff",
+                      color: "white",
+                      cursor: "pointer",
+                      fontSize: "1rem",
+                      marginTop: "1rem",
+                    }}
+                  >
+                    Create Your First Post
+                  </button>
+                )}
               </div>
             ) : (
-              posts.map((post) => (
+              filteredPosts.map((post) => (
                 <PostCard
                   key={post.id}
                   post={post}
