@@ -102,14 +102,15 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  padding: 12px 8px;
+  justify-content: center;
+  padding: 8px;
   border: 2px solid #333;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
   background-color: #252525;
-  text-align: center;
+  width: 80px;
+  height: 80px;
 }
 
 .sticker-item:hover {
@@ -118,18 +119,10 @@
 }
 
 .sticker-item img {
-  width: 40px;
-  height: 40px;
+  width: 60px;
+  height: 60px;
   object-fit: cover;
-  border-radius: 4px;
-}
-
-.sticker-item span {
-  color: #fff;
-  font-size: 12px;
-  font-weight: 500;
-  word-wrap: break-word;
-  max-width: 100%;
+  border-radius: 8px;
 }
 
 /* Upload Zone */

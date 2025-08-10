@@ -30,7 +30,7 @@ const StickerSelector = ({
       });
       setPresetStickers(response.data);
     } catch (error) {
-      console.error('Error fetching preset stickers:', error);
+      console.error('Failed to load preset stickers:', error.message);
       setPresetStickers([]);
     } finally {
       setPresetsLoading(false);
@@ -44,7 +44,11 @@ const StickerSelector = ({
       });
       setUserStickers(response.data);
     } catch (error) {
-      console.error('Error fetching user stickers:', error);
+      if (error.response?.status === 404) {
+        console.log('User stickers endpoint not available - using empty array');
+      } else {
+        console.error('Error fetching user stickers:', error.message);
+      }
       setUserStickers([]);
     }
   };
@@ -52,6 +56,11 @@ const StickerSelector = ({
   const handleFileUpload = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file');
+      return;
+    }
 
     if (file.size > 2 * 1024 * 1024) {
       alert('File size must be less than 2MB');
@@ -79,9 +88,9 @@ const StickerSelector = ({
       const mockResponse = {
         id: `custom_${Date.now()}`,
         imageUrl: URL.createObjectURL(file),
-        name: file.name
+        name: file.name.replace(/\.[^/.]+$/, "")
       };
-
+      
       setUserStickers(prev => [...prev, mockResponse]);
       setActiveTab('uploads');
       
@@ -142,8 +151,16 @@ const StickerSelector = ({
                         className="sticker-item"
                         onClick={() => handleStickerClick(sticker)}
                       >
-                        <img src={sticker.imageUrl} alt={sticker.name} />
-                        <span>{sticker.name}</span>
+                        <img 
+                          src={sticker.url || sticker.imageUrl} 
+                          alt="Sticker"
+                          style={{ 
+                            width: '60px',
+                            height: '60px',
+                            objectFit: 'cover',
+                            borderRadius: '8px'
+                          }}
+                        />
                       </div>
                     ))}
                   </div>
@@ -188,8 +205,16 @@ const StickerSelector = ({
                         className="sticker-item"
                         onClick={() => handleStickerClick(sticker)}
                       >
-                        <img src={sticker.imageUrl} alt={sticker.name} />
-                        <span>{sticker.name}</span>
+                        <img 
+                          src={sticker.imageUrl} 
+                          alt="Custom sticker"
+                          style={{ 
+                            width: '60px',
+                            height: '60px',
+                            objectFit: 'cover',
+                            borderRadius: '8px'
+                          }}
+                        />
                       </div>
                     ))}
                   </div>
