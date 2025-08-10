@@ -175,19 +175,22 @@
   opacity: 0.6;
 }
 
-/* Empty State */
-.empty-state {
+/* Empty State & Loading State */
+.empty-state,
+.loading-state {
   text-align: center;
   padding: 32px 16px;
   color: #aaa;
 }
 
-.empty-state svg {
+.empty-state svg,
+.loading-state svg {
   color: #555;
   margin-bottom: 16px;
 }
 
-.empty-state p {
+.empty-state p,
+.loading-state p {
   margin: 8px 0;
   font-size: 14px;
 }
