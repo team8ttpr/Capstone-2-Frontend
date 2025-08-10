@@ -10,15 +10,16 @@ const StickerSelector = ({
   onStickerSelect 
 }) => {
   const [presetStickers, setPresetStickers] = useState([]);
-  const [userStickers, setUserStickers] = useState([]);
+  const [customStickers, setCustomStickers] = useState([]);
   const [uploadLoading, setUploadLoading] = useState(false);
   const [presetsLoading, setPresetsLoading] = useState(false);
+  const [customLoading, setCustomLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('preset');
 
   useEffect(() => {
     if (isOpen) {
       fetchPresetStickers();
-      fetchUserStickers();
+      fetchCustomStickers();
     }
   }, [isOpen]);
 
@@ -37,19 +38,22 @@ const StickerSelector = ({
     }
   };
 
-  const fetchUserStickers = async () => {
+  const fetchCustomStickers = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/stickers/user`, {
+      setCustomLoading(true);
+      const response = await axios.get(`${API_URL}/api/stickers/custom`, {
         withCredentials: true
       });
-      setUserStickers(response.data);
+      setCustomStickers(response.data);
     } catch (error) {
       if (error.response?.status === 404) {
-        console.log('User stickers endpoint not available - using empty array');
+        // Custom stickers endpoint not available - using empty array
       } else {
-        console.error('Error fetching user stickers:', error.message);
+        console.error('Error fetching custom stickers:', error.message);
       }
-      setUserStickers([]);
+      setCustomStickers([]);
+    } finally {
+      setCustomLoading(false);
     }
   };
 
@@ -80,8 +84,8 @@ const StickerSelector = ({
         }
       });
 
-      setUserStickers(prev => [...prev, response.data]);
-      setActiveTab('uploads');
+      setCustomStickers(prev => [...prev, response.data]);
+      setActiveTab('custom');
     } catch (error) {
       console.error('Error uploading sticker:', error);
       
@@ -91,8 +95,8 @@ const StickerSelector = ({
         name: file.name.replace(/\.[^/.]+$/, "")
       };
       
-      setUserStickers(prev => [...prev, mockResponse]);
-      setActiveTab('uploads');
+      setCustomStickers(prev => [...prev, mockResponse]);
+      setActiveTab('custom');
       
       alert('Upload failed, showing local preview only.');
     } finally {
@@ -127,11 +131,11 @@ const StickerSelector = ({
               Preset Stickers
             </button>
             <button
-              className={`tab-btn ${activeTab === 'uploads' ? 'active' : ''}`}
-              onClick={() => setActiveTab('uploads')}
+              className={`tab-btn ${activeTab === 'custom' ? 'active' : ''}`}
+              onClick={() => setActiveTab('custom')}
             >
               <Image size={16} />
-              My Uploads ({userStickers.length})
+              Custom ({customStickers.length})
             </button>
           </div>
 
@@ -174,58 +178,67 @@ const StickerSelector = ({
               </div>
             )}
 
-            {activeTab === 'uploads' && (
+            {activeTab === 'custom' && (
               <div>
-                <div className="upload-zone">
-                  <input
-                    type="file"
-                    id="sticker-upload"
-                    accept="image/*"
-                    onChange={handleFileUpload}
-                    disabled={uploadLoading}
-                    style={{ display: 'none' }}
-                  />
-                  <label 
-                    htmlFor="sticker-upload"
-                    className={`upload-label ${uploadLoading ? 'disabled' : ''}`}
-                  >
-                    <Upload size={32} />
-                    <span>
-                      {uploadLoading ? 'Uploading...' : 'Click to upload a custom sticker'}
-                    </span>
-                    <small>PNG, JPG, GIF, WebP (Max 2MB)</small>
-                  </label>
-                </div>
-
-                {userStickers.length > 0 && (
-                  <div className="sticker-grid">
-                    {userStickers.map(sticker => (
-                      <div
-                        key={sticker.id}
-                        className="sticker-item"
-                        onClick={() => handleStickerClick(sticker)}
-                      >
-                        <img 
-                          src={sticker.imageUrl} 
-                          alt="Custom sticker"
-                          style={{ 
-                            width: '60px',
-                            height: '60px',
-                            objectFit: 'cover',
-                            borderRadius: '8px'
-                          }}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {userStickers.length === 0 && !uploadLoading && (
-                  <div className="empty-state">
+                {customLoading ? (
+                  <div className="loading-state">
                     <Image size={48} />
-                    <p>No custom stickers uploaded yet</p>
-                    <p>Upload your first sticker to get started!</p>
+                    <p>Loading custom stickers...</p>
                   </div>
+                ) : (
+                  <>
+                    <div className="upload-zone">
+                      <input
+                        type="file"
+                        id="sticker-upload"
+                        accept="image/*"
+                        onChange={handleFileUpload}
+                        disabled={uploadLoading}
+                        style={{ display: 'none' }}
+                      />
+                      <label 
+                        htmlFor="sticker-upload"
+                        className={`upload-label ${uploadLoading ? 'disabled' : ''}`}
+                      >
+                        <Upload size={32} />
+                        <span>
+                          {uploadLoading ? 'Uploading...' : 'Click to upload a custom sticker'}
+                        </span>
+                        <small>PNG, JPG, GIF, WebP (Max 2MB)</small>
+                      </label>
+                    </div>
+
+                    {customStickers.length > 0 && (
+                      <div className="sticker-grid">
+                        {customStickers.map(sticker => (
+                          <div
+                            key={sticker.id}
+                            className="sticker-item"
+                            onClick={() => handleStickerClick(sticker)}
+                          >
+                            <img 
+                              src={sticker.url || sticker.imageUrl} 
+                              alt="Custom sticker"
+                              style={{ 
+                                width: '60px',
+                                height: '60px',
+                                objectFit: 'cover',
+                                borderRadius: '8px'
+                              }}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {customStickers.length === 0 && !uploadLoading && !customLoading && (
+                      <div className="empty-state">
+                        <Image size={48} />
+                        <p>No custom stickers available yet</p>
+                        <p>Upload your first custom sticker to get started!</p>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             )}
