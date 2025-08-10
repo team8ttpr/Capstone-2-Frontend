@@ -27,12 +27,9 @@ const StickerSelector = ({
   const fetchPresetStickers = async () => {
     try {
       setPresetsLoading(true);
-      const response = await axios.get(`${API_URL}/api/stickers/presets`, {
-        withCredentials: true
-      });
+      const response = await axios.get(`${API_URL}/api/stickers/presets`);
       setPresetStickers(response.data);
     } catch (error) {
-      console.error('Failed to load preset stickers:', error.message);
       setPresetStickers([]);
     } finally {
       setPresetsLoading(false);
@@ -42,16 +39,9 @@ const StickerSelector = ({
   const fetchCustomStickers = async () => {
     try {
       setCustomLoading(true);
-      const response = await axios.get(`${API_URL}/api/stickers/custom`, {
-        withCredentials: true
-      });
+      const response = await axios.get(`${API_URL}/api/stickers/custom`);
       setCustomStickers(response.data);
     } catch (error) {
-      if (error.response?.status === 404) {
-        // Custom stickers endpoint not available - using empty array
-      } else {
-        console.error('Error fetching custom stickers:', error.message);
-      }
       setCustomStickers([]);
     } finally {
       setCustomLoading(false);
@@ -90,35 +80,14 @@ const StickerSelector = ({
         `${API_URL}/api/stickers/upload-with-bg-removal` : 
         `${API_URL}/api/stickers/upload`;
 
-      const response = await axios.post(endpoint, formData, {
-        withCredentials: true,
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
+      await axios.post(endpoint, formData);
 
-      // Wait 4 seconds before refreshing to allow Cloudinary to finish background removal (bug fix)
       setTimeout(() => {
         fetchCustomStickers();
         setActiveTab('custom');
       }, 4000);
     } catch (error) {
-      console.error('Error uploading sticker:', error);
-      console.error('Response data:', error.response?.data);
-      console.error('Status code:', error.response?.status);
-      
-      const mockResponse = {
-        id: `custom_${Date.now()}`,
-        imageUrl: URL.createObjectURL(file),
-        name: file.name.replace(/\.[^/.]+$/, "")
-      };
-      
-      setCustomStickers(prev => [...prev, mockResponse]);
-      setActiveTab('custom');
-      
-      // Show more specific error message
-      const errorMsg = error.response?.data?.message || error.message || 'Unknown error';
-      alert(`Upload failed: ${errorMsg}\nShowing local preview only.`);
+      alert(`Upload failed: ${(error.response?.data?.message || error.message || 'Unknown error')}`);
     } finally {
       setUploadLoading(false);
       event.target.value = '';
@@ -138,19 +107,21 @@ const StickerSelector = ({
     }
 
     try {
-      await axios.delete(`${API_URL}/api/stickers/${sticker.id}`, {
-        withCredentials: true
-      });
-      
-      // Remove from local state immediately for better UX
+      const token = localStorage.getItem('authToken');
+      await axios.post(
+        `${API_URL}/api/stickers/custom/delete`,
+        { id: sticker.id },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: token ? `Bearer ${token}` : undefined
+          },
+          withCredentials: true
+        }
+      );
       setCustomStickers(prev => prev.filter(s => s.id !== sticker.id));
-      
-    } catch (error) {
-      console.error('Error deleting sticker:', error);
-      const errorMsg = error.response?.data?.message || error.message || 'Delete failed';
-      alert(`Delete error: ${errorMsg}`);
-      
-      // Refresh to ensure state consistency if delete failed
+    } catch (err) {
+      alert(`Delete error: ${err.response?.data?.error || err.message}`);
       await fetchCustomStickers();
     }
   };
