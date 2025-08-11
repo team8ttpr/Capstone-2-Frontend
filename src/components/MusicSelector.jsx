@@ -11,6 +11,7 @@ const MusicSelector = ({
 }) => {
   const [selectedItems, setSelectedItems] = useState(initialItems);
   const [searchKey, setSearchKey] = useState(0); // key force remount/reset
+  const [errorMsg, setErrorMsg] = useState("");
 
   // Reset selectedItems when initialItems changes (e.g., when reopening modal)
   useEffect(() => {
@@ -46,6 +47,15 @@ const MusicSelector = ({
   };
 
   const handleSettingChange = (idx, field, value) => {
+    if (field === 'width' && Number(value) > 500) {
+      setErrorMsg('Width cannot be greater than 500.');
+      return;
+    }
+    if (field === 'height' && Number(value) > 400) {
+      setErrorMsg('Height cannot be greater than 400.');
+      return;
+    }
+    setErrorMsg("");
     setSelectedItems(items => items.map((item, i) =>
       i === idx ? { ...item, [field]: value } : item
     ));
@@ -55,6 +65,9 @@ const MusicSelector = ({
     <div className="music-selector-overlay">
       <div className="music-selector-modal">
         <div className="music-selector-header">
+          {errorMsg && (
+            <div style={{ color: 'red', marginBottom: 8 }}>{errorMsg}</div>
+          )}
           <button onClick={handleSave} className="save-btn-top">Save</button>
           <h3>Select up to {maxItems} Spotify items</h3>
           <button onClick={onClose} className="close-btn">✕</button>
@@ -103,7 +116,7 @@ const MusicSelector = ({
                       <input
                         type="number"
                         min="100"
-                        max="600"
+                        max="500"
                         value={selectedItems[idx].width || defaultWidth}
                         onChange={e => handleSettingChange(idx, 'width', e.target.value)}
                         style={{ width: 60, marginLeft: 8 }}
