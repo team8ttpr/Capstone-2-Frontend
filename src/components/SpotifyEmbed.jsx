@@ -1,12 +1,11 @@
 import React from 'react';
 
-const SpotifyEmbed = ({ type = "track", id, width = "100%", height = 152 }) => {
+const SpotifyEmbed = ({ type = "track", id, width = "100%", height = 152, theme = 'dark' }) => {
     if (!id || !type) {
         return null;
     }
-    
-    const src = `https://open.spotify.com/embed/${type}/${id}?utm_source=generator&theme=0`;
-    
+    // Add theme param if provided
+    let src = `https://open.spotify.com/embed/${type}/${id}?utm_source=generator&theme=${theme === 'light' ? 1 : 0}`;
     return (
         <iframe
                 src={src}
