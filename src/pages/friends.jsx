@@ -21,10 +21,10 @@ const Friends = () => {
         const username = user.username;
 
         const [followersRes, followingRes] = await Promise.all([
-          fetch(`http://localhost:8080/api/profile/${username}/followers`, {
+          fetch(`http://localhost:8080/api/follow/${username}/followers`, {
             credentials: "include",
           }),
-          fetch(`http://localhost:8080/api/profile/${username}/following`, {
+          fetch(`http://localhost:8080/api/follow/${username}/following`, {
             credentials: "include",
           }),
         ]);
@@ -63,6 +63,17 @@ const Friends = () => {
     }
   };
 
+  const handleToggleFollow = (username, currentlyFollowing) => {
+    const action = currentlyFollowing ? "unfollow" : "follow";
+    const confirmed = window.confirm(
+      `Are you sure you want to ${action} ${username}?`
+    );
+
+    if (confirmed) {
+      toggleFollow(username);
+    }
+  };
+
   return (
     <div className="dashboard-layout">
       <MiniDrawer menuType="social" />
@@ -78,7 +89,12 @@ const Friends = () => {
               isFollowing={following.some((f) => f.username === u.username)}
               isMe={me?.username === u.username}
               busy={!!busy[u.username]}
-              onToggleFollow={toggleFollow}
+              onToggleFollow={() =>
+                handleToggleFollow(
+                  u.username,
+                  following.some((f) => f.username === u.username)
+                )
+              }
             />
           ))}
 
@@ -90,7 +106,7 @@ const Friends = () => {
               isFollowing
               isMe={me?.username === u.username}
               busy={!!busy[u.username]}
-              onToggleFollow={toggleFollow}
+              onToggleFollow={() => handleToggleFollow(u.username, true)}
             />
           ))}
         </div>
