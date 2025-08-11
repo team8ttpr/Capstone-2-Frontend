@@ -114,26 +114,28 @@ const MusicSelector = ({
                     <label style={{ display: 'block', margin: '8px 0' }}>
                       Width:
                       <input
-                        type="number"
+                        type="range"
                         min="100"
                         max="500"
                         value={selectedItems[idx].width || defaultWidth}
                         onChange={e => handleSettingChange(idx, 'width', e.target.value)}
-                        style={{ width: 60, marginLeft: 8 }}
+                        style={{ width: 120, marginLeft: 8 }}
                         disabled={selectedItems[idx].widthMode === 'full'}
                       />
+                      <span style={{ marginLeft: 8 }}>{selectedItems[idx].width || defaultWidth}px</span>
                     </label>
                   )}
                   <label style={{ display: 'block', margin: '8px 0' }}>
                     Height:
                     <input
-                      type="number"
+                      type="range"
                       min="60"
                       max="400"
                       value={selectedItems[idx].height || defaultHeight}
                       onChange={e => handleSettingChange(idx, 'height', e.target.value)}
-                      style={{ width: 60, marginLeft: 8 }}
+                      style={{ width: 120, marginLeft: 8 }}
                     />
+                    <span style={{ marginLeft: 8 }}>{selectedItems[idx].height || defaultHeight}px</span>
                   </label>
                   <SpotifyEmbed
                     type={selectedItems[idx].type}
