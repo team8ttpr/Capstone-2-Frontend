@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
 import PostCard from "./PostCard";
 import ColorThemeSelector from "./ColorThemeSelector";
 import StickerSelector from "./StickerSelector";
@@ -16,6 +17,7 @@ import {
   Star,
   LibraryMusic
 } from '@mui/icons-material';
+import { API_URL } from '../shared';
 
 const ProfileComponent = ({ 
   profile, 
@@ -117,7 +119,9 @@ const ProfileComponent = ({
         <div 
           className="profile-cover"
           style={{
-            background: currentTheme.gradient
+            background: profile?.wallpaperURL
+              ? `url('${profile.wallpaperURL}') center/cover no-repeat`
+              : currentTheme.gradient
           }}
         >
           <div className="profile-avatar-section">
@@ -153,12 +157,14 @@ const ProfileComponent = ({
             >
               {getDisplayName()}
             </h1>
-            <p 
-              className="username"
-              style={{ color: currentTheme.textSecondary }}
-            >
-              @{profile?.username}
-            </p>
+            {profile?.showUsername !== false && (
+              <p 
+                className="username"
+                style={{ color: currentTheme.textSecondary }}
+              >
+                @{profile?.username}
+              </p>
+            )}
           </div>
 
           {profile?.bio && (
@@ -175,16 +181,18 @@ const ProfileComponent = ({
           )}
 
           <div className="profile-meta">
-            <div className="meta-item">
-              <CalendarToday 
-                className="meta-icon"
-                style={{ color: currentTheme.primary }}
-              />
-              <span style={{ color: currentTheme.textSecondary }}>
-                Joined {formatJoinDate(profile?.createdAt)}
-              </span>
-            </div>
-            {profile?.spotifyDisplayName && (
+            {profile?.showDateJoined !== false && (
+              <div className="meta-item">
+                <CalendarToday 
+                  className="meta-icon"
+                  style={{ color: currentTheme.primary }}
+                />
+                <span style={{ color: currentTheme.textSecondary }}>
+                  Joined {formatJoinDate(profile?.createdAt)}
+                </span>
+              </div>
+            )}
+            {profile?.showSpotifyStatus !== false && profile?.spotifyDisplayName && (
               <div className="meta-item">
                 <MusicNote 
                   className="meta-icon"
@@ -285,72 +293,74 @@ const ProfileComponent = ({
       )}
 
       {/* Posts Section */}
-      <div 
-        className="profile-posts"
-        style={{
-          background: currentTheme.postsBg,
-          border: `1px solid ${currentTheme.border}`
-        }}
-      >
-        <div className="posts-header">
-          <h2 style={{ color: currentTheme.textPrimary }}>
-            {isOwnProfile ? 'Your Posts' : `${getDisplayName()}'s Posts`}
-          </h2>
-          <p style={{ color: currentTheme.textSecondary }}>
-            {posts?.length || 0} {posts?.length === 1 ? 'post' : 'posts'}
-          </p>
-        </div>
+      {profile?.showPosts !== false && (
+        <div 
+          className="profile-posts"
+          style={{
+            background: currentTheme.postsBg,
+            border: `1px solid ${currentTheme.border}`
+          }}
+        >
+          <div className="posts-header">
+            <h2 style={{ color: currentTheme.textPrimary }}>
+              {isOwnProfile ? 'Your Posts' : `${getDisplayName()}'s Posts`}
+            </h2>
+            <p style={{ color: currentTheme.textSecondary }}>
+              {posts?.length || 0} {posts?.length === 1 ? 'post' : 'posts'}
+            </p>
+          </div>
 
-        {postsLoading ? (
-          <div 
-            className="posts-loading"
-            style={{ color: currentTheme.textSecondary }}
-          >
-            Loading posts...
-          </div>
-        ) : posts && posts.length > 0 ? (
-          <div className="posts-grid">
-            {posts.map(post => (
-              <PostCard 
-                key={post.id} 
-                post={post}
-                theme={currentTheme}
-              />
-            ))}
-          </div>
-        ) : (
-          <div className="no-posts">
-            <div className="no-posts-content">
-              <MusicNote 
-                className="no-posts-icon"
-                style={{ color: currentTheme.primary }}
-              />
-              <h3 style={{ color: currentTheme.textPrimary }}>No posts yet</h3>
-              <p style={{ color: currentTheme.textSecondary }}>
-                {isOwnProfile 
-                  ? "Share your first musical discovery with the world!" 
-                  : "This user hasn't shared any posts yet."
-                }
-              </p>
-              {isOwnProfile && (
-                <button 
-                  className="create-first-post-btn"
-                  onClick={onNavigateToCreatePost}
-                  style={{
-                    background: currentTheme.buttonBg,
-                    color: currentTheme.textPrimary,
-                    border: `1px solid ${currentTheme.primary}`
-                  }}
-                  onMouseEnter={(e) => e.target.style.background = currentTheme.buttonHover}
-                  onMouseLeave={(e) => e.target.style.background = currentTheme.buttonBg}
-                >
-                  Create Your First Post
-                </button>
-              )}
+          {postsLoading ? (
+            <div 
+              className="posts-loading"
+              style={{ color: currentTheme.textSecondary }}
+            >
+              Loading posts...
             </div>
-          </div>
-        )}
-      </div>
+          ) : posts && posts.length > 0 ? (
+            <div className="posts-grid">
+              {posts.map(post => (
+                <PostCard 
+                  key={post.id} 
+                  post={post}
+                  theme={currentTheme}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="no-posts">
+              <div className="no-posts-content">
+                <MusicNote 
+                  className="no-posts-icon"
+                  style={{ color: currentTheme.primary }}
+                />
+                <h3 style={{ color: currentTheme.textPrimary }}>No posts yet</h3>
+                <p style={{ color: currentTheme.textSecondary }}>
+                  {isOwnProfile 
+                    ? "Share your first musical discovery with the world!" 
+                    : "This user hasn't shared any posts yet."
+                  }
+                </p>
+                {isOwnProfile && (
+                  <button 
+                    className="create-first-post-btn"
+                    onClick={onNavigateToCreatePost}
+                    style={{
+                      background: currentTheme.buttonBg,
+                      color: currentTheme.textPrimary,
+                      border: `1px solid ${currentTheme.primary}`
+                    }}
+                    onMouseEnter={(e) => e.target.style.background = currentTheme.buttonHover}
+                    onMouseLeave={(e) => e.target.style.background = currentTheme.buttonBg}
+                  >
+                    Create Your First Post
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Theme Selector - Only for own profile */}
       {isOwnProfile && showThemeSelector && (

@@ -133,6 +133,8 @@ const PublicProfile = ({ user }) => {
           postsLoading={postsLoading}
           isOwnProfile={false}
           profileTheme={profileTheme}
+          //  props are passed for visibility logic
+          // (ProfileComponent will use profile.showPosts, showUsername, etc.)
         />
       </div>
     </div>
