@@ -1,4 +1,3 @@
-/* Main container - works with dashboard layout */
 .my-playlist-container {
   max-width: 1400px;
   margin: 0 auto;
@@ -66,21 +65,17 @@
   background: #c82333;
 }
 
-/* Dynamic grid layout that responds to drawer state */
 .playlists-embed-list {
   display: grid;
   gap: 2rem;
   margin-top: 2rem;
-  /* Default to 3 columns when drawer is collapsed (more space) */
   grid-template-columns: repeat(3, 1fr);
 }
 
-/* When drawer is expanded, use 2 columns (less space available) */
 .dashboard-layout:not(:has(.dashboard-drawer.collapsed)) .playlists-embed-list {
   grid-template-columns: repeat(2, 1fr);
 }
 
-/* When drawer is collapsed, use 3 columns (more space available) */
 .dashboard-layout:has(.dashboard-drawer.collapsed) .playlists-embed-list {
   grid-template-columns: repeat(3, 1fr);
 }
@@ -195,26 +190,18 @@
   line-height: 1.6;
 }
 
-/* Responsive Design */
-
-/* Large screens - maintain drawer responsiveness */
 @media (min-width: 1400px) {
-  /* Always 3 columns on very large screens regardless of drawer state */
   .playlists-embed-list {
     grid-template-columns: repeat(3, 1fr) !important;
   }
 }
 
-/* Medium-large screens - drawer affects layout */
 @media (max-width: 1399px) and (min-width: 1200px) {
   .my-playlist-container {
     max-width: 1200px;
   }
-  
-  /* Default behavior handled by :has() selectors above */
 }
 
-/* Medium screens - force 2 columns regardless of drawer */
 @media (max-width: 1199px) and (min-width: 900px) {
   .my-playlist-container {
     max-width: 100%;
@@ -226,7 +213,6 @@
   }
 }
 
-/* Small-medium screens */
 @media (max-width: 899px) and (min-width: 768px) {
   .my-playlist-container {
     padding: 1.5rem;
@@ -246,7 +232,6 @@
   }
 }
 
-/* Mobile screens - 1 column */
 @media (max-width: 767px) {
   .my-playlist-container {
     padding: 1rem;
@@ -272,7 +257,6 @@
   }
 }
 
-/* Very small screens */
 @media (max-width: 480px) {
   .my-playlist-container {
     padding: 0.5rem;
@@ -300,9 +284,7 @@
   }
 }
 
-/* Fallback for browsers that don't support :has() */
 @supports not (selector(:has(*))) {
-  /* Default to 2 columns for better compatibility */
   .playlists-embed-list {
     grid-template-columns: repeat(2, 1fr);
   }

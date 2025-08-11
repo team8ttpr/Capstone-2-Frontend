@@ -5,9 +5,7 @@ import { useNavigate } from "react-router-dom";
 import MiniDrawer from "../components/MiniDrawer";
 import ProfileComponent from "../components/ProfileComponent";
 import EditProfileModal from "../components/EditProfileModal";
-import ColorThemeSelector from "../components/ColorThemeSelector";
 import { saveTheme, loadTheme } from "../utils/themeManager";
-import { Edit, Visibility, Palette } from '@mui/icons-material';
 
 const Profile = ({ user }) => {
   const [profile, setProfile] = useState(null);
@@ -18,6 +16,8 @@ const Profile = ({ user }) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [profileTheme, setProfileTheme] = useState('default');
   const [showThemeSelector, setShowThemeSelector] = useState(false);
+  const [showStickerSelector, setShowStickerSelector] = useState(false);
+  const [showMusicSelector, setShowMusicSelector] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -48,13 +48,19 @@ const Profile = ({ user }) => {
       if (showThemeSelector && !event.target.closest('.color-theme-selector')) {
         setShowThemeSelector(false);
       }
+      if (showStickerSelector && !event.target.closest('.sticker-selector')) {
+        setShowStickerSelector(false);
+      }
+      if (showMusicSelector && !event.target.closest('.music-selector-modal')) {
+        setShowMusicSelector(false);
+      }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [showThemeSelector]);
+  }, [showThemeSelector, showStickerSelector, showMusicSelector]);
 
   const fetchProfile = async () => {
     try {
@@ -132,6 +138,36 @@ const Profile = ({ user }) => {
     setShowThemeSelector(!showThemeSelector);
   };
 
+  const toggleStickerSelector = () => {
+    setShowStickerSelector(!showStickerSelector);
+  };
+
+  const handleStickerSelect = (sticker) => {
+    console.log('Sticker selected:', sticker);
+    // TODO: Add sticker to profile canvas
+    setShowStickerSelector(false);
+  };
+
+  const handleSaveSpotifyItems = async (items) => {
+    try {
+      const response = await axios.patch(
+        `${API_URL}/api/profile/spotify-items`,
+        items,
+        {
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
+      if (response.data && response.data.user) {
+        setProfile(prev => ({ ...prev, spotifyItems: response.data.user.spotifyItems }));
+      }
+      setShowMusicSelector(false);
+    } catch (error) {
+      alert('Failed to save Spotify items.');
+      console.error(error);
+    }
+  };
+  const handleToggleMusicSelector = () => setShowMusicSelector(v => !v);
+
   if (loading) {
     return (
       <div className="dashboard-layout">
@@ -179,8 +215,14 @@ const Profile = ({ user }) => {
           onEditProfile={() => setShowEditModal(true)}
           onShareProfile={handleShareProfile}
           onToggleTheme={toggleThemeSelector}
+          onToggleStickers={toggleStickerSelector}
           showThemeSelector={showThemeSelector}
+          showStickerSelector={showStickerSelector}
           onThemeChange={handleThemeChange}
+          onStickerSelect={handleStickerSelect}
+          showMusicSelector={showMusicSelector}
+          onToggleMusicSelector={handleToggleMusicSelector}
+          onSaveSpotifyItems={handleSaveSpotifyItems}
         />
 
         {/* Edit Profile Modal */}

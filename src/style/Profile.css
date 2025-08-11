@@ -6,7 +6,6 @@
   min-height: 100vh;
 }
 
-/* Profile Header */
 .profile-header {
   background: #1e1e1e;
   border-radius: 16px;
@@ -127,7 +126,6 @@
   color: #666;
 }
 
-/* Profile Stats */
 .profile-stats {
   display: flex;
   gap: 2rem;
@@ -152,7 +150,6 @@
   text-transform: lowercase;
 }
 
-/* Posts Section */
 .profile-posts {
   background: #1e1e1e;
   border-radius: 16px;
@@ -192,7 +189,6 @@
   gap: 2rem;
 }
 
-/* No Posts State */
 .no-posts {
   text-align: center;
   padding: 4rem 2rem;
@@ -237,7 +233,6 @@
   transform: translateY(-1px);
 }
 
-/* Profile buttons Section (edit,theme,view public profile,maybe stickers in the future) */
 .profile-actions {
   display: flex;
   gap: 12px;
@@ -296,7 +291,6 @@
   box-shadow: 0 4px 12px rgba(29, 185, 84, 0.3);
 }
 
-/* Error message styles */
 .error-message {
   text-align: center;
   padding: 40px;
@@ -336,7 +330,6 @@
   transform: translateY(-1px);
 }
 
-/* Loading state */
 .loading {
   text-align: center;
   padding: 40px;
@@ -344,7 +337,6 @@
   font-size: 18px;
 }
 
-/* Profile Actions Header - outside of Profile Card */
 .profile-actions-header {
   display: flex;
   gap: 12px;
@@ -407,7 +399,6 @@
   box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
 }
 
-/* Circular Action Buttons REVAMP */
 .profile-action-buttons {
   position: fixed;
   top: 8rem;
@@ -419,7 +410,6 @@
   transition: left 0.3s ease;
 }
 
-/* where drawer is collapsed */
 .dashboard-layout:has(.dashboard-drawer.collapsed) .profile-action-buttons {
   left: 100px;
 }
@@ -468,7 +458,6 @@
   flex-shrink: 0;
 }
 
-/* Individual button colors */
 .edit-btn {
   background: rgba(25, 118, 210, 0.9);
   color: white;
@@ -496,6 +485,16 @@
 
 .theme-btn:hover {
   background: rgba(156, 39, 176, 1);
+  transform: translateX(5px);
+}
+
+.sticker-btn {
+  background: rgba(134, 148, 105, 0.9);
+  color: white;
+}
+
+.sticker-btn:hover {
+  background: rgba(255, 193, 7, 1);
   transform: translateX(5px);
 }
 
