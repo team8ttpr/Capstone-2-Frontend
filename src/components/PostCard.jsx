@@ -5,7 +5,22 @@ import { API_URL } from "../shared";
 import EditPostModal from "./EditPostModal";
 
 const PostCard = ({ post, currentUser, onPostUpdate }) => {
-  const [isLiked, setIsLiked] = useState(false);
+
+  const userData = post.author || post.user || post.User || null;
+  const username = userData?.username || 
+                  userData?.spotifyDisplayName || 
+                  userData?.name || 
+                  userData?.display_name ||
+                  "Unknown User";
+
+  const avatar = userData?.avatarURL || 
+                userData?.profileImage || 
+                userData?.spotifyProfileImage ||
+                userData?.avatar || 
+                userData?.profile_image ||
+                null;
+
+  const [isLiked, setIsLiked] = useState(post.isLiked || false);
   const [likesCount, setLikesCount] = useState(post.likesCount || 0);
   const [showShareModal, setShowShareModal] = useState(false);
   const [showPostModal, setShowPostModal] = useState(false);
@@ -13,83 +28,48 @@ const PostCard = ({ post, currentUser, onPostUpdate }) => {
   const [linkCopied, setLinkCopied] = useState(false);
 
   const isDraft = post.status === "draft";
-  const isOwner = currentUser && post.userId === currentUser.id;
 
   useEffect(() => {
-    if (currentUser && post.likes) {
-      setIsLiked(post.likes.some(like => like.userId === currentUser.id));
-    }
-  }, [currentUser, post.likes]);
+    setIsLiked(post.isLiked || false);
+    setLikesCount(post.likesCount || 0);
+  }, [post.isLiked, post.likesCount]);
 
   const handleLike = async () => {
-    if (!currentUser) return;
-    
-    try {
-      const response = await axios.post(`${API_URL}/api/posts/${post.id}/like`, {}, {
-        withCredentials: true
-      });
-      
-      setIsLiked(response.data.liked);
-      setLikesCount(response.data.likesCount);
-    } catch (error) {
-      console.error("Error toggling like:", error);
+    if (!currentUser) {
+      console.log("No current user, cannot like post");
+      return;
     }
-  };
 
-  const handleComment = () => {
-    console.log("Comment clicked for post:", post.id);
+    try {
+      const response = await axios.post(
+        `${API_URL}/api/posts/${post.id}/like`,
+        {},
+        { withCredentials: true }
+      );
+
+      console.log("Like response:", response.data);
+      setIsLiked(!isLiked);
+      setLikesCount(response.data.likesCount || likesCount + (isLiked ? -1 : 1));
+    } catch (error) {
+      console.error("Error liking post:", error);
+    }
   };
 
   const handleShare = () => {
     setShowShareModal(true);
   };
 
-  const copyToClipboard = async (text) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setLinkCopied(true);
-      setTimeout(() => setLinkCopied(false), 2000);
-    } catch (error) {
-      console.error("Failed to copy:", error);
-    }
-  };
-
   const handleCopyLink = () => {
     const postUrl = `${window.location.origin}/post/${post.id}`;
-    copyToClipboard(postUrl);
+    navigator.clipboard.writeText(postUrl).then(() => {
+      setLinkCopied(true);
+      setTimeout(() => setLinkCopied(false), 2000);
+    });
   };
 
-  const handleRepost = () => {
+    const handleRepost = () => {
     console.log("Repost clicked for post:", post.id);
     setShowShareModal(false);
-  };
-
-  const handleDelete = async () => {
-    const confirmed = window.confirm("Are you sure you want to delete this post?");
-    if (!confirmed) return;
-
-    try {
-      await axios.delete(`${API_URL}/api/posts/${post.id}`, {
-        withCredentials: true
-      });
-      
-      alert("Post deleted successfully!");
-      if (onPostUpdate) onPostUpdate();
-      
-    } catch (error) {
-      console.error("Error deleting post:", error);
-      alert("Failed to delete post. Please try again.");
-    }
-  };
-
-  const handleGoToPost = () => {
-    window.open(`/post/${post.id}`, '_blank');
-    setShowPostModal(false);
-  };
-
-  const handleUnfollow = () => {
-    console.log("Unfollow clicked for user:", post.userId);
-    setShowPostModal(false);
   };
 
   const handleEdit = () => {
@@ -102,26 +82,36 @@ const PostCard = ({ post, currentUser, onPostUpdate }) => {
     if (onPostUpdate) onPostUpdate();
   };
 
+  const handleDelete = async () => {
+    if (window.confirm("Are you sure you want to delete this post?")) {
+      try {
+        await axios.delete(`${API_URL}/api/posts/${post.id}`, {
+          withCredentials: true,
+        });
+        console.log("Post deleted successfully");
+        if (onPostUpdate) {
+          onPostUpdate();
+        }
+      } catch (error) {
+        console.error("Error deleting post:", error);
+      }
+    }
+  };
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    const now = new Date();
-    const diffInSeconds = Math.floor((now - date) / 1000);
-
-    if (diffInSeconds < 60) return "just now";
-    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m`;
-    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h`;
-    if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 86400)}d`;
-    
-    return date.toLocaleDateString();
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
   };
 
-  const getDefaultAvatar = (username) => {
-    return username ? username.charAt(0).toUpperCase() : "?";
+  const handleComment = () => {
+    console.log("Comment clicked for post:", post.id);
   };
-
-  const userData = post.user || post.User || null;
-  const username = userData?.username || userData?.name || "Unknown User";
-  const avatar = userData?.avatar || userData?.profilePicture || userData?.profile_picture || null;
 
   const getSpotifyEmbedUrl = () => {
     if (post.spotifyEmbedUrl) {
@@ -135,6 +125,17 @@ const PostCard = ({ post, currentUser, onPostUpdate }) => {
     return null;
   };
 
+    const handleGoToPost = () => {
+    window.open(`/post/${post.id}`, '_blank');
+    setShowPostModal(false);
+  };
+
+    const handleUnfollow = () => {
+    console.log("Unfollow clicked for user:", post.userId);
+    setShowPostModal(false);
+  };
+
+  const isOwner = currentUser && post.userId === currentUser.id;
   const spotifyEmbedUrl = getSpotifyEmbedUrl();
 
   return (
@@ -375,5 +376,4 @@ const PostCard = ({ post, currentUser, onPostUpdate }) => {
     </div>
   );
 };
-
 export default PostCard;
