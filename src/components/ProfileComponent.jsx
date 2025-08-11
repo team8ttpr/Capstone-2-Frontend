@@ -2,6 +2,8 @@ import React from "react";
 import PostCard from "./PostCard";
 import ColorThemeSelector from "./ColorThemeSelector";
 import StickerSelector from "./StickerSelector";
+import MusicSelector from './MusicSelector';
+import SpotifyEmbed from './SpotifyEmbed';
 import '../style/Profile.css';
 import { getTheme } from '../utils/themeManager';
 import { 
@@ -11,7 +13,8 @@ import {
   Edit,
   Visibility,
   Palette,
-  Star
+  Star,
+  LibraryMusic
 } from '@mui/icons-material';
 
 const ProfileComponent = ({ 
@@ -25,10 +28,13 @@ const ProfileComponent = ({
   onShareProfile,
   onToggleTheme,
   onToggleStickers,
+  onToggleMusicSelector,
   showThemeSelector,
   showStickerSelector,
+  showMusicSelector,
   onThemeChange,
-  onStickerSelect
+  onStickerSelect,
+  onSaveSpotifyItems
 }) => {
   
   const currentTheme = getTheme(profileTheme);
@@ -96,6 +102,14 @@ const ProfileComponent = ({
             >
               <Star />
               <span className="btn-tooltip">Add Stickers</span>
+            </button>
+            <button 
+              className="circular-action-btn music-btn"
+              onClick={onToggleMusicSelector}
+              data-tooltip="Add Spotify Item"
+            >
+              <LibraryMusic />
+              <span className="btn-tooltip">Add Spotify Item</span>
             </button>
           </div>
         )}
@@ -236,6 +250,39 @@ const ProfileComponent = ({
           </div>
         </div>
       </div>
+
+      {/* Music Selector -- can only add up to 5*/}
+      {isOwnProfile && showMusicSelector && (
+        <MusicSelector
+          initialItems={profile?.spotifyItems || []}
+          maxItems={5}
+          onSave={onSaveSpotifyItems}
+          onClose={onToggleMusicSelector}
+        />
+      )}
+
+      {/* Spotify Items Section BAr*/}
+      {profile?.spotifyItems && profile.spotifyItems.length > 0 && !showMusicSelector && (
+        <div className="profile-spotify-items">
+          <div className="spotify-items-list">
+            {profile.spotifyItems.map(item => {
+              // Ensure width/height are numbers, handle widthMode
+              let width = item.widthMode === 'full' ? '100%' : Number(item.width) || 300;
+              let height = Number(item.height) || 80;
+              return (
+                <SpotifyEmbed
+                  key={item.id}
+                  type={item.type}
+                  id={item.id}
+                  width={width}
+                  height={height}
+                  theme={item.theme || 'dark'}
+                />
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Posts Section */}
       <div 

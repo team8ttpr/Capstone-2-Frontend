@@ -17,6 +17,7 @@ const Profile = ({ user }) => {
   const [profileTheme, setProfileTheme] = useState('default');
   const [showThemeSelector, setShowThemeSelector] = useState(false);
   const [showStickerSelector, setShowStickerSelector] = useState(false);
+  const [showMusicSelector, setShowMusicSelector] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -50,13 +51,16 @@ const Profile = ({ user }) => {
       if (showStickerSelector && !event.target.closest('.sticker-selector')) {
         setShowStickerSelector(false);
       }
+      if (showMusicSelector && !event.target.closest('.music-selector-modal')) {
+        setShowMusicSelector(false);
+      }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [showThemeSelector, showStickerSelector]);
+  }, [showThemeSelector, showStickerSelector, showMusicSelector]);
 
   const fetchProfile = async () => {
     try {
@@ -144,6 +148,26 @@ const Profile = ({ user }) => {
     setShowStickerSelector(false);
   };
 
+  const handleSaveSpotifyItems = async (items) => {
+    try {
+      const response = await axios.patch(
+        `${API_URL}/api/profile/spotify-items`,
+        items,
+        {
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
+      if (response.data && response.data.user) {
+        setProfile(prev => ({ ...prev, spotifyItems: response.data.user.spotifyItems }));
+      }
+      setShowMusicSelector(false);
+    } catch (error) {
+      alert('Failed to save Spotify items.');
+      console.error(error);
+    }
+  };
+  const handleToggleMusicSelector = () => setShowMusicSelector(v => !v);
+
   if (loading) {
     return (
       <div className="dashboard-layout">
@@ -196,6 +220,9 @@ const Profile = ({ user }) => {
           showStickerSelector={showStickerSelector}
           onThemeChange={handleThemeChange}
           onStickerSelect={handleStickerSelect}
+          showMusicSelector={showMusicSelector}
+          onToggleMusicSelector={handleToggleMusicSelector}
+          onSaveSpotifyItems={handleSaveSpotifyItems}
         />
 
         {/* Edit Profile Modal */}
