@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import MiniDrawer from "../components/MiniDrawer";
+import MiniDrawer from "../components/MiniDrawer.jsx";
 import FriendCard from "../components/FriendCard";
+import FriendNavbar from "../components/FriendNavbar";
 import axios from "axios";
 
 const Friends = () => {
@@ -8,6 +9,7 @@ const Friends = () => {
   const [followers, setFollowers] = useState([]);
   const [following, setFollowing] = useState([]);
   const [busy, setBusy] = useState({});
+  const [activeTab, onTabChange] = useState("friends");
 
   useEffect(() => {
     const loadFriends = async () => {
@@ -49,13 +51,11 @@ const Friends = () => {
 
       const json = res.data;
 
-      if (json.following) {
-        // Add to following
+      if (json.message?.includes("Followed")) {
         if (!following.find((u) => u.username === username)) {
           setFollowing((prev) => [...prev, { username }]);
         }
-      } else {
-        // Remove from following
+      } else if (json.message?.includes("Unfollowed")) {
         setFollowing((prev) => prev.filter((u) => u.username !== username));
       }
     } finally {
@@ -68,9 +68,57 @@ const Friends = () => {
     const confirmed = window.confirm(
       `Are you sure you want to ${action} ${username}?`
     );
-
     if (confirmed) {
       toggleFollow(username);
+    }
+  };
+
+  const renderList = () => {
+    if (activeTab === "friends") {
+      const mutuals = followers.filter((f) =>
+        following.some((fl) => fl.username === f.username)
+      );
+      return mutuals.map((u) => (
+        <FriendCard
+          key={u.id}
+          user={u}
+          isFollowing
+          isMe={me?.username === u.username}
+          busy={!!busy[u.username]}
+          onToggleFollow={() => handleToggleFollow(u.username, true)}
+        />
+      ));
+    }
+
+    if (activeTab === "followers") {
+      return followers.map((u) => (
+        <FriendCard
+          key={u.id}
+          user={u}
+          isFollowing={following.some((f) => f.username === u.username)}
+          isMe={me?.username === u.username}
+          busy={!!busy[u.username]}
+          onToggleFollow={() =>
+            handleToggleFollow(
+              u.username,
+              following.some((f) => f.username === u.username)
+            )
+          }
+        />
+      ));
+    }
+
+    if (activeTab === "following") {
+      return following.map((u) => (
+        <FriendCard
+          key={u.id}
+          user={u}
+          isFollowing
+          isMe={me?.username === u.username}
+          busy={!!busy[u.username]}
+          onToggleFollow={() => handleToggleFollow(u.username, true)}
+        />
+      ));
     }
   };
 
@@ -80,35 +128,8 @@ const Friends = () => {
       <div className="dashboard-main-content">
         <div className="dashboard-summary">
           <h1>Friends</h1>
-
-          <h2>Followers</h2>
-          {followers.map((u) => (
-            <FriendCard
-              key={u.id}
-              user={u}
-              isFollowing={following.some((f) => f.username === u.username)}
-              isMe={me?.username === u.username}
-              busy={!!busy[u.username]}
-              onToggleFollow={() =>
-                handleToggleFollow(
-                  u.username,
-                  following.some((f) => f.username === u.username)
-                )
-              }
-            />
-          ))}
-
-          <h2>Following</h2>
-          {following.map((u) => (
-            <FriendCard
-              key={u.id}
-              user={u}
-              isFollowing
-              isMe={me?.username === u.username}
-              busy={!!busy[u.username]}
-              onToggleFollow={() => handleToggleFollow(u.username, true)}
-            />
-          ))}
+          <FriendNavbar activeTab={activeTab} onTabChange={onTabChange} />
+          {renderList()}
         </div>
       </div>
     </div>
