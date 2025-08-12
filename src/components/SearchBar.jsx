@@ -14,7 +14,7 @@ const SearchBar = ({ onSearch }) => {
     <form className="search-input" onSubmit={(e) => e.preventDefault()}>
       <input
         type="text"
-        placeholder="Search for a user..."
+        placeholder="Search for a post..."
         value={query}
         onChange={handleChange}
       />
