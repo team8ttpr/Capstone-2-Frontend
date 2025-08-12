@@ -184,6 +184,7 @@
 }
 
 .selected-embed-header {
+  color: black !important;
   display: flex;
   justify-content: space-between;
   align-items: center;

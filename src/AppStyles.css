@@ -25,6 +25,15 @@ body {
   min-height: 100vh;
 }
 
+.post-form-modal { background:#fff; border:2px solid #000; border-radius:16px; width:640px; max-width:calc(100vw - 40px); max-height:calc(100vh - 40px); display:flex; flex-direction:column; overflow:hidden; color:#000; }
+.post-form-modal .pf-header { display:flex; align-items:center; justify-content:space-between; padding:20px 24px; border-bottom:2px solid #000; background:#fafafa; }
+.post-form-modal .pf-content { padding:20px 24px; flex:1; overflow:auto; scrollbar-gutter:stable both-edges; }
+.post-form-modal label { color:#000; font-weight:700; }
+.post-form-modal input, .post-form-modal textarea { background:#fff; color:#000; border:2px solid #000; border-radius:10px; padding:12px 14px; width:100%; }
+.post-form-modal .pf-actions { display:flex; justify-content:flex-end; gap:12px; padding:20px 24px; border-top:2px solid #000; background:#fafafa; }
+.post-form-modal .btn { padding:12px 24px; border-radius:50px; border:2px solid; font-weight:700; }
+.post-form-modal .btn-cancel { background:#fff; color:#555; border-color:#e0e0e0; }
+.post-form-modal .btn-primary { background:#7b68ee; color:#fff; border-color:#7b68ee; }
 @keyframes spin {
   from {
     transform: rotate(0deg);

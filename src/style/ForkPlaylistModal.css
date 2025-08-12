@@ -1,0 +1,131 @@
+/* RESET: remove global/bleed and previous debug rules */
+/* ...existing code... */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Root container */
+.fork-modal {
+  background: #fff;
+  border: 2px solid #000;
+  border-radius: 16px;
+  width: 520px;
+  max-width: calc(100vw - 40px);
+  max-height: calc(100vh - 40px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;           /* key: container does NOT scroll */
+  box-shadow: 0 20px 40px rgba(0,0,0,.3);
+  animation: slideUp .25s ease-out;
+  color: #000; /* base text color */
+}
+
+/* Header (scoped) */
+.fork-modal .fork-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 2px solid #000;
+  background: #fafafa;
+  flex-shrink: 0;
+}
+.fork-modal .fork-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+.fork-modal .fork-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #000;
+  padding: 4px;
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+}
+.fork-modal .fork-close:hover { background: #f0f0f0; }
+
+/* Body scrolls (no right grey gutter) */
+.fork-modal .fork-content {
+  padding: 20px 24px;
+  flex: 1;
+  overflow: auto;                         /* key: only the content scrolls */
+  scrollbar-gutter: stable both-edges;    /* avoids layout shift/right gutter */
+}
+
+/* Info box */
+.fork-modal .fork-info {
+  background: #f8f9fa;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+.fork-modal .fork-info h4 { margin: 0 0 8px; font-weight: 700; font-size: 1rem; }
+.fork-modal .fork-info p  { margin: 0; color: #666; font-size: 14px; }
+
+/* Form */
+.fork-modal .form-group { margin-bottom: 20px; }
+.fork-modal .form-label {
+  display: block; margin-bottom: 8px; font-weight: 700; font-size: .95rem; color: #000;
+}
+.fork-modal .text-input {
+  width: 100%; padding: 12px 16px; font-size: 16px;
+  border: 2px solid #000; border-radius: 10px;
+  background: #fff; color: #000; transition: border-color .2s, box-shadow .2s;
+}
+.fork-modal .text-input:focus {
+  outline: none; border-color: #7b68ee; box-shadow: 0 0 0 3px rgba(123,104,238,.12);
+}
+
+/* Checkbox */
+.fork-modal .checkbox-label {
+  display: flex; align-items: flex-start; gap: 12px; cursor: pointer; color: #000; font-weight: 600;
+}
+.fork-modal .checkbox-label input[type="checkbox"] { position: absolute; opacity: 0; pointer-events: none; }
+.fork-modal .checkmark {
+  width: 20px; height: 20px; border: 2px solid #000; border-radius: 4px; background: #fff; position: relative; flex-shrink: 0;
+}
+.fork-modal .checkbox-label input[type="checkbox"]:checked + .checkmark {
+  background: #7b68ee; border-color: #7b68ee;
+}
+.fork-modal .checkbox-label input[type="checkbox"]:checked + .checkmark::after {
+  content: ""; position: absolute; left: 6px; top: 2px; width: 6px; height: 10px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg);
+}
+.fork-modal .checkbox-text { flex: 1; color: #000; }
+.fork-modal .help-text { margin: 4px 0 0; font-size: 13px; color: #666; }
+
+/* Error */
+.fork-modal .fork-error {
+  background: rgba(255,0,0,.05);
+  border: 2px solid #ff0000;
+  color: #ff0000;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px; font-weight: 600;
+  margin-bottom: 20px;
+}
+
+/* Actions (scoped buttons to avoid collisions) */
+.fork-modal .fork-actions {
+  display: flex; justify-content: flex-end; gap: 12px;
+  padding: 20px 24px; border-top: 2px solid #000; background: #fafafa; flex-shrink: 0;
+}
+.fork-modal .btn { padding: 12px 24px; border-radius: 50px; font-weight: 700; font-size: .9rem; border: 2px solid; cursor: pointer; transition: .2s; }
+.fork-modal .btn-cancel { background: #fff; color: #555; border-color: #e0e0e0; }
+.fork-modal .btn-cancel:hover { background: #f0f0f0; color: #000; border-color: #000; }
+.fork-modal .btn-primary { background: #7b68ee; color: #fff; border-color: #7b68ee; }
+.fork-modal .btn-primary:hover { background: #6c5ce7; border-color: #6c5ce7; box-shadow: 0 4px 12px rgba(123,104,238,.3); transform: translateY(-1px); }
+
+/* Anim */
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
