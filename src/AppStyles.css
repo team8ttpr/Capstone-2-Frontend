@@ -25,7 +25,20 @@ body {
   min-height: 100vh;
 }
 
-@keyframes spin {
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-overlay * {
+  box-sizing: border-box;
+  font-family: "Raleway", sans-serif;
+  
+}@keyframes spin {
   from {
     transform: rotate(0deg);
   }
