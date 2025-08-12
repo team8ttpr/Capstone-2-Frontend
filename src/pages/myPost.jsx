@@ -145,7 +145,7 @@ const MyPost = () => {
             </button>
           </div>
 
-          <SearchBar onSearch={setQuery} />
+          <SearchBar onSearch={setQuery} placeholder="Search for a post..." />
 
           {/* Post Form Modal */}
           <PostForm

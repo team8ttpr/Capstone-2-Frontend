@@ -17,7 +17,7 @@ const FriendCard = ({ user, isFollowing, isMe, busy, onToggleFollow }) => {
       }}
     >
       <img
-        src={user.avatarURL || user.spotifyProfileImage || user.profileImage}
+        src={user.spotifyProfileImage || user.avatarURL || user.profileImage}
         alt={user.username}
         width={40}
         height={40}

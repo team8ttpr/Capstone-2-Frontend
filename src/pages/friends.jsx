@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import MiniDrawer from "../components/MiniDrawer.jsx";
 import FriendCard from "../components/FriendCard";
 import FriendNavbar from "../components/FriendNavbar";
+import SearchBar from "../components/SearchBar";
 import axios from "axios";
 
 const Friends = () => {
@@ -10,6 +11,7 @@ const Friends = () => {
   const [following, setFollowing] = useState([]);
   const [busy, setBusy] = useState({});
   const [activeTab, onTabChange] = useState("friends");
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
     const loadFriends = async () => {
@@ -74,11 +76,21 @@ const Friends = () => {
   };
 
   const renderList = () => {
+    const lowerQuery = query.trim().toLowerCase();
+    const filterUsers = (users) => {
+      if (!lowerQuery) return users;
+      return users.filter(
+        (u) =>
+          (u.username || "").toLowerCase().includes(lowerQuery) ||
+          (u.name || "").toLowerCase().includes(lowerQuery)
+      );
+    };
+
     if (activeTab === "friends") {
       const mutuals = followers.filter((f) =>
         following.some((fl) => fl.username === f.username)
       );
-      return mutuals.map((u) => (
+      return filterUsers(mutuals).map((u) => (
         <FriendCard
           key={u.id}
           user={u}
@@ -91,7 +103,7 @@ const Friends = () => {
     }
 
     if (activeTab === "followers") {
-      return followers.map((u) => (
+      return filterUsers(followers).map((u) => (
         <FriendCard
           key={u.id}
           user={u}
@@ -109,7 +121,7 @@ const Friends = () => {
     }
 
     if (activeTab === "following") {
-      return following.map((u) => (
+      return filterUsers(following).map((u) => (
         <FriendCard
           key={u.id}
           user={u}
@@ -129,6 +141,16 @@ const Friends = () => {
         <div className="dashboard-summary">
           <h1>Friends</h1>
           <FriendNavbar activeTab={activeTab} onTabChange={onTabChange} />
+          <SearchBar
+            onSearch={setQuery}
+            placeholder={
+              activeTab === "friends"
+                ? "Search mutual friends..."
+                : activeTab === "followers"
+                ? "Search followers..."
+                : "Search following..."
+            }
+          />
           {renderList()}
         </div>
       </div>

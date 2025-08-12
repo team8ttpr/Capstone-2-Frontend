@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../style/SearchBar.css";
 
-const SearchBar = ({ onSearch }) => {
+const SearchBar = ({ onSearch, placeholder = "Search..." }) => {
   const [query, setQuery] = useState("");
 
   const handleChange = (e) => {
@@ -14,7 +14,7 @@ const SearchBar = ({ onSearch }) => {
     <form className="search-input" onSubmit={(e) => e.preventDefault()}>
       <input
         type="text"
-        placeholder="Search for a post..."
+        placeholder={placeholder}
         value={query}
         onChange={handleChange}
       />
