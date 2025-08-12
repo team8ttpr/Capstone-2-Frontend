@@ -91,11 +91,13 @@ const SearchComponent = ({
     }
   };
 
-  const handleResultClick = (result) => {
-    if (onResultSelect) {
-      onResultSelect(result);
-    }
-  };
+const handleResultClick = (result, e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  if (onResultSelect) {
+    onResultSelect(result);
+  }
+};
 
   const getSpotifyId = (item) => {
     if (item.spotify_url) {
@@ -114,7 +116,7 @@ const SearchComponent = ({
       <div
         key={item.id}
         className="search-result-item"
-        onClick={() => handleResultClick(item)}
+        onClick={(e) => handleResultClick(item, e)}
       >
         <div className="result-image">
           {item.image ? (
@@ -212,15 +214,9 @@ const SearchComponent = ({
             {tabs.map((tab) => (
               <button
                 key={tab.key}
-                className={`search-tab ${
-                  activeTab === tab.key ? "active" : ""
-                }`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setActiveTab(tab.key);
-                }}
                 type="button"
+                className={`search-tab ${activeTab === tab.key ? 'active' : ''}`}
+                onClick={() => setActiveTab(tab.key)}
               >
                 {tab.label} ({tab.count})
               </button>
