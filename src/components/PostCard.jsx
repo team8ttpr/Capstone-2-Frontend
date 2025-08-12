@@ -34,26 +34,31 @@ const PostCard = ({ post, currentUser, onPostUpdate }) => {
     setLikesCount(post.likesCount || 0);
   }, [post.isLiked, post.likesCount]);
 
-  const handleLike = async () => {
-    if (!currentUser) {
-      console.log("No current user, cannot like post");
-      return;
-    }
+const handleLike = async () => {
+  if (!currentUser) {
+    console.log("User not logged in");
+    return;
+  }
 
-    try {
-      const response = await axios.post(
-        `${API_URL}/api/posts/${post.id}/like`,
-        {},
-        { withCredentials: true }
-      );
+  try {
+    const response = await axios.post(`${API_URL}/api/posts/${post.id}/like`, {}, {
+      withCredentials: true,
+    });
 
-      console.log("Like response:", response.data);
-      setIsLiked(!isLiked);
-      setLikesCount(response.data.likesCount || likesCount + (isLiked ? -1 : 1));
-    } catch (error) {
-      console.error("Error liking post:", error);
+    if (response.status === 200) {
+      const data = response.data;
+      setIsLiked(data.isLiked);
+      setLikesCount(data.likesCount);
+      
+      if (onPostUpdate) {
+        onPostUpdate(post.id, { isLiked: data.isLiked, likesCount: data.likesCount });
+      }
     }
-  };
+  } catch (error) {
+    console.error('Error liking post:', error);
+    console.error('Error response:', error.response?.data);
+  }
+};
 
   const handleShare = () => {
     setShowShareModal(true);
@@ -97,6 +102,10 @@ const PostCard = ({ post, currentUser, onPostUpdate }) => {
       }
     }
   };
+
+  const getDefaultAvatar = (username) => {
+  return username ? username.charAt(0).toUpperCase() : '?';
+};
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
