@@ -12,8 +12,13 @@ export default function AddFriendForm({ onClose }) {
       try {
         setLoading(true);
         setError("");
+        const authToken = localStorage.getItem("authToken"); // or wherever you store it
         const res = await fetch("http://localhost:8080/api/profile/all", {
           credentials: "include",
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            "Content-Type": "application/json",
+          },
         });
         if (!res.ok) {
           throw new Error(`Request failed: ${res.status}`);
