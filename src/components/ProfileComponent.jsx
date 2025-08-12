@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import axios from "axios";
 import PostCard from "./PostCard";
 import ColorThemeSelector from "./ColorThemeSelector";
 import StickerSelector from "./StickerSelector";
 import MusicSelector from './MusicSelector';
 import SpotifyEmbed from './SpotifyEmbed';
+import UserPostsModal from './UserPostsModal';
 import '../style/Profile.css';
 import { getTheme } from '../utils/themeManager';
 import { 
@@ -15,9 +15,10 @@ import {
   Visibility,
   Palette,
   Star,
-  LibraryMusic
+  LibraryMusic,
+  ContentCopy
 } from '@mui/icons-material';
-import { API_URL } from '../shared';
+import SmsIcon from '@mui/icons-material/Sms';
 
 const ProfileComponent = ({ 
   profile, 
@@ -38,8 +39,10 @@ const ProfileComponent = ({
   onStickerSelect,
   onSaveSpotifyItems
 }) => {
-  
   const currentTheme = getTheme(profileTheme);
+  const [showPostsModal, setShowPostsModal] = useState(false);
+  const [copySuccess, setCopySuccess] = useState(false);
+  const [showShareMenu, setShowShareMenu] = useState(false);
 
   const getDisplayName = () => {
     if (profile?.firstName && profile?.lastName) {
@@ -80,6 +83,7 @@ const ProfileComponent = ({
             >
               <Edit />
               <span className="btn-tooltip">Edit Profile</span>
+              <span className="btn-label">Edit Profile</span>
             </button>
             <button 
               className="circular-action-btn share-btn"
@@ -88,6 +92,22 @@ const ProfileComponent = ({
             >
               <Visibility />
               <span className="btn-tooltip">View Public Profile</span>
+              <span className="btn-label">View Public Profile</span>
+            </button>
+            <button
+              className={`circular-action-btn copy-link-btn${copySuccess ? ' copied' : ''}`}
+              onClick={async () => {
+                const url = `${window.location.origin}/share/${profile?.username}`;
+                await navigator.clipboard.writeText(url);
+                setCopySuccess(true);
+                setTimeout(() => setCopySuccess(false), 1500);
+              }}
+              data-tooltip={copySuccess ? "Copied!" : "Copy Share Link"}
+              type="button"
+            >
+              <ContentCopy />
+              <span className="btn-tooltip">{copySuccess ? "Link Copied!" : "Copy Share Link"}</span>
+              <span className="btn-label">{copySuccess ? "Link Copied!" : "Copy Link"}</span>
             </button>
             <button 
               className="circular-action-btn theme-btn"
@@ -96,6 +116,7 @@ const ProfileComponent = ({
             >
               <Palette />
               <span className="btn-tooltip">Change Theme</span>
+              <span className="btn-label">Change Theme</span>
             </button>
             <button 
               className="circular-action-btn sticker-btn"
@@ -104,6 +125,7 @@ const ProfileComponent = ({
             >
               <Star />
               <span className="btn-tooltip">Add Stickers</span>
+              <span className="btn-label">Add Stickers</span>
             </button>
             <button 
               className="circular-action-btn music-btn"
@@ -112,6 +134,7 @@ const ProfileComponent = ({
             >
               <LibraryMusic />
               <span className="btn-tooltip">Add Spotify Item</span>
+              <span className="btn-label">Add Spotify Item</span>
             </button>
           </div>
         )}
@@ -213,7 +236,7 @@ const ProfileComponent = ({
               border: `1px solid ${currentTheme.border}`
             }}
           >
-            <div className="stat-item">
+            <div className="stat-item" style={{ cursor: 'pointer' }} onClick={() => setShowPostsModal(true)}>
               <span 
                 className="stat-number"
                 style={{ color: currentTheme.statsColor }}
@@ -381,6 +404,13 @@ const ProfileComponent = ({
           onStickerSelect={onStickerSelect}
         />
       )}
+
+      <UserPostsModal
+        open={showPostsModal}
+        onClose={() => setShowPostsModal(false)}
+        posts={posts}
+        theme={currentTheme}
+      />
     </div>
   );
 };
