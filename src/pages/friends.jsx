@@ -4,6 +4,7 @@ import FriendCard from "../components/FriendCard";
 import FriendNavbar from "../components/FriendNavbar";
 import SearchBar from "../components/SearchBar";
 import axios from "axios";
+import AddFriendForm from "../components/AddFriendFrom.jsx";
 
 const Friends = () => {
   const [me, setMe] = useState(null);
@@ -12,6 +13,7 @@ const Friends = () => {
   const [busy, setBusy] = useState({});
   const [activeTab, onTabChange] = useState("friends");
   const [query, setQuery] = useState("");
+  const [showSearch, setShowSearch] = useState(false);
 
   useEffect(() => {
     const loadFriends = async () => {
@@ -139,18 +141,30 @@ const Friends = () => {
       <MiniDrawer menuType="social" />
       <div className="dashboard-main-content">
         <div className="dashboard-summary">
-          <h1>Friends</h1>
+          <h1
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            Friends
+            <button onClick={() => setShowSearch(true)}>+ Add Friend</button>
+          </h1>
           <FriendNavbar activeTab={activeTab} onTabChange={onTabChange} />
           <SearchBar
             onSearch={setQuery}
             placeholder={
               activeTab === "friends"
-                ? "Search mutual friends..."
+                ? "Search friends..."
                 : activeTab === "followers"
                 ? "Search followers..."
                 : "Search following..."
             }
           />
+          {showSearch && (
+            <AddFriendForm onClose={() => setShowSearch(false)} />
+          )}
           {renderList()}
         </div>
       </div>
