@@ -1,0 +1,55 @@
+/* ShareProfile Page Styles */
+
+.shareprofile-root {
+  min-height: 100vh;
+  width: 100vw;
+  transition: background 0.3s;
+}
+
+.shareprofile-navbar {
+  width: 100%;
+  padding: 1.25rem 0;
+  text-align: center;
+  font-weight: 700;
+  font-size: 24px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  border-bottom: 1px solid var(--shareprofile-border, #333);
+  background: var(--shareprofile-navbar-bg, #232323);
+  color: var(--shareprofile-navbar-text, #1db954);
+}
+
+.shareprofile-content {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 60vh;
+  padding: 2rem 0;
+}
+
+.shareprofile-content .profile-container {
+  width: 100%;
+  max-width: 420px;
+  min-width: 0;
+  margin: 0 auto;
+  padding: 2rem 1.2rem;
+  box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+  .shareprofile-content .profile-container {
+    max-width: 98vw;
+    padding: 1rem 0.5rem;
+  }
+}
+
+.shareprofile-loading,
+.shareprofile-error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+  color: var(--shareprofile-text, #fff);
+  font-size: 1.1rem;
+}
