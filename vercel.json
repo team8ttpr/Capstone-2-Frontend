@@ -1,12 +1,21 @@
 {
   "version": 2,
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
   "routes": [
-    { "src": "/main.js", "dest": "/main.js" },
-    { "src": "/favicon.ico", "dest": "/favicon.ico" },
-    { "src": "/react-logo.svg", "dest": "/react-logo.svg" },
-    { "src": "/spongebob-404.webp", "dest": "/spongebob-404.webp" },
-    { "src": "/(.*)", "dest": "/index.html" }
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
   ],
-  
-  "outputDirectory": "dist"
+  "build": {
+    "env": {
+      "REACT_APP_API_URL": "https://capstone-2-backend-three.vercel.app",
+      "REACT_APP_FRONTEND_URL": "https://capstone-2-frontend-tan.vercel.app",
+      "NODE_ENV": "production"
+    }
+  }
 }
