@@ -6,6 +6,7 @@ import '../style/ForkPlaylistModal.css';
 const ForkPlaylistModal = ({ post, onClose, onSuccess }) => {
   const [playlistName, setPlaylistName] = useState(`${post.title} - Fork`);
   const [isPublic, setIsPublic] = useState(true);
+  const [isCollaborative, setIsCollaborative] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -21,7 +22,8 @@ const ForkPlaylistModal = ({ post, onClose, onSuccess }) => {
     try {
       const response = await axios.post(`${API_URL}/api/posts/${post.id}/fork-playlist`, {
         playlistName: playlistName.trim(),
-        isPublic: isPublic
+        isPublic: isPublic,
+        isCollaborative: isCollaborative
       }, {
         withCredentials: true,
       });
@@ -37,7 +39,6 @@ const ForkPlaylistModal = ({ post, onClose, onSuccess }) => {
       setIsLoading(false);
     }
   };
-
 
   return (
     <div className="modal-overlay" role="dialog" aria-modal="true">
@@ -77,6 +78,23 @@ const ForkPlaylistModal = ({ post, onClose, onSuccess }) => {
                 <strong>Make playlist public on Spotify</strong>
                 <p className="help-text">
                   {isPublic ? 'Others can see this playlist on your Spotify profile' : 'Only you can see this playlist'}
+                </p>
+              </div>
+            </label>
+          </div>
+
+          <div className="form-group">
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={isCollaborative}
+                onChange={(e) => setIsCollaborative(e.target.checked)}
+              />
+              <span className="checkmark" />
+              <div className="checkbox-text">
+                <strong>Make playlist collaborative</strong>
+                <p className="help-text">
+                  {isCollaborative ? 'Others can add tracks to this playlist' : 'Only you can modify this playlist'}
                 </p>
               </div>
             </label>
