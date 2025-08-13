@@ -127,7 +127,18 @@ const PostCard = ({ post, currentUser, onPostUpdate }) => {
   };
 
   const isSpotifyPlaylist = () => {
-    return post.spotifyType === "playlist" && post.spotifyId;
+    console.log("Checking if playlist:", {
+      spotifyType: post.spotifyType,
+      spotifyEmbedUrl: post.spotifyEmbedUrl,
+      hasEmbedUrl: !!post.spotifyEmbedUrl
+    });
+    
+    // Check if it's a playlist type OR if the embed URL contains playlist
+    const isPlaylist = (post.spotifyType && post.spotifyType.toLowerCase() === "playlist") || 
+                       (post.spotifyEmbedUrl && post.spotifyEmbedUrl.includes("/playlist/"));
+                       
+    console.log("Is playlist result:", isPlaylist);
+    return isPlaylist;
   };
 
   const getDefaultAvatar = (username) => {

@@ -6,33 +6,39 @@ import '../style/ForkPlaylistModal.css';
 const ForkPlaylistModal = ({ post, onClose, onSuccess }) => {
   const [playlistName, setPlaylistName] = useState(`${post.title} - Fork`);
   const [isPublic, setIsPublic] = useState(true);
-  const [loading, setLoading] = useState(false);
+  const [isCollaborative, setIsCollaborative] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
   const handleFork = async () => {
-    setLoading(true);
-    setError("");
+    if (!playlistName.trim()) {
+      setError('Playlist name is required');
+      return;
+    }
+
+    setIsLoading(true);
+    setError('');
+
     try {
-      const res = await axios.post(
-        `${API_URL}/api/posts/${post.id}/fork-playlist`,
-        {},
-        { withCredentials: true }
-      );
-      const data = res.data;
-      setDone(data);
-      onSuccess?.(data);
-    } catch (e) {
-      const msg =
-        e.response?.data?.error ||
-        (e.response?.status === 401
-          ? "Please connect Spotify and try again."
-          : "Failed to fork playlist");
-      setError(msg);
+      const response = await axios.post(`${API_URL}/api/posts/${post.id}/fork-playlist`, {
+        playlistName: playlistName.trim(),
+        isPublic: isPublic,
+        isCollaborative: isCollaborative
+      }, {
+        withCredentials: true,
+      });
+
+      if (response.status === 200) {
+        onSuccess(response.data);
+        onClose();
+      }
+    } catch (error) {
+      console.error('Error forking playlist:', error);
+      setError(error.response?.data?.error || 'Failed to fork playlist');
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
-
 
   return (
     <div className="modal-overlay" role="dialog" aria-modal="true">
@@ -76,11 +82,28 @@ const ForkPlaylistModal = ({ post, onClose, onSuccess }) => {
               </div>
             </label>
           </div>
+
+          <div className="form-group">
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={isCollaborative}
+                onChange={(e) => setIsCollaborative(e.target.checked)}
+              />
+              <span className="checkmark" />
+              <div className="checkbox-text">
+                <strong>Make playlist collaborative</strong>
+                <p className="help-text">
+                  {isCollaborative ? 'Others can add tracks to this playlist' : 'Only you can modify this playlist'}
+                </p>
+              </div>
+            </label>
+          </div>
         </div>
   
         <div className="fork-actions">
-          <button className="btn btn-cancel" onClick={onClose} disabled={loading}>Cancel</button>
-          <button className="btn btn-primary" onClick={handleFork} disabled={loading}>Fork Playlist</button>
+          <button className="btn btn-cancel" onClick={onClose} disabled={isLoading}>Cancel</button>
+          <button className="btn btn-primary" onClick={handleFork} disabled={isLoading}>Fork Playlist</button>
         </div>
       </div>
     </div>
