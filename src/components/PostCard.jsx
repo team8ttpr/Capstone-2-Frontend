@@ -4,6 +4,7 @@ import "../style/PostCard.css";
 import { API_URL } from "../shared";
 import EditPostModal from "./EditPostModal";
 import ForkPlaylistModal from "./ForkPlaylistModal";
+import { useNavigate } from "react-router-dom";
 
 const PostCard = ({ post, currentUser, onPostUpdate }) => {
   const userData = post.author || post.user || post.User || null;
@@ -29,6 +30,7 @@ const PostCard = ({ post, currentUser, onPostUpdate }) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
   const [showForkModal, setShowForkModal] = useState(false);
+  const navigate = useNavigate();
 
   const isDraft = post.status === "draft";
 
@@ -39,7 +41,6 @@ const PostCard = ({ post, currentUser, onPostUpdate }) => {
 
   const handleLike = async () => {
     if (!currentUser) {
-      console.log("User not logged in");
       return;
     }
 
@@ -83,7 +84,6 @@ const PostCard = ({ post, currentUser, onPostUpdate }) => {
   };
 
   const handleRepost = () => {
-    console.log("Repost clicked for post:", post.id);
     setShowShareModal(false);
   };
 
@@ -103,7 +103,6 @@ const PostCard = ({ post, currentUser, onPostUpdate }) => {
         await axios.delete(`${API_URL}/api/posts/${post.id}`, {
           withCredentials: true,
         });
-        console.log("Post deleted successfully");
         if (onPostUpdate) {
           onPostUpdate();
         }
@@ -115,7 +114,6 @@ const PostCard = ({ post, currentUser, onPostUpdate }) => {
 
   const handleFork = () => {
     if (!currentUser) {
-      console.log("User not logged in");
       return;
     }
     setShowForkModal(true);
@@ -148,7 +146,7 @@ const PostCard = ({ post, currentUser, onPostUpdate }) => {
   };
 
   const handleComment = () => {
-    console.log("Comment clicked for post:", post.id);
+    navigate(`/post/${post.id}`);
   };
 
   const getSpotifyEmbedUrl = () => {
@@ -164,7 +162,7 @@ const PostCard = ({ post, currentUser, onPostUpdate }) => {
   };
 
   const handleGoToPost = () => {
-    window.open(`/post/${post.id}`, "_blank");
+    navigate(`/post/${post.id}`);
     setShowPostModal(false);
   };
 
@@ -280,7 +278,12 @@ const PostCard = ({ post, currentUser, onPostUpdate }) => {
               className={`concept-action-btn like-btn ${
                 isLiked ? "liked" : ""
               }`}
-              onClick={handleLike}
+              onClick={(e) => {
+                console.log("Like button clicked!"); // Add this debug log
+                e.preventDefault();
+                e.stopPropagation();
+                handleLike();
+              }}
             >
               <svg
                 width="16"

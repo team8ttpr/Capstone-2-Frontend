@@ -6,35 +6,30 @@ import '../style/ForkPlaylistModal.css';
 const ForkPlaylistModal = ({ post, onClose, onSuccess }) => {
   const [playlistName, setPlaylistName] = useState(`${post.title} - Fork`);
   const [isPublic, setIsPublic] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const handleFork = async () => {
-    if (!playlistName.trim()) {
-      setError('Playlist name is required');
-      return;
-    }
-
-    setIsLoading(true);
-    setError('');
-
+    setLoading(true);
+    setError("");
     try {
-      const response = await axios.post(`${API_URL}/api/posts/${post.id}/fork`, {
-        playlistName: playlistName.trim(),
-        isPublic: isPublic
-      }, {
-        withCredentials: true,
-      });
-
-      if (response.status === 200) {
-        onSuccess(response.data);
-        onClose();
-      }
-    } catch (error) {
-      console.error('Error forking playlist:', error);
-      setError(error.response?.data?.error || 'Failed to fork playlist');
+      const res = await axios.post(
+        `${API_URL}/api/posts/${post.id}/fork-playlist`,
+        {},
+        { withCredentials: true }
+      );
+      const data = res.data;
+      setDone(data);
+      onSuccess?.(data);
+    } catch (e) {
+      const msg =
+        e.response?.data?.error ||
+        (e.response?.status === 401
+          ? "Please connect Spotify and try again."
+          : "Failed to fork playlist");
+      setError(msg);
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
@@ -84,8 +79,8 @@ const ForkPlaylistModal = ({ post, onClose, onSuccess }) => {
         </div>
   
         <div className="fork-actions">
-          <button className="btn btn-cancel" onClick={onClose} disabled={isLoading}>Cancel</button>
-          <button className="btn btn-primary" onClick={handleFork} disabled={isLoading}>Fork Playlist</button>
+          <button className="btn btn-cancel" onClick={onClose} disabled={loading}>Cancel</button>
+          <button className="btn btn-primary" onClick={handleFork} disabled={loading}>Fork Playlist</button>
         </div>
       </div>
     </div>

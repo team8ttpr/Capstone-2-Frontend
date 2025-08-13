@@ -8,6 +8,7 @@ import {
   Route,
   useNavigate,
   Navigate,
+  useLocation,
 } from "react-router-dom";
 import { API_URL } from "./shared";
 import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
@@ -28,13 +29,15 @@ import MyPlaylist from "./pages/myPlaylist";
 import MyPost from "./pages/myPost";
 import Profile from "./pages/profile";
 import PublicProfile from "./pages/publicprofile";
+import ShareProfile from "./pages/shareProfile";
 import SinglePostView from "./pages/SinglePostView";
-
 
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
+  const hideNavBar = location.pathname.startsWith("/share/");
 
   const {
     isAuthenticated,
@@ -160,7 +163,7 @@ function App() {
 
   return (
     <div>
-      <NavBar user={user} onLogout={handleLogout} />
+      {!hideNavBar && <NavBar user={user} onLogout={handleLogout} />}
       <div className="app">
         <Routes>
           {/* Auth Routes */}
@@ -216,6 +219,7 @@ function App() {
           {/* Profile Route */}
           <Route path="/profile" element={<Profile user={user} />} />
           <Route path="/profile/:username" element={<PublicProfile user={user} />} />
+          <Route path="/share/:username" element={<ShareProfile />} />
           <Route path="/post/:id" element={<SinglePostView user={user} />} />
 
           {/* 404 Route */}
