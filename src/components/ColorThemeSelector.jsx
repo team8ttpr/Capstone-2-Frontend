@@ -4,17 +4,14 @@ import { colorThemes, themeCategories } from '../utils/themeManager';
 import '../style/ColorThemeSelector.css';
 
 const ColorThemeSelector = ({ currentTheme, onThemeChange, isOpen, onToggle, hideToggleButton = false }) => {
-  // helper function to format theme names
   const formatThemeName = (themeId) => {
     return themeId.charAt(0).toUpperCase() + themeId.slice(1).replace(/([A-Z])/g, ' $1');
   };
 
-  // format category names
   const formatCategoryName = (category) => {
     return category.charAt(0).toUpperCase() + category.slice(1);
   };
 
-  // themes organized by categories
   const themesByCategory = Object.entries(themeCategories).map(([category, themeIds]) => ({
     category,
     categoryName: formatCategoryName(category),
