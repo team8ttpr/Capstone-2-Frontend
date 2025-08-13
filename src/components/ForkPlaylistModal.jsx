@@ -19,7 +19,7 @@ const ForkPlaylistModal = ({ post, onClose, onSuccess }) => {
     setError('');
 
     try {
-      const response = await axios.post(`${API_URL}/api/posts/${post.id}/fork`, {
+      const response = await axios.post(`${API_URL}/api/posts/${post.id}/fork-playlist`, {
         playlistName: playlistName.trim(),
         isPublic: isPublic
       }, {
