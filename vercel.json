@@ -7,5 +7,6 @@
     { "src": "/spongebob-404.webp", "dest": "/spongebob-404.webp" },
     { "src": "/(.*)", "dest": "/index.html" }
   ],
+  
   "outputDirectory": "dist"
 }
