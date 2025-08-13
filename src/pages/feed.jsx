@@ -33,7 +33,6 @@ const Feed = ({ user }) => {
       .catch((err) => console.error("Failed to fetch posts:", err));
   };
 
-  // filter client-side
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return posts;
@@ -61,9 +60,7 @@ const Feed = ({ user }) => {
               <PostCard
                 key={post.id}
                 post={post}
-                // ⚠️ Make sure this prop name matches PostCard’s signature.
-                // If PostCard expects `user`, pass `user={currentUser}` instead.
-                user={currentUser}
+                currentUser={user}
                 onPostUpdate={handlePostUpdate}
               />
             ))

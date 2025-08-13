@@ -138,7 +138,6 @@ export default function AddFriendForm({ onClose }) {
                   isMe={false}
                   busy={false}
                   onToggleFollow={() => {
-                    // You can implement follow logic here
                     console.log("Add friend:", u.id);
                   }}
                 />
