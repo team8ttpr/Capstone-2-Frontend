@@ -87,8 +87,6 @@ const EditPostModal = ({ post, onClose, onSuccess }) => {
         withCredentials: true,
       });
       
-      console.log('Update response:', response.data);
-      
       const message = shouldPublish ? 'Draft published successfully!' : 'Draft updated successfully!';
       alert(message);
       onSuccess();

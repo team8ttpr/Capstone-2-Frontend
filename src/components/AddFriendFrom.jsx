@@ -90,8 +90,6 @@ export default function AddFriendForm({ onClose }) {
           </button>
         </div>
 
-        {/* You can add a search input here if you want to filter users client-side */}
-
         <div
           style={{
             flex: 1,
