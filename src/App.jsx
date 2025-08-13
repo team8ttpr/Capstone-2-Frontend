@@ -30,6 +30,7 @@ import MyPost from "./pages/myPost";
 import Profile from "./pages/profile";
 import PublicProfile from "./pages/publicprofile";
 import ShareProfile from "./pages/shareProfile";
+import SinglePostView from "./pages/SinglePostView";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -219,6 +220,7 @@ function App() {
           <Route path="/profile" element={<Profile user={user} />} />
           <Route path="/profile/:username" element={<PublicProfile user={user} />} />
           <Route path="/share/:username" element={<ShareProfile />} />
+          <Route path="/post/:id" element={<SinglePostView user={user} />} />
 
           {/* 404 Route */}
           <Route path="*" element={<NotFound />} />

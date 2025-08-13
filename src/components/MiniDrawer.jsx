@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import '../style/MiniDrawer.css';
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import "../style/MiniDrawer.css";
 import {
   ChevronLeft,
   ChevronRight,
@@ -12,22 +12,26 @@ import {
   People,
   Message,
   Notifications,
-  Article
-} from '@mui/icons-material';
+  Article,
+} from "@mui/icons-material";
 
 const dashboardMenuItems = [
-  { text: 'Analytics', path: '/dashboard/analytics', icon: 'Analytics' },
-  { text: 'Top Tracks', path: '/dashboard/toptracks', icon: 'MusicNote' },
-  { text: 'Top Artist', path: '/dashboard/topartist', icon: 'Person' },
-  { text: 'My Playlist', path: '/dashboard/myplaylist', icon: 'QueueMusic' }
+  { text: "Analytics", path: "/dashboard/analytics", icon: "Analytics" },
+  { text: "Top Tracks", path: "/dashboard/toptracks", icon: "MusicNote" },
+  { text: "Top Artist", path: "/dashboard/topartist", icon: "Person" },
+  { text: "My Playlist", path: "/dashboard/myplaylist", icon: "QueueMusic" },
 ];
 
 const socialMenuItems = [
-  { text: 'Feed', path: '/social/feed', icon: 'Feed' },
-  { text: 'Friends', path: '/social/friends', icon: 'People' },
-  { text: 'Messages', path: '/social/messages', icon: 'Message' },
-  { text: 'My Posts', path: '/social/mypost', icon: 'Article' },
-  { text: 'Notifications', path: '/social/notifications', icon: 'Notifications' }
+  { text: "Feed", path: "/social/feed", icon: "Feed" },
+  { text: "Friends", path: "/social/friends", icon: "People" },
+  { text: "Messages", path: "/social/messages", icon: "Message" },
+  { text: "My Posts", path: "/social/mypost", icon: "Article" },
+  {
+    text: "Notifications",
+    path: "/social/notifications",
+    icon: "Notifications",
+  },
 ];
 
 const iconComponents = {
@@ -39,14 +43,15 @@ const iconComponents = {
   People,
   Message,
   Notifications,
-  Article
+  Article,
 };
 
-export default function MiniDrawer({ menuType = 'dashboard' }) {
+export default function MiniDrawer({ menuType = "dashboard" }) {
   const [open, setOpen] = useState(true);
   const location = useLocation();
-  
-  const menuItems = menuType === 'social' ? socialMenuItems : dashboardMenuItems;
+
+  const menuItems =
+    menuType === "social" ? socialMenuItems : dashboardMenuItems;
 
   const handleDrawerToggle = () => {
     setOpen(!open);
@@ -58,8 +63,8 @@ export default function MiniDrawer({ menuType = 'dashboard' }) {
   };
 
   return (
-    <div className={`dashboard-drawer ${!open ? 'collapsed' : ''}`}>
-      <div className={`dashboard-drawer-paper ${!open ? 'collapsed' : ''}`}>
+    <div className={`dashboard-drawer ${!open ? "collapsed" : ""}`}>
+      <div className={`dashboard-drawer-paper ${!open ? "collapsed" : ""}`}>
         <div className="drawer-header">
           <button className="drawer-toggle-btn" onClick={handleDrawerToggle}>
             {open ? <ChevronLeft /> : <ChevronRight />}
@@ -71,12 +76,18 @@ export default function MiniDrawer({ menuType = 'dashboard' }) {
             <li key={item.text} className="sidebar-list-item">
               <Link
                 to={item.path}
-                className={`sidebar-list-button ${!open ? 'collapsed' : ''} ${location.pathname === item.path ? 'active' : ''}`}
+                className={`sidebar-list-button ${!open ? "collapsed" : ""} ${
+                  location.pathname === item.path ? "active" : ""
+                }`}
               >
-                <div className={`sidebar-list-icon ${!open ? 'collapsed' : ''}`}>
+                <div
+                  className={`sidebar-list-icon ${!open ? "collapsed" : ""}`}
+                >
                   {getIcon(item.icon)}
                 </div>
-                <span className={`sidebar-list-text ${!open ? 'collapsed' : ''}`}>
+                <span
+                  className={`sidebar-list-text ${!open ? "collapsed" : ""}`}
+                >
                   {item.text}
                 </span>
               </Link>

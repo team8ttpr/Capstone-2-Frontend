@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import PostCard from "../components/PostCard";
 import PostForm from "../components/PostForm";
 import MiniDrawer from "../components/MiniDrawer";
+import SearchBar from "../components/SearchBar";
 import "../style/MyPost.css";
 import { API_URL } from "../shared";
 
@@ -11,6 +12,7 @@ const MyPost = () => {
   const [filter, setFilter] = useState("all");
   const [currentUser, setCurrentUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [query, setQuery] = useState("");
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -59,6 +61,18 @@ const MyPost = () => {
   const handlePostUpdate = () => {
     fetchPosts();
   };
+
+  //filter posts based on query
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return posts;
+    return posts.filter(
+      (p) =>
+        (p.title || "").toLowerCase().includes(q) ||
+        (p.description || "").toLowerCase().includes(q) ||
+        (p.status || "").toLowerCase().includes(q)
+    );
+  }, [posts, query]);
 
   return (
     <div className="dashboard-layout">
@@ -131,6 +145,8 @@ const MyPost = () => {
             </button>
           </div>
 
+          <SearchBar onSearch={setQuery} placeholder="Search for a post..." />
+
           {/* Post Form Modal */}
           <PostForm
             isOpen={isModalOpen}
@@ -175,7 +191,7 @@ const MyPost = () => {
                 </button>
               </div>
             ) : (
-              posts.map((post) => (
+              filtered.map((post) => (
                 <PostCard
                   key={post.id}
                   post={post}
