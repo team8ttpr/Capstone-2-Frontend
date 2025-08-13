@@ -1,5 +1,5 @@
 import "../style/SinglePostView.css";
-import "../style/PostCard.css"; // reuse modal styles from PostCard
+import "../style/PostCard.css"; 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { API_URL } from "../shared";
@@ -13,13 +13,9 @@ const SinglePostView = ({ user }) => {
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // likes
   const [likes, setLikes] = useState(0);
   const [liked, setLiked] = useState(false);
   const [likeBusy, setLikeBusy] = useState(false);
-
-  // comments + sharing
   const [commentsOpen, setCommentsOpen] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
@@ -27,28 +23,27 @@ const SinglePostView = ({ user }) => {
 
   useEffect(() => {
     if (id) fetchPost();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  const fetchPost = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const res = await axios.get(`${API_URL}/api/posts/${id}`, {
-        withCredentials: true,
-      });
-      const p = res.data;
-      setPost(p);
-      setLikes(Number(p?.likesCount ?? p?.likes ?? 0));
-      setLiked(Boolean(p?.isLiked ?? p?.likedByUser));
-    } catch (_) {
-      setError("Failed to load post.");
-    } finally {
-      setLoading(false);
-    }
-  };
+const fetchPost = async () => {
+  try {
+    setLoading(true);
+    setError(null);
+    const res = await axios.get(`${API_URL}/api/posts/${id}`, {
+      withCredentials: true,
+    });
+    const p = res.data;
+    setPost(p);
+    setLikes(Number(p?.likesCount ?? 0));
+    setLiked(Boolean(p?.isLiked ?? false));
+  } catch (error) {
+    console.error('Error fetching post:', error);
+    setError("Failed to load post.");
+  } finally {
+    setLoading(false);
+  }
+};
 
-  // Use the same toggle endpoint as PostCard (POST /like returns { isLiked, likesCount })
   const toggleLike = async () => {
     if (!user) {
       navigate("/auth");
@@ -63,10 +58,8 @@ const SinglePostView = ({ user }) => {
         { withCredentials: true }
       );
       const data = res.data || {};
-      // Server is source of truth
       if (typeof data.isLiked === "boolean") setLiked(data.isLiked);
       if (typeof data.likesCount === "number") setLikes(data.likesCount);
-      // Fallback if API returns nothing
       if (data.isLiked === undefined && data.likesCount === undefined) {
         setLiked((v) => !v);
         setLikes((c) => (liked ? Math.max(0, c - 1) : c + 1));
@@ -78,7 +71,6 @@ const SinglePostView = ({ user }) => {
     }
   };
 
-  // Share modal controls (same as PostCard)
   const openShare = () => setShareOpen(true);
   const handleCopyLink = () => {
     navigator.clipboard.writeText(postUrl).then(() => {
@@ -87,7 +79,6 @@ const SinglePostView = ({ user }) => {
     });
   };
   const handleRepost = () => {
-    // Placeholder: implement when backend is ready
     setShareOpen(false);
   };
 

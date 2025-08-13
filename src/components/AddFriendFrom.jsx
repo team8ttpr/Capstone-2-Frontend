@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import FriendCard from "./FriendCard";
+import { API_URL } from "../shared";
 
 export default function AddFriendForm({ onClose }) {
   const [users, setUsers] = useState([]);
@@ -12,8 +13,8 @@ export default function AddFriendForm({ onClose }) {
       try {
         setLoading(true);
         setError("");
-        const authToken = localStorage.getItem("authToken"); // or wherever you store it
-        const res = await fetch("http://localhost:8080/api/profile/all", {
+        const authToken = localStorage.getItem("authToken"); 
+        const res = await fetch(`${API_URL}/api/profile/all`, {
           credentials: "include",
           headers: {
             Authorization: `Bearer ${authToken}`,
@@ -137,7 +138,6 @@ export default function AddFriendForm({ onClose }) {
                   isMe={false}
                   busy={false}
                   onToggleFollow={() => {
-                    // You can implement follow logic here
                     console.log("Add friend:", u.id);
                   }}
                 />
