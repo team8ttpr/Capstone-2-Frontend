@@ -5,6 +5,7 @@ import FriendNavbar from "../components/FriendNavbar";
 import SearchBar from "../components/SearchBar";
 import axios from "axios";
 import AddFriendForm from "../components/AddFriendFrom.jsx";
+import { API_URL } from "../shared.js";
 
 const Friends = () => {
   const [me, setMe] = useState(null);
@@ -18,7 +19,7 @@ const Friends = () => {
   useEffect(() => {
     const loadFriends = async () => {
       try {
-        const meRes = await axios.get("http://localhost:8080/auth/me", {
+        const meRes = await axios.get(`${API_URL}/auth/me`, {
           withCredentials: true,
         });
         const { user } = meRes.data;
@@ -27,10 +28,10 @@ const Friends = () => {
         const username = user.username;
 
         const [followersRes, followingRes] = await Promise.all([
-          fetch(`http://localhost:8080/api/follow/${username}/followers`, {
+          fetch(`${API_URL}/api/follow/${username}/followers`, {
             credentials: "include",
           }),
-          fetch(`http://localhost:8080/api/follow/${username}/following`, {
+          fetch(`${API_URL}/api/follow/${username}/following`, {
             credentials: "include",
           }),
         ]);
@@ -48,7 +49,7 @@ const Friends = () => {
     setBusy((prev) => ({ ...prev, [username]: true }));
     try {
       const res = await axios.post(
-        `http://localhost:8080/api/profile/${username}/follow`,
+        `${API_URL}/api/profile/${username}/follow`,
         {},
         { withCredentials: true }
       );
