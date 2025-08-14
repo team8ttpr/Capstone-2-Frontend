@@ -57,7 +57,7 @@ const ShareProfile = () => {
     return (
       <div className="shareprofile-root" style={{ minHeight: '100vh', background: theme.cardBg }}>
         <nav className="shareprofile-navbar" style={{ background: theme.cardBg, color: theme.primary, borderBottom: `1px solid ${theme.border}` }} onClick={handleLogoClick}>
-          capstone-2
+          Spotter
         </nav>
         <div className="shareprofile-loading" style={{ color: theme.textPrimary }}>Loading profile...</div>
       </div>
@@ -68,7 +68,7 @@ const ShareProfile = () => {
     return (
       <div className="shareprofile-root" style={{ minHeight: '100vh', background: theme.cardBg }}>
         <nav className="shareprofile-navbar" style={{ background: theme.cardBg, color: theme.primary, borderBottom: `1px solid ${theme.border}` }} onClick={handleLogoClick}>
-          capstone-2
+          Spotter
         </nav>
         <div className="shareprofile-error" style={{ color: theme.textPrimary }}>{error}</div>
       </div>
@@ -78,7 +78,7 @@ const ShareProfile = () => {
   return (
     <div className="shareprofile-root" style={{ minHeight: '100vh', background: theme.cardBg }}>
       <nav className="shareprofile-navbar" style={{ background: theme.cardBg, color: theme.primary, borderBottom: `1px solid ${theme.border}` }} onClick={handleLogoClick}>
-        capstone-2
+        Spotter
       </nav>
       <div className="shareprofile-content">
         <ProfileComponent
