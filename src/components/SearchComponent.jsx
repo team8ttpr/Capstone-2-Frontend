@@ -46,6 +46,7 @@ const SearchComponent = ({
 
       const response = await axios.get(`${API_URL}/api/search-songs`, {
         params: { q: searchQuery.trim() },
+        withCredentials: true,
         timeout: 10000,
       });
 
