@@ -25,7 +25,7 @@ const MyPost = () => {
 
   const fetchPosts = async () => {
     try {
-      let url = `${API_URL}/api/posts/?include=user`;
+      let url = `${API_URL}/api/posts/my?include=user`;
 
       if (filter === "draft") {
         url = `${API_URL}/api/posts/draft?include=user`;
