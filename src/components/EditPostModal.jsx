@@ -80,8 +80,8 @@ const EditPostModal = ({ post, onClose, onSuccess }) => {
 
     try {
       const endpoint = shouldPublish 
-        ? `/api/posts/${post.id}/publish` 
-        : `/api/posts/draft/${post.id}`;
+        ? `/api/posts/${post.id}` 
+        : `/api/posts/${post.id}`;
         
       const response = await axios.patch(`${API_URL}${endpoint}`, updateData, {
         withCredentials: true,

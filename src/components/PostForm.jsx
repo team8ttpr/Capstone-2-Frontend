@@ -72,7 +72,7 @@ export default function PostForm({ isOpen, onClose, onPostCreated }) {
     };
 
     try {
-      const endpoint = saveAsDraft ? '/api/posts/draft' : '/api/posts';
+      const endpoint = saveAsDraft ? '/api/posts' : '/api/posts';
       const response = await axios.post(`${API_URL}${endpoint}`, postData, {
         withCredentials: true,
       });
