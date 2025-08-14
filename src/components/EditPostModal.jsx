@@ -8,7 +8,8 @@ import '../style/EditPostModal.css';
 const EditPostModal = ({ post, onClose, onSuccess }) => {
   const [formData, setFormData] = useState({
     title: post.title || '',
-    description: post.description || ''
+    description: post.description || '',
+    spotifyEmbedUrl: post.spotifyEmbedUrl || ''
   });
   const [selectedEmbed, setSelectedEmbed] = useState(null);
   const [showSearch, setShowSearch] = useState(false);
@@ -24,7 +25,25 @@ const EditPostModal = ({ post, onClose, onSuccess }) => {
         author: post.spotifyArtist || '',
         spotify_url: `https://open.spotify.com/${post.spotifyType}/${post.spotifyId}`
       });
+    } else if (post.spotifyEmbedUrl) {
+      const match = post.spotifyEmbedUrl.match(/embed\/(track|artist|album|playlist)\/([a-zA-Z0-9]+)/);
+      if (match) {
+        setSelectedEmbed({
+          id: match[2],
+          type: match[1],
+          name: post.title,
+          author: post.spotifyArtist || '',
+          spotify_url: `https://open.spotify.com/${match[1]}/${match[2]}`
+        });
+      }
+    } else {
+      setSelectedEmbed(null);
     }
+    setFormData({
+      title: post.title || '',
+      description: post.description || '',
+      spotifyEmbedUrl: post.spotifyEmbedUrl || ''
+    });
   }, [post]);
 
   const getSpotifyId = (item) => {
@@ -50,18 +69,21 @@ const EditPostModal = ({ post, onClose, onSuccess }) => {
   };
 
   const handleSearchResultSelect = (result) => {
-    console.log('Selected search result:', result);
     setSelectedEmbed(result);
     setShowSearch(false);
   };
 
   const removeSelectedEmbed = () => {
     setSelectedEmbed(null);
+    setFormData(prev => ({
+      ...prev,
+      spotifyEmbedUrl: ''
+    }));
   };
 
   const handleSubmit = async (e, shouldPublish = false) => {
     e.preventDefault();
-    
+
     if (shouldPublish) {
       setIsPublishing(true);
     } else {
@@ -73,24 +95,19 @@ const EditPostModal = ({ post, onClose, onSuccess }) => {
       status: shouldPublish ? 'published' : 'draft',
       spotifyId: selectedEmbed ? getSpotifyId(selectedEmbed) : null,
       spotifyType: selectedEmbed ? selectedEmbed.type : null,
-      spotifyEmbedUrl: selectedEmbed ? getSpotifyEmbedUrl(selectedEmbed) : null,
+      spotifyEmbedUrl: selectedEmbed ? getSpotifyEmbedUrl(selectedEmbed) : formData.spotifyEmbedUrl || null,
     };
 
-    console.log('Updating post with data:', updateData);
-
     try {
-      const endpoint = shouldPublish 
-        ? `/api/posts/${post.id}` 
-        : `/api/posts/${post.id}`;
-        
-      const response = await axios.patch(`${API_URL}${endpoint}`, updateData, {
+      const endpoint = `/api/posts/${post.id}`;
+      await axios.patch(`${API_URL}${endpoint}`, updateData, {
         withCredentials: true,
       });
-      
+
       const message = shouldPublish ? 'Draft published successfully!' : 'Draft updated successfully!';
       alert(message);
       onSuccess();
-      
+
     } catch (error) {
       console.error("Error updating draft:", error);
       alert(error.response?.data?.error || 'Failed to update draft. Please try again.');
@@ -184,7 +201,7 @@ const EditPostModal = ({ post, onClose, onSuccess }) => {
             )}
 
             {/* Selected Embed Preview */}
-            {selectedEmbed && (
+            {selectedEmbed ? (
               <div className="selected-embed-section">
                 <div className="embed-header">
                   <div className="embed-title">
@@ -230,6 +247,30 @@ const EditPostModal = ({ post, onClose, onSuccess }) => {
                   )}
                 </div>
               </div>
+            ) : (
+              formData.spotifyEmbedUrl && (
+                <div className="selected-embed-section">
+                  <div className="embed-header">
+                    <div className="embed-title">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                        <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                      </svg>
+                      Existing Music:
+                    </div>
+                  </div>
+                  <div className="embed-preview">
+                    <iframe
+                      src={formData.spotifyEmbedUrl}
+                      width="100%"
+                      height="152"
+                      frameBorder="0"
+                      allow="encrypted-media"
+                      title="Spotify Embed"
+                    />
+                  </div>
+                </div>
+              )
             )}
           </div>
 
