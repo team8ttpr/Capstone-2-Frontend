@@ -23,25 +23,15 @@ const MyPost = () => {
     fetchPosts();
   };
 
-  const fetchPosts = async () => {
-    try {
-      let url = `${API_URL}/api/posts/?include=user`;
-
-      if (filter === "draft") {
-        url = `${API_URL}/api/posts/draft?include=user`;
-      } else if (filter === "published") {
-        url = `${API_URL}/api/posts/published?include=user`;
-      }
-
-      console.log(`Fetching posts from: ${url}`);
-
-      const response = await axios.get(url, { withCredentials: true });
-      console.log("MyPost posts data:", response.data);
-      setPosts(response.data);
-    } catch (error) {
-      console.error("Error fetching posts:", error);
-    }
-  };
+const fetchPosts = async () => {
+  try {
+    const url = `${API_URL}/api/posts/my`;
+    const response = await axios.get(url, { withCredentials: true });
+    setPosts(response.data);
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+  }
+};
 
   useEffect(() => {
     axios
@@ -62,17 +52,22 @@ const MyPost = () => {
     fetchPosts();
   };
 
-  //filter posts based on query
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return posts;
-    return posts.filter(
-      (p) =>
-        (p.title || "").toLowerCase().includes(q) ||
-        (p.description || "").toLowerCase().includes(q) ||
-        (p.status || "").toLowerCase().includes(q)
-    );
-  }, [posts, query]);
+const filtered = useMemo(() => {
+  const q = query.trim().toLowerCase();
+  let filteredPosts = posts;
+  if (filter === "draft") {
+    filteredPosts = filteredPosts.filter(p => p.status === "draft");
+  } else if (filter === "published") {
+    filteredPosts = filteredPosts.filter(p => p.status === "published");
+  }
+  if (!q) return filteredPosts;
+  return filteredPosts.filter(
+    (p) =>
+      (p.title || "").toLowerCase().includes(q) ||
+      (p.description || "").toLowerCase().includes(q) ||
+      (p.status || "").toLowerCase().includes(q)
+  );
+}, [posts, query, filter]);
 
   return (
     <div className="dashboard-layout">
