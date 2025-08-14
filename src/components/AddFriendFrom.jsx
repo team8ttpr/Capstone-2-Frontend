@@ -1,34 +1,31 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import FriendCard from "./FriendCard";
-import { API_URL } from "../shared";
+import { API_URL } from "../shared.js";
 
 export default function AddFriendForm({ onClose }) {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // Fetch all users with follow status
   useEffect(() => {
     let mounted = true;
     const fetchUsers = async () => {
       try {
         setLoading(true);
         setError("");
-        const authToken = localStorage.getItem("authToken"); 
-        const res = await fetch(`${API_URL}/api/profile/all`, {
-          credentials: "include",
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-            "Content-Type": "application/json",
-          },
-        });
-        if (!res.ok) {
-          throw new Error(`Request failed: ${res.status}`);
-        }
+        const res = await fetch(
+          `${API_URL}/api/follow/all-with-follow-status`,
+          {
+            credentials: "include",
+          }
+        );
+        if (!res.ok) throw new Error(`Request failed: ${res.status}`);
         const data = await res.json();
         if (mounted) setUsers(data);
       } catch (e) {
-        if (mounted) setError("Could not load users.");
         console.error(e);
+        if (mounted) setError("Could not load users.");
       } finally {
         if (mounted) setLoading(false);
       }
@@ -38,6 +35,26 @@ export default function AddFriendForm({ onClose }) {
       mounted = false;
     };
   }, []);
+
+  // Follow/unfollow toggle
+  const handleToggleFollow = async (username) => {
+    try {
+      const res = await fetch(`${API_URL}/api/profile/${username}/follow`, {
+        method: "POST",
+        credentials: "include",
+      });
+      if (!res.ok) throw new Error("Failed to toggle follow");
+
+      // Toggle isFollowing in state without refetching
+      setUsers((prev) =>
+        prev.map((u) =>
+          u.username === username ? { ...u, isFollowing: !u.isFollowing } : u
+        )
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div
@@ -132,12 +149,10 @@ export default function AddFriendForm({ onClose }) {
                 <FriendCard
                   key={u.id}
                   user={u}
-                  isFollowing={false}
+                  isFollowing={u.isFollowing}
                   isMe={false}
                   busy={false}
-                  onToggleFollow={() => {
-                    console.log("Add friend:", u.id);
-                  }}
+                  onToggleFollow={() => handleToggleFollow(u.username)}
                 />
               ))}
             </>

@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { API_URL } from '../shared';
-import { useNavigate } from 'react-router-dom';
-import '../style/TopArtist.css';
-import MiniDrawer from '../components/MiniDrawer';
-import SpotifyEmbed from '../components/SpotifyEmbed';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { API_URL } from "../shared";
+import { useNavigate } from "react-router-dom";
+import "../style/TopArtist.css";
+import MiniDrawer from "../components/MiniDrawer";
+import SpotifyEmbed from "../components/SpotifyEmbed";
 
 const TopArtist = ({ user }) => {
   const [topArtists, setTopArtists] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [timeRange, setTimeRange] = useState('medium_term');
+  const [error, setError] = useState("");
+  const [timeRange, setTimeRange] = useState("medium_term");
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!user) {
-      navigate('/auth');
+      navigate("/auth");
       return;
     }
     fetchTopArtists();
@@ -24,21 +24,23 @@ const TopArtist = ({ user }) => {
   const fetchTopArtists = async () => {
     try {
       setLoading(true);
-      setError('');
-      
+      setError("");
+
       const response = await axios.get(`${API_URL}/auth/spotify/top-artists`, {
         params: { time_range: timeRange },
-        withCredentials: true
+        withCredentials: true,
       });
 
       setTopArtists(response.data.items || []);
     } catch (error) {
       if (error.response?.status === 401) {
-        navigate('/auth');
+        navigate("/auth");
         return;
       }
-      setError('Failed to load top artists. Please make sure Spotify is connected.');
-      console.error('Error fetching top artists:', error);
+      setError(
+        "Failed to load top artists. Please make sure Spotify is connected."
+      );
+      console.error("Error fetching top artists:", error);
     } finally {
       setLoading(false);
     }
@@ -46,13 +48,13 @@ const TopArtist = ({ user }) => {
 
   const timeRangeLabels = {
     short_term: "Last 4 Weeks",
-    medium_term: "Last 6 Months", 
-    long_term: "All Time"
+    medium_term: "Last 6 Months",
+    long_term: "All Time",
   };
 
   const getSpotifyArtistId = (artist) => {
     if (artist.uri) {
-      return artist.uri.split(':')[2];
+      return artist.uri.split(":")[2];
     }
     if (artist.external_urls?.spotify) {
       const url = artist.external_urls.spotify;
@@ -116,7 +118,9 @@ const TopArtist = ({ user }) => {
               {Object.entries(timeRangeLabels).map(([value, label]) => (
                 <button
                   key={value}
-                  className={`time-range-btn ${timeRange === value ? 'active' : ''}`}
+                  className={`time-range-btn ${
+                    timeRange === value ? "active" : ""
+                  }`}
                   onClick={() => setTimeRange(value)}
                 >
                   {label}
@@ -130,16 +134,16 @@ const TopArtist = ({ user }) => {
               <div className="artists-embed-list">
                 {topArtists.map((artist, index) => {
                   const artistId = getSpotifyArtistId(artist);
-                  
+
                   return (
                     <div key={artist.id} className="artist-embed-item">
                       <div className="artist-rank">#{index + 1}</div>
                       {artistId ? (
-                        <SpotifyEmbed 
-                          type="artist" 
-                          id={artistId} 
-                          width="80%" 
-                          height="352" 
+                        <SpotifyEmbed
+                          type="artist"
+                          id={artistId}
+                          width="80%"
+                          height="352"
                         />
                       ) : (
                         <div className="embed-fallback">
@@ -152,12 +156,17 @@ const TopArtist = ({ user }) => {
                                 </span>
                               ))}
                             </div>
-                            <p className="popularity">Popularity: {artist.popularity}%</p>
-                            <p className="followers">{artist.followers.total.toLocaleString()} followers</p>
+                            <p className="popularity">
+                              Popularity: {artist.popularity}%
+                            </p>
+                            <p className="followers">
+                              {artist.followers.total.toLocaleString()}{" "}
+                              followers
+                            </p>
                             {artist.external_urls?.spotify && (
-                              <a 
-                                href={artist.external_urls.spotify} 
-                                target="_blank" 
+                              <a
+                                href={artist.external_urls.spotify}
+                                target="_blank"
                                 rel="noopener noreferrer"
                                 className="spotify-link"
                               >
@@ -174,8 +183,14 @@ const TopArtist = ({ user }) => {
             ) : (
               <div className="no-data">
                 <h3>No Top Artists Found</h3>
-                <p>You don't have enough listening history to show top artists for this time period.</p>
-                <p>Try selecting a different time range or listen to more music on Spotify!</p>
+                <p>
+                  You don't have enough listening history to show top artists
+                  for this time period.
+                </p>
+                <p>
+                  Try selecting a different time range or listen to more music
+                  on Spotify!
+                </p>
               </div>
             )}
           </div>
