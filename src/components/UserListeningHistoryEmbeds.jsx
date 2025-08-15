@@ -15,7 +15,7 @@ const UserListeningHistoryEmbeds = ({ recentTracks }) => {
             <SpotifyEmbed type="track" id={item.track.id} width="100%" height={80} />
             <div className="embed-details">
               Album: {item.track.album}
-              {item.timeAgo && (
+              {item.timeAgo && !item.timeAgo.startsWith("NaN") && (
                 <><br />Played: {item.timeAgo}</>
               )}
             </div>
