@@ -1,56 +1,48 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import FriendCard from "./FriendCard";
 import { API_URL } from "../shared.js";
+import axios from "axios";
 
-export default function AddFriendForm({ onClose }) {
+export default function AddFriendForm({ onClose, onFollowChange }) {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const mounted = useRef(true);
 
-  // Fetch all users with follow status
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+      setError("");
+      const res = await axios.get(
+        `${API_URL}/api/follow/all-with-follow-status`,
+        { withCredentials: true }
+      );
+      if (mounted.current) setUsers(res.data);
+    } catch (e) {
+      console.error(e);
+      if (mounted.current) setError("Could not load users.");
+    } finally {
+      if (mounted.current) setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    let mounted = true;
-    const fetchUsers = async () => {
-      try {
-        setLoading(true);
-        setError("");
-        const res = await fetch(
-          `${API_URL}/api/follow/all-with-follow-status`,
-          {
-            credentials: "include",
-          }
-        );
-        if (!res.ok) throw new Error(`Request failed: ${res.status}`);
-        const data = await res.json();
-        if (mounted) setUsers(data);
-      } catch (e) {
-        console.error(e);
-        if (mounted) setError("Could not load users.");
-      } finally {
-        if (mounted) setLoading(false);
-      }
-    };
+    mounted.current = true;
     fetchUsers();
     return () => {
-      mounted = false;
+      mounted.current = false;
     };
   }, []);
 
-  // Follow/unfollow toggle
   const handleToggleFollow = async (username) => {
     try {
-      const res = await fetch(`${API_URL}/api/profile/${username}/follow`, {
-        method: "POST",
-        credentials: "include",
-      });
-      if (!res.ok) throw new Error("Failed to toggle follow");
-
-      // Toggle isFollowing in state without refetching
-      setUsers((prev) =>
-        prev.map((u) =>
-          u.username === username ? { ...u, isFollowing: !u.isFollowing } : u
-        )
+      await axios.post(
+        `${API_URL}/api/profile/${username}/follow`,
+        {},
+        { withCredentials: true }
       );
+      fetchUsers();
+      if (onFollowChange) onFollowChange();
     } catch (err) {
       console.error(err);
     }

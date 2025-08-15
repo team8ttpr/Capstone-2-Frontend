@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import MiniDrawer from "../components/MiniDrawer.jsx";
 import FriendCard from "../components/FriendCard";
 import FriendNavbar from "../components/FriendNavbar";
@@ -16,34 +16,35 @@ const Friends = () => {
   const [query, setQuery] = useState("");
   const [showSearch, setShowSearch] = useState(false);
 
-  useEffect(() => {
-    const loadFriends = async () => {
-      try {
-        const meRes = await axios.get(`${API_URL}/auth/me`, {
-          withCredentials: true,
-        });
-        const { user } = meRes.data;
-        setMe(user);
+  const loadFriends = useCallback(async () => {
+    try {
+      const meRes = await axios.get(`${API_URL}/auth/me`, {
+        withCredentials: true,
+      });
+      const { user } = meRes.data;
+      setMe(user);
 
-        const username = user.username;
+      const username = user.username;
 
-        const [followersRes, followingRes] = await Promise.all([
-          fetch(`${API_URL}/api/follow/${username}/followers`, {
-            credentials: "include",
-          }),
-          fetch(`${API_URL}/api/follow/${username}/following`, {
-            credentials: "include",
-          }),
-        ]);
+      const [followersRes, followingRes] = await Promise.all([
+        fetch(`${API_URL}/api/follow/${username}/followers`, {
+          credentials: "include",
+        }),
+        fetch(`${API_URL}/api/follow/${username}/following`, {
+          credentials: "include",
+        }),
+      ]);
 
-        setFollowers(await followersRes.json());
-        setFollowing(await followingRes.json());
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    loadFriends();
+      setFollowers(await followersRes.json());
+      setFollowing(await followingRes.json());
+    } catch (err) {
+      console.error(err);
+    }
   }, []);
+
+  useEffect(() => {
+    loadFriends();
+  }, [loadFriends]);
 
   const toggleFollow = async (username) => {
     setBusy((prev) => ({ ...prev, [username]: true }));
@@ -164,7 +165,10 @@ const Friends = () => {
             }
           />
           {showSearch && (
-            <AddFriendForm onClose={() => setShowSearch(false)} />
+            <AddFriendForm
+          onClose={() => setShowSearch(false)}
+          onFollowChange={loadFriends} 
+        />
           )}
           {renderList()}
         </div>
