@@ -4,8 +4,9 @@ import FriendCard from "../components/FriendCard";
 import FriendNavbar from "../components/FriendNavbar";
 import SearchBar from "../components/SearchBar";
 import axios from "axios";
-import AddFriendForm from "../components/AddFriendFrom.jsx";
+import AddFriendForm from "../components/AddFriendForm.jsx"; // <- fixed
 import { API_URL } from "../shared.js";
+import { socket } from "../ws";
 
 const Friends = () => {
   const [me, setMe] = useState(null);
@@ -15,6 +16,29 @@ const Friends = () => {
   const [activeTab, onTabChange] = useState("friends");
   const [query, setQuery] = useState("");
   const [showSearch, setShowSearch] = useState(false);
+  const [online, setOnline] = useState(new Set());
+
+  useEffect(() => {
+    console.log("socket id:", socket.id);
+    const onSnapshot = (ids) => {
+      console.log("presence:snapshot", ids);
+      setOnline(new Set(ids.map(String)));
+    };
+    const onUpdate = (p) => {
+      console.log("presence:update", p);
+      setOnline((prev) => {
+        const next = new Set(prev);
+        p.online ? next.add(String(p.userId)) : next.delete(String(p.userId));
+        return next;
+      });
+    };
+    socket.on("presence:snapshot", onSnapshot);
+    socket.on("presence:update", onUpdate);
+    return () => {
+      socket.off("presence:snapshot", onSnapshot);
+      socket.off("presence:update", onUpdate);
+    };
+  }, []);
 
   const loadFriends = useCallback(async () => {
     try {
@@ -35,8 +59,13 @@ const Friends = () => {
         }),
       ]);
 
-      setFollowers(await followersRes.json());
-      setFollowing(await followingRes.json());
+      const [followersData, followingData] = await Promise.all([
+        followersRes.json(),
+        followingRes.json(),
+      ]);
+
+      setFollowers(followersData);
+      setFollowing(followingData);
     } catch (err) {
       console.error(err);
     }
@@ -49,21 +78,13 @@ const Friends = () => {
   const toggleFollow = async (username) => {
     setBusy((prev) => ({ ...prev, [username]: true }));
     try {
-      const res = await axios.post(
+      await axios.post(
         `${API_URL}/api/profile/${username}/follow`,
         {},
         { withCredentials: true }
       );
-
-      const json = res.data;
-
-      if (json.message?.includes("Followed")) {
-        if (!following.find((u) => u.username === username)) {
-          setFollowing((prev) => [...prev, { username }]);
-        }
-      } else if (json.message?.includes("Unfollowed")) {
-        setFollowing((prev) => prev.filter((u) => u.username !== username));
-      }
+      // IMPORTANT: refresh lists so each user has a real id for presence
+      await loadFriends();
     } finally {
       setBusy((prev) => ({ ...prev, [username]: false }));
     }
@@ -71,10 +92,7 @@ const Friends = () => {
 
   const handleToggleFollow = (username, currentlyFollowing) => {
     const action = currentlyFollowing ? "unfollow" : "follow";
-    const confirmed = window.confirm(
-      `Are you sure you want to ${action} ${username}?`
-    );
-    if (confirmed) {
+    if (window.confirm(`Are you sure you want to ${action} ${username}?`)) {
       toggleFollow(username);
     }
   };
@@ -86,7 +104,9 @@ const Friends = () => {
       return users.filter(
         (u) =>
           (u.username || "").toLowerCase().includes(lowerQuery) ||
-          (u.name || "").toLowerCase().includes(lowerQuery)
+          ([u.firstName, u.lastName].filter(Boolean).join(" ") || "")
+            .toLowerCase()
+            .includes(lowerQuery)
       );
     };
 
@@ -102,26 +122,26 @@ const Friends = () => {
           isMe={me?.username === u.username}
           busy={!!busy[u.username]}
           onToggleFollow={() => handleToggleFollow(u.username, true)}
+          isOnline={online.has(String(u.id))} // <- pass presence
         />
       ));
     }
 
     if (activeTab === "followers") {
-      return filterUsers(followers).map((u) => (
-        <FriendCard
-          key={u.id}
-          user={u}
-          isFollowing={following.some((f) => f.username === u.username)}
-          isMe={me?.username === u.username}
-          busy={!!busy[u.username]}
-          onToggleFollow={() =>
-            handleToggleFollow(
-              u.username,
-              following.some((f) => f.username === u.username)
-            )
-          }
-        />
-      ));
+      return filterUsers(followers).map((u) => {
+        const amIFollowing = following.some((f) => f.username === u.username);
+        return (
+          <FriendCard
+            key={u.id}
+            user={u}
+            isFollowing={amIFollowing}
+            isMe={me?.username === u.username}
+            busy={!!busy[u.username]}
+            onToggleFollow={() => handleToggleFollow(u.username, amIFollowing)}
+            isOnline={online.has(String(u.id))} // <- pass presence
+          />
+        );
+      });
     }
 
     if (activeTab === "following") {
@@ -133,6 +153,7 @@ const Friends = () => {
           isMe={me?.username === u.username}
           busy={!!busy[u.username]}
           onToggleFollow={() => handleToggleFollow(u.username, true)}
+          isOnline={online.has(String(u.id))} // <- pass presence
         />
       ));
     }
@@ -166,9 +187,9 @@ const Friends = () => {
           />
           {showSearch && (
             <AddFriendForm
-          onClose={() => setShowSearch(false)}
-          onFollowChange={loadFriends} 
-        />
+              onClose={() => setShowSearch(false)}
+              onFollowChange={loadFriends}
+            />
           )}
           {renderList()}
         </div>

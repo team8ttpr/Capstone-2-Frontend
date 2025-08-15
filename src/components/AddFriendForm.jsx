@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import FriendCard from "./FriendCard";
-import SearchBar from "./SearchBar"; 
+import FriendCard from "./FriendCard.jsx";
 import { API_URL } from "../shared.js";
 import axios from "axios";
 
@@ -8,7 +7,7 @@ export default function AddFriendForm({ onClose, onFollowChange }) {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [query, setQuery] = useState(""); 
+  const [query, setQuery] = useState("");
   const mounted = useRef(true);
 
   const fetchUsers = async () => {
@@ -19,7 +18,7 @@ export default function AddFriendForm({ onClose, onFollowChange }) {
         `${API_URL}/api/follow/all-with-follow-status`,
         { withCredentials: true }
       );
-      if (mounted.current) setUsers(res.data);
+      if (mounted.current) setUsers(res.data || []);
     } catch (e) {
       console.error(e);
       if (mounted.current) setError("Could not load users.");
@@ -43,21 +42,27 @@ export default function AddFriendForm({ onClose, onFollowChange }) {
         {},
         { withCredentials: true }
       );
-      fetchUsers();
+
+      setUsers((prev) =>
+        prev.map((u) =>
+          u.username === username ? { ...u, isFollowing: !u.isFollowing } : u
+        )
+      );
       if (onFollowChange) onFollowChange();
     } catch (err) {
       console.error(err);
     }
   };
 
-  const showUsers = query.trim().length > 0;
-  const filteredUsers = showUsers
-    ? users.filter(
-        (u) =>
-          u.username.toLowerCase().includes(query.trim().toLowerCase()) ||
-          (u.name && u.name.toLowerCase().includes(query.trim().toLowerCase()))
-      )
-    : [];
+  const q = query.trim().toLowerCase();
+  const filteredUsers = users.filter((u) => {
+    const username = (u.username || "").toLowerCase();
+    const first = (u.firstName || "").toLowerCase();
+    const last = (u.lastName || "").toLowerCase();
+    return q === ""
+      ? true
+      : username.includes(q) || first.includes(q) || last.includes(q);
+  });
 
   return (
     <div
@@ -82,7 +87,7 @@ export default function AddFriendForm({ onClose, onFollowChange }) {
           padding: "20px",
           width: "420px",
           maxWidth: "90vw",
-          height: "520px", 
+          height: "520px",
           maxHeight: "90vh",
           boxShadow: "0 8px 30px rgba(0,0,0,0.25)",
           display: "flex",
@@ -111,12 +116,21 @@ export default function AddFriendForm({ onClose, onFollowChange }) {
             ✕
           </button>
         </div>
-  
-        <SearchBar
-          onSearch={setQuery}
-          placeholder="Search users..."
+
+        {/* Search input */}
+        <input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search users by name or username…"
+          style={{
+            width: "100%",
+            padding: "10px 12px",
+            borderRadius: "8px",
+            border: "1px solid #ccc",
+            outline: "none",
+          }}
         />
-  
+
         <div
           style={{
             flex: 1,
@@ -127,22 +141,11 @@ export default function AddFriendForm({ onClose, onFollowChange }) {
             flexDirection: "column",
             gap: "8px",
             padding: "10px",
-            overflowY: "auto", 
+            overflowY: "auto",
             marginTop: "8px",
           }}
         >
-          {!showUsers && (
-            <div
-              style={{
-                textAlign: "center",
-                color: "#777",
-                fontStyle: "italic",
-              }}
-            >
-              Start typing to search for users…
-            </div>
-          )}
-          {showUsers && loading && (
+          {loading && (
             <div
               style={{
                 textAlign: "center",
@@ -153,8 +156,8 @@ export default function AddFriendForm({ onClose, onFollowChange }) {
               Loading…
             </div>
           )}
-          {showUsers && error && <div style={{ color: "#b00" }}>{error}</div>}
-          {showUsers && !loading && !error && filteredUsers.length === 0 && (
+          {error && <div style={{ color: "#b00" }}>{error}</div>}
+          {!loading && !error && filteredUsers.length === 0 && (
             <div
               style={{
                 textAlign: "center",
@@ -165,13 +168,13 @@ export default function AddFriendForm({ onClose, onFollowChange }) {
               No users found
             </div>
           )}
-          {showUsers && !loading && !error && filteredUsers.length > 0 && (
+          {!loading && !error && filteredUsers.length > 0 && (
             <>
               {filteredUsers.map((u) => (
                 <FriendCard
                   key={u.id}
                   user={u}
-                  isFollowing={u.isFollowing}
+                  isFollowing={!!u.isFollowing}
                   isMe={false}
                   busy={false}
                   onToggleFollow={() => handleToggleFollow(u.username)}
@@ -183,4 +186,4 @@ export default function AddFriendForm({ onClose, onFollowChange }) {
       </div>
     </div>
   );
-};
+}
