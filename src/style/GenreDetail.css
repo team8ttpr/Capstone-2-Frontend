@@ -1,0 +1,55 @@
+.genre-detail-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.genre-detail-popup {
+  position: absolute;
+  top: 32px;
+  left: 360px;
+  background: #fff;
+  border-radius: 10px;
+  padding: 24px 32px;
+  max-width: 350px;
+  width: 90vw;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+  z-index: 100;
+}
+
+.genre-detail-content {
+  position: relative;
+}
+
+.genre-detail-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #888;
+  cursor: pointer;
+}
+
+.genre-detail-content h2 {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.genre-detail-content ul {
+  list-style: none;
+  padding: 0;
+}
+
+.genre-detail-content li {
+  margin-bottom: 10px;
+  font-size: 1.05em;
+}

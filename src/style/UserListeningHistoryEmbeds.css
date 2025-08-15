@@ -1,0 +1,44 @@
+.listening-history-embeds-container {
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 10px 0;
+}
+
+.listening-history-embeds-scroll {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #888 #eee;
+}
+
+.embed-item {
+  min-width: 250px;
+  max-width: 300px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.embed-details {
+  font-size: 0.95em;
+  margin-top: 4px;
+  color: #333;
+}
+
+.listening-history-embeds-scroll::-webkit-scrollbar {
+  height: 8px;
+}
+
+.listening-history-embeds-scroll::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.listening-history-embeds-scroll::-webkit-scrollbar-track {
+  background: #eee;
+}
