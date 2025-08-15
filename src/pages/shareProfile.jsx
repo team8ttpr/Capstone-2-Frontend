@@ -12,6 +12,8 @@ const ShareProfile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [profileThemeId, setProfileThemeId] = useState("default");
+  const [followers, setFollowers] = useState([]);
+  const [following, setFollowing] = useState([]);
   const { username } = useParams();
   const navigate = useNavigate();
 
@@ -19,8 +21,8 @@ const ShareProfile = () => {
     if (username) {
       fetchPublicProfile();
       fetchUserPosts();
+      fetchFollowersAndFollowing();
     }
-    // eslint-disable-next-line
   }, [username]);
 
   const fetchPublicProfile = async () => {
@@ -43,9 +45,39 @@ const ShareProfile = () => {
       const response = await axios.get(`${API_URL}/api/profile/${username}/posts`);
       setPosts(response.data);
     } catch (error) {
-      // ignore
     }
   };
+
+const fetchFollowersAndFollowing = async () => {
+  try {
+    const [followersRes, followingRes] = await Promise.all([
+      axios.get(`${API_URL}/api/follow/${username}/followers`, { withCredentials: true }),
+      axios.get(`${API_URL}/api/follow/${username}/following`, { withCredentials: true }),
+    ]);
+    setFollowers(followersRes.data.map(u => ({
+      ...u,
+      isFollowing: followingRes.data.some(f => f.username === u.username)
+    })));
+    setFollowing(followingRes.data.map(u => ({
+      ...u,
+      isFollowing: true
+    })));
+    setProfile(prev =>
+      prev
+        ? {
+            ...prev,
+            stats: {
+              ...prev.stats,
+              followers: followersRes.data.length,
+              following: followingRes.data.length,
+            },
+          }
+        : prev
+    );
+  } catch (error) {
+    console.error("Error fetching followers/following:", error);
+  }
+};
 
   const handleLogoClick = () => {
     navigate("/dashboard");
@@ -87,6 +119,9 @@ const ShareProfile = () => {
           postsLoading={false}
           isOwnProfile={false}
           profileTheme={profileThemeId}
+          followers={followers}
+          following={following}
+          onFollowChange={fetchFollowersAndFollowing}
         />
       </div>
     </div>

@@ -18,6 +18,8 @@ const Profile = ({ user }) => {
   const [showThemeSelector, setShowThemeSelector] = useState(false);
   const [showStickerSelector, setShowStickerSelector] = useState(false);
   const [showMusicSelector, setShowMusicSelector] = useState(false);
+  const [followers, setFollowers] = useState([]);
+  const [following, setFollowing] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,8 +29,40 @@ const Profile = ({ user }) => {
     }
     fetchProfile();
     fetchUserPosts();
+    fetchFollowersAndFollowing();
     loadUserTheme(); 
   }, [user, navigate]);
+
+const fetchFollowersAndFollowing = async () => {
+  try {
+    const [followersRes, followingRes] = await Promise.all([
+      axios.get(`${API_URL}/api/follow/me/followers`, { withCredentials: true }),
+      axios.get(`${API_URL}/api/follow/me/following`, { withCredentials: true }),
+    ]);
+    setFollowers(followersRes.data.map(u => ({
+      ...u,
+      isFollowing: followingRes.data.some(f => f.username === u.username)
+    })));
+    setFollowing(followingRes.data.map(u => ({
+      ...u,
+      isFollowing: true
+    })));
+    setProfile(prev =>
+      prev
+        ? {
+            ...prev,
+            stats: {
+              ...prev.stats,
+              followers: followersRes.data.length,
+              following: followingRes.data.length,
+            },
+          }
+        : prev
+    );
+  } catch (error) {
+    console.error("Error fetching followers/following:", error);
+  }
+};
 
   const loadUserTheme = async () => {
     if (!user) return;
@@ -42,7 +76,6 @@ const Profile = ({ user }) => {
     }
   };
 
-  // Close theme selector when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (showThemeSelector && !event.target.closest('.color-theme-selector')) {
@@ -110,7 +143,6 @@ const Profile = ({ user }) => {
   };
 
   const handleShareProfile = () => {
-    // Navigate to public profile page
     navigate(`/profile/${profile.username}`);
   };
 
@@ -119,18 +151,15 @@ const Profile = ({ user }) => {
       setProfileTheme(newTheme);
       setShowThemeSelector(false);
       
-      // save theme to backend
       const saveResult = await saveTheme(newTheme);
       
       if (!saveResult.success) {
         console.error('Failed to save theme to server:', saveResult.serverError);
       } else {
         console.log('Theme saved successfully:', saveResult.serverMessage);
-        // You could show a success toast here
       }
     } catch (error) {
       console.error('Failed to save theme:', error);
-      // Optionally revert UI or show error message
     }
   };
 
@@ -223,6 +252,9 @@ const Profile = ({ user }) => {
           showMusicSelector={showMusicSelector}
           onToggleMusicSelector={handleToggleMusicSelector}
           onSaveSpotifyItems={handleSaveSpotifyItems}
+          followers={followers}
+          following={following}
+          onFollowChange={fetchFollowersAndFollowing}
         />
 
         {/* Edit Profile Modal */}

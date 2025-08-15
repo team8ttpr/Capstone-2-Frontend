@@ -82,22 +82,36 @@ const PublicProfile = ({ user }) => {
     navigate("/profile");
   };
 
-  const fetchFollowersAndFollowing = async () => {
-    try {
-      const [followersRes, followingRes] = await Promise.all([
-        axios.get(`${API_URL}/api/follow/${username}/followers`, {
-          withCredentials: true,
-        }),
-        axios.get(`${API_URL}/api/follow/${username}/following`, {
-          withCredentials: true,
-        }),
-      ]);
-      setFollowers(followersRes.data);
-      setFollowing(followingRes.data);
-    } catch (err) {
-      console.error("Error fetching followers/following:", err);
-    }
-  };
+const fetchFollowersAndFollowing = async () => {
+  try {
+    const [followersRes, followingRes] = await Promise.all([
+      axios.get(`${API_URL}/api/follow/${username}/followers`, { withCredentials: true }),
+      axios.get(`${API_URL}/api/follow/${username}/following`, { withCredentials: true }),
+    ]);
+    setFollowers(followersRes.data.map(u => ({
+      ...u,
+      isFollowing: followingRes.data.some(f => f.username === u.username)
+    })));
+    setFollowing(followingRes.data.map(u => ({
+      ...u,
+      isFollowing: true
+    })));
+    setProfile(prev =>
+      prev
+        ? {
+            ...prev,
+            stats: {
+              ...prev.stats,
+              followers: followersRes.data.length,
+              following: followingRes.data.length,
+            },
+          }
+        : prev
+    );
+  } catch (error) {
+    console.error("Error fetching followers/following:", error);
+  }
+};
 
   useEffect(() => {
     if (!user) {
@@ -165,6 +179,7 @@ const PublicProfile = ({ user }) => {
           profileTheme={profileTheme}
           followers={followers}
           following={following}
+          onFollowChange={fetchFollowersAndFollowing}
         />
       </div>
     </div>

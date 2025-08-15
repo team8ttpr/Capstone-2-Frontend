@@ -1,7 +1,35 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import FriendCard from "./FriendCard";
+import axios from "axios";
+import { API_URL } from "../shared";
 
-export default function UserListModal({ open, onClose, users, title }) {
+export default function UserListModal({ open, onClose, users: initialUsers, title, onFollowChange }) {
+  const [users, setUsers] = useState(initialUsers || []);
+
+  useEffect(() => {
+    if (open) setUsers(initialUsers || []);
+  }, [open]);
+
+  const handleToggleFollow = async (username) => {
+    try {
+      await axios.post(
+        `${API_URL}/api/profile/${username}/follow`,
+        {},
+        { withCredentials: true }
+      );
+      setUsers((prev) =>
+        prev.map((u) =>
+          u.username === username
+            ? { ...u, isFollowing: !u.isFollowing }
+            : u
+        )
+      );
+      if (onFollowChange) onFollowChange();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   if (!open) return null;
   return (
     <div
@@ -38,7 +66,7 @@ export default function UserListModal({ open, onClose, users, title }) {
                 isFollowing={u.isFollowing}
                 isMe={false}
                 busy={false}
-                onToggleFollow={() => {}}
+                onToggleFollow={handleToggleFollow}
               />
             ))}
           </div>

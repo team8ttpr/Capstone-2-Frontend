@@ -41,6 +41,7 @@ const ProfileComponent = ({
   onSaveSpotifyItems,
   followers = [],
   following = [],
+  onFollowChange,
 }) => {
   const currentTheme = getTheme(profileTheme);
   const [showPostsModal, setShowPostsModal] = useState(false);
@@ -457,6 +458,7 @@ const ProfileComponent = ({
           onClose={() => setShowUserListModal(false)}
           users={userListModalType === "followers" ? followers : following}
           title={userListModalType === "followers" ? "Followers" : "Following"}
+          onFollowChange={onFollowChange}
         />
       </div>
     </div>
