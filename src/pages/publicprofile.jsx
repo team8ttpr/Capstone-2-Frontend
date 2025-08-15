@@ -5,21 +5,23 @@ import { useNavigate, useParams } from "react-router-dom";
 import MiniDrawer from "../components/MiniDrawer";
 import ProfileComponent from "../components/ProfileComponent";
 import { loadUserTheme } from "../utils/themeManager";
-import { ArrowBack } from '@mui/icons-material';
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 const PublicProfile = ({ user }) => {
   const [profile, setProfile] = useState(null);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [postsLoading, setPostsLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [profileTheme, setProfileTheme] = useState('default');
+  const [error, setError] = useState("");
+  const [profileTheme, setProfileTheme] = useState("default");
   const { username } = useParams();
   const navigate = useNavigate();
+  const [followers, setFollowers] = useState([]);
+  const [following, setFollowing] = useState([]);
 
   useEffect(() => {
     if (!user) {
-      navigate('/auth');
+      navigate("/auth");
       return;
     }
     if (username) {
@@ -31,27 +33,26 @@ const PublicProfile = ({ user }) => {
   const fetchPublicProfile = async () => {
     try {
       setLoading(true);
-      setError('');
-      
+      setError("");
+
       const response = await axios.get(`${API_URL}/api/profile/${username}`, {
-        withCredentials: true
+        withCredentials: true,
       });
 
       setProfile(response.data);
-      
-      //lLoad the user's saved theme using the improved theme manager
+
       const userTheme = await loadUserTheme(username);
       setProfileTheme(userTheme);
     } catch (error) {
-      console.error('Error fetching public profile:', error);
+      console.error("Error fetching public profile:", error);
       if (error.response?.status === 401) {
-        navigate('/auth');
+        navigate("/auth");
         return;
       }
       if (error.response?.status === 404) {
-        setError('User not found');
+        setError("User not found");
       } else {
-        setError('Failed to load profile');
+        setError("Failed to load profile");
       }
     } finally {
       setLoading(false);
@@ -61,22 +62,54 @@ const PublicProfile = ({ user }) => {
   const fetchUserPosts = async () => {
     try {
       setPostsLoading(true);
-      
-      const response = await axios.get(`${API_URL}/api/profile/${username}/posts`, {
-        withCredentials: true
-      });
+
+      const response = await axios.get(
+        `${API_URL}/api/profile/${username}/posts`,
+        {
+          withCredentials: true,
+        }
+      );
 
       setPosts(response.data);
     } catch (error) {
-      console.error('Error fetching user posts:', error);
+      console.error("Error fetching user posts:", error);
     } finally {
       setPostsLoading(false);
     }
   };
 
   const handleBackToProfile = () => {
-    navigate('/profile');
+    navigate("/profile");
   };
+
+  const fetchFollowersAndFollowing = async () => {
+    try {
+      const [followersRes, followingRes] = await Promise.all([
+        axios.get(`${API_URL}/api/follow/${username}/followers`, {
+          withCredentials: true,
+        }),
+        axios.get(`${API_URL}/api/follow/${username}/following`, {
+          withCredentials: true,
+        }),
+      ]);
+      setFollowers(followersRes.data);
+      setFollowing(followingRes.data);
+    } catch (err) {
+      console.error("Error fetching followers/following:", err);
+    }
+  };
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/auth");
+      return;
+    }
+    if (username) {
+      fetchPublicProfile();
+      fetchUserPosts();
+      fetchFollowersAndFollowing();
+    }
+  }, [user, username, navigate]);
 
   if (loading) {
     return (
@@ -102,7 +135,7 @@ const PublicProfile = ({ user }) => {
               <button onClick={fetchPublicProfile} className="retry-btn">
                 Try Again
               </button>
-              <button onClick={() => navigate('/')} className="back-btn">
+              <button onClick={() => navigate("/")} className="back-btn">
                 Go Back
               </button>
             </div>
@@ -118,12 +151,9 @@ const PublicProfile = ({ user }) => {
       <div className="dashboard-main-content">
         {/* Profile Action Button ,which will lead back to My Profile */}
         <div className="profile-actions-header">
-          <button 
-            className="back-to-profile-btn"
-            onClick={handleBackToProfile}
-          >
-            <ArrowBack />
-            Back to My Profile
+          <button className="back-to-profile-btn" onClick={handleBackToProfile}>
+            <AccountCircleIcon />
+            Go to My Profile
           </button>
         </div>
 
@@ -133,8 +163,8 @@ const PublicProfile = ({ user }) => {
           postsLoading={postsLoading}
           isOwnProfile={false}
           profileTheme={profileTheme}
-          //  props are passed for visibility logic
-          // (ProfileComponent will use profile.showPosts, showUsername, etc.)
+          followers={followers}
+          following={following}
         />
       </div>
     </div>
