@@ -1,8 +1,16 @@
 import React from "react";
 import axios from "axios";
 import { API_URL } from "../shared";
+import { useNavigate } from "react-router-dom";
 
 const FriendCard = ({ user, isFollowing, isMe, busy, onToggleFollow }) => {
+  const navigate = useNavigate();
+
+  const handleCardClick = (e) => {
+    if (e.target.tagName === "BUTTON") return;
+    navigate(`/profile/${user.username}`);
+  };
+
   return (
     <div
       className="friend-card"
@@ -14,7 +22,9 @@ const FriendCard = ({ user, isFollowing, isMe, busy, onToggleFollow }) => {
         alignItems: "center",
         gap: 12,
         marginBottom: 12,
+        cursor: "pointer",
       }}
+      onClick={handleCardClick}
     >
       <img
         src={user.spotifyProfileImage || user.avatarURL || user.profileImage}
@@ -31,7 +41,13 @@ const FriendCard = ({ user, isFollowing, isMe, busy, onToggleFollow }) => {
         </div>
       </div>
       {!isMe && (
-        <button disabled={busy} onClick={() => onToggleFollow(user.username)}>
+        <button
+          disabled={busy}
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleFollow(user.username);
+          }}
+        >
           {isFollowing
             ? busy
               ? "Unfollowing..."
