@@ -1,10 +1,19 @@
 import "../style/SinglePostView.css";
-import "../style/PostCard.css"; 
+import "../style/PostCard.css";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { API_URL } from "../shared";
 import { useNavigate, useParams } from "react-router-dom";
 import CommentsPanel from "../components/CommentsPanel";
+
+const getProfileImage = (profile) => {
+  return (
+    profile?.profileImage ||
+    profile?.spotifyProfileImage ||
+    profile?.avatarURL ||
+    "/default-avatar.png"
+  );
+};
 
 const SinglePostView = ({ user }) => {
   const navigate = useNavigate();
@@ -25,24 +34,24 @@ const SinglePostView = ({ user }) => {
     if (id) fetchPost();
   }, [id]);
 
-const fetchPost = async () => {
-  try {
-    setLoading(true);
-    setError(null);
-    const res = await axios.get(`${API_URL}/api/posts/${id}`, {
-      withCredentials: true,
-    });
-    const p = res.data;
-    setPost(p);
-    setLikes(Number(p?.likesCount ?? 0));
-    setLiked(Boolean(p?.isLiked ?? false));
-  } catch (error) {
-    console.error('Error fetching post:', error);
-    setError("Failed to load post.");
-  } finally {
-    setLoading(false);
-  }
-};
+  const fetchPost = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const res = await axios.get(`${API_URL}/api/posts/${id}`, {
+        withCredentials: true,
+      });
+      const p = res.data;
+      setPost(p);
+      setLikes(Number(p?.likesCount ?? 0));
+      setLiked(Boolean(p?.isLiked ?? false));
+    } catch (error) {
+      console.error("Error fetching post:", error);
+      setError("Failed to load post.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const toggleLike = async () => {
     if (!user) {
@@ -93,12 +102,10 @@ const fetchPost = async () => {
         <header className="post-header">
           <div className="user-info">
             <img
-              src={post.author?.spotifyProfileImage}
+              src={getProfileImage(post.author)}
               alt="Profile"
               className="profile-image"
-              onClick={() =>
-                navigate(`/profile/${post.author?.id || post.author?._id}`)
-              }
+              onClick={() => navigate(`/profile/${post.author?.username}`)}
             />
             <div className="user-meta">
               <span className="username">{post.author?.username}</span>

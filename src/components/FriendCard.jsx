@@ -3,6 +3,15 @@ import axios from "axios";
 import { API_URL } from "../shared";
 import { useNavigate } from "react-router-dom";
 
+const getProfileImage = (profile) => {
+  return (
+    profile?.profileImage ||
+    profile?.spotifyProfileImage ||
+    profile?.avatarURL ||
+    "/default-avatar.png"
+  );
+};
+
 const FriendCard = ({
   user,
   isFollowing,
@@ -35,7 +44,7 @@ const FriendCard = ({
     >
       <div style={{ position: "relative" }}>
         <img
-          src={user.spotifyProfileImage || user.avatarURL || user.profileImage}
+          src={getProfileImage(user)}
           alt={user.username}
           width={40}
           height={40}
