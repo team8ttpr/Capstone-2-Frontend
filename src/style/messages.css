@@ -1,0 +1,112 @@
+.messages-theme {
+  --spotify-green: #1db954;
+  --spotify-dark: #191414;
+  --spotify-gray: #282828;
+  --spotify-light: #b3b3b3;
+  --spotify-white: #fff;
+}
+
+.messages-theme .dashboard-layout,
+.messages-theme .dashboard-main-content {
+  background: var(--spotify-dark);
+  color: var(--spotify-white);
+}
+
+.messages-theme .friend-list {
+  background: var(--spotify-gray);
+  height: 100%;
+  padding: 0;
+}
+
+.messages-theme .friend-list-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  cursor: pointer;
+  color: var(--spotify-white);
+  border-left: 4px solid transparent;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.messages-theme .friend-list-item.selected,
+.messages-theme .friend-list-item:hover {
+  background: #232323;
+  border-left: 4px solid var(--spotify-green);
+}
+
+.messages-theme .friend-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  margin-right: 12px;
+  object-fit: cover;
+  border: 2px solid var(--spotify-green);
+}
+
+.messages-theme .message-thread {
+  background: var(--spotify-dark);
+  padding: 0;
+  height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.messages-theme .message-bubble {
+  max-width: 60%;
+  margin-bottom: 12px;
+  padding: 12px 16px;
+  border-radius: 18px;
+  background: var(--spotify-gray);
+  color: var(--spotify-white);
+  align-self: flex-start;
+  position: relative;
+  word-break: break-word;
+}
+
+.messages-theme .message-bubble.sent {
+  background: var(--spotify-green);
+  color: var(--spotify-dark);
+  align-self: flex-end;
+}
+
+.messages-theme .message-meta {
+  font-size: 0.75em;
+  color: var(--spotify-light);
+  margin-top: 4px;
+  text-align: right;
+}
+
+.messages-theme .message-input {
+  display: flex;
+  background: var(--spotify-gray);
+  border-radius: 0 0 12px 12px;
+  padding: 12px;
+}
+
+.messages-theme .message-input input {
+  flex: 1;
+  background: #232323;
+  border: none;
+  color: var(--spotify-white);
+  padding: 10px 14px;
+  border-radius: 20px;
+  margin-right: 10px;
+  outline: none;
+  font-size: 1em;
+}
+
+.messages-theme .message-input button {
+  background: var(--spotify-green);
+  color: var(--spotify-dark);
+  border: none;
+  border-radius: 20px;
+  padding: 10px 22px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.messages-theme .message-input button:hover {
+  background: #1ed760;
+}

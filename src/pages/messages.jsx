@@ -3,6 +3,7 @@ import MiniDrawer from "../components/MiniDrawer";
 import FriendList from "../components/FriendList";
 import MessageThread from "../components/MessageThread";
 import MessageInput from "../components/MessageInput";
+import "../style/messages.css";
 import axios from "axios";
 import { API_URL } from "../shared";
 import { io } from "socket.io-client";
@@ -57,12 +58,7 @@ const Messages = ({ user }) => {
   }, []);
 
   useEffect(() => {
-    if (
-      socketRef.current &&
-      socketRef.current.connected &&
-      user &&
-      user.id
-    ) {
+    if (socketRef.current && socketRef.current.connected && user && user.id) {
       console.log("Registering user (user changed)", user.id);
       socketRef.current.emit("register", user.id);
     }
@@ -71,7 +67,7 @@ const Messages = ({ user }) => {
   useEffect(() => {
     axios
       .get(`${API_URL}/api/messages/friends`, { withCredentials: true })
-      .then(res => setFriends(res.data))
+      .then((res) => setFriends(res.data))
       .catch(() => setFriends([]));
   }, []);
 
@@ -79,8 +75,10 @@ const Messages = ({ user }) => {
     if (!selectedFriend) return;
     setLoadingMessages(true);
     axios
-      .get(`${API_URL}/api/messages/${selectedFriend.id}`, { withCredentials: true })
-      .then(res => setMessages(res.data))
+      .get(`${API_URL}/api/messages/${selectedFriend.id}`, {
+        withCredentials: true,
+      })
+      .then((res) => setMessages(res.data))
       .catch(() => setMessages([]))
       .finally(() => setLoadingMessages(false));
   }, [selectedFriend]);
@@ -93,10 +91,10 @@ const Messages = ({ user }) => {
       content,
     });
     console.log("Emitted send_message event to socket server");
-    setMessages(prev => [
+    setMessages((prev) => [
       ...prev,
       {
-        id: Date.now(), 
+        id: Date.now(),
         senderId: user.id,
         receiverId: selectedFriend.id,
         content,
@@ -109,45 +107,62 @@ const Messages = ({ user }) => {
         { content },
         { withCredentials: true }
       );
-    } catch (err) {
-    }
+    } catch (err) {}
   };
 
   return (
-    <div className="dashboard-layout">
-      <MiniDrawer menuType="social" />
-      <div className="dashboard-main-content" style={{ display: "flex", height: "80vh" }}>
-        {/* Left: Friend List */}
-        <div style={{ width: 280, borderRight: "1px solid #eee", overflowY: "auto" }}>
-          <FriendList
-            friends={friends}
-            selectedFriendId={selectedFriend?.id}
-            onSelect={setSelectedFriend}
-          />
-        </div>
-        {/* Right: Messages */}
-        <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-          {selectedFriend ? (
-            <>
-              <div style={{ padding: "16px", borderBottom: "1px solid #eee" }}>
-                <strong>{selectedFriend.username}</strong>
+    <div className="messages-theme">
+      <div className="dashboard-layout">
+        <MiniDrawer menuType="social" />
+        <div
+          className="dashboard-main-content"
+          style={{ display: "flex", height: "80vh" }}
+        >
+          {/* Left: Friend List */}
+          <div
+            style={{
+              width: 280,
+              borderRight: "1px solid #eee",
+              overflowY: "auto",
+            }}
+          >
+            <FriendList
+              friends={friends}
+              selectedFriendId={selectedFriend?.id}
+              onSelect={setSelectedFriend}
+            />
+          </div>
+          {/* Right: Messages */}
+          <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+            {selectedFriend ? (
+              <>
+                <div
+                  style={{ padding: "16px", borderBottom: "1px solid #eee" }}
+                >
+                  <strong>{selectedFriend.username}</strong>
+                </div>
+                <div style={{ flex: 1, overflowY: "auto", padding: "16px" }}>
+                  {loadingMessages ? (
+                    <div>Loading messages...</div>
+                  ) : (
+                    <MessageThread
+                      messages={messages}
+                      currentUserId={user?.id}
+                    />
+                  )}
+                </div>
+                <div
+                  style={{ borderTop: "1px solid #eee", padding: "8px 16px" }}
+                >
+                  <MessageInput onSend={handleSendMessage} />
+                </div>
+              </>
+            ) : (
+              <div style={{ padding: "32px", color: "#888" }}>
+                Select a friend to start messaging.
               </div>
-              <div style={{ flex: 1, overflowY: "auto", padding: "16px" }}>
-                {loadingMessages ? (
-                  <div>Loading messages...</div>
-                ) : (
-                  <MessageThread messages={messages} currentUserId={user?.id} />
-                )}
-              </div>
-              <div style={{ borderTop: "1px solid #eee", padding: "8px 16px" }}>
-                <MessageInput onSend={handleSendMessage} />
-              </div>
-            </>
-          ) : (
-            <div style={{ padding: "32px", color: "#888" }}>
-              Select a friend to start messaging.
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </div>

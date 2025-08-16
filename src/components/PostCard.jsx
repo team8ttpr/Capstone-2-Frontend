@@ -6,6 +6,17 @@ import EditPostModal from "./EditPostModal";
 import ForkPlaylistModal from "./ForkPlaylistModal";
 import { useNavigate } from "react-router-dom";
 
+const getProfileImage = (profile) => {
+  return (
+    profile?.profileImage ||
+    profile?.spotifyProfileImage ||
+    profile?.avatarURL ||
+    profile?.avatar ||
+    profile?.profile_image ||
+    "/default-avatar.png"
+  );
+};
+
 const PostCard = ({ post, currentUser, onPostUpdate }) => {
   const userData = post.author || post.user || post.User || null;
   const username =
@@ -15,13 +26,7 @@ const PostCard = ({ post, currentUser, onPostUpdate }) => {
     userData?.display_name ||
     "Unknown User";
 
-  const avatar =
-    userData?.avatarURL ||
-    userData?.profileImage ||
-    userData?.spotifyProfileImage ||
-    userData?.avatar ||
-    userData?.profile_image ||
-    null;
+  const avatar = getProfileImage(userData);
 
   const [isLiked, setIsLiked] = useState(post.isLiked || false);
   const [likesCount, setLikesCount] = useState(post.likesCount || 0);
@@ -127,17 +132,9 @@ const PostCard = ({ post, currentUser, onPostUpdate }) => {
   };
 
   const isSpotifyPlaylist = () => {
-    console.log("Checking if playlist:", {
-      spotifyType: post.spotifyType,
-      spotifyEmbedUrl: post.spotifyEmbedUrl,
-      hasEmbedUrl: !!post.spotifyEmbedUrl
-    });
-    
     // Check if it's a playlist type OR if the embed URL contains playlist
     const isPlaylist = (post.spotifyType && post.spotifyType.toLowerCase() === "playlist") || 
                        (post.spotifyEmbedUrl && post.spotifyEmbedUrl.includes("/playlist/"));
-                       
-    console.log("Is playlist result:", isPlaylist);
     return isPlaylist;
   };
 
@@ -290,7 +287,6 @@ const PostCard = ({ post, currentUser, onPostUpdate }) => {
                 isLiked ? "liked" : ""
               }`}
               onClick={(e) => {
-                console.log("Like button clicked!"); // Add this debug log
                 e.preventDefault();
                 e.stopPropagation();
                 handleLike();
