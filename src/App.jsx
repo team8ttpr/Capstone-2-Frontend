@@ -31,6 +31,7 @@ import Profile from "./pages/profile";
 import PublicProfile from "./pages/publicprofile";
 import ShareProfile from "./pages/shareProfile";
 import SinglePostView from "./pages/SinglePostView";
+import AI from "./pages/AI";
 
 
 function App() {
@@ -223,7 +224,7 @@ function App() {
           <Route path="/profile/:username" element={<PublicProfile user={user} />} />
           <Route path="/share/:username" element={<ShareProfile />} />
           <Route path="/post/:id" element={<SinglePostView user={user} />} />
-          
+          <Route path="/ai" element={<AI />} />
 
 
           {/* 404 Route */}

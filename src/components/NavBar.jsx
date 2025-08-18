@@ -19,7 +19,7 @@ const NavBar = ({ user, onLogout }) => {
         </div>
 
         <div className="nav-section">
-          <Link to="/ai-playlist" className="nav-link">AI Playlist</Link>
+          <Link to="/ai" className="nav-link">AI Playlist</Link>
         </div>
 
         <div className="nav-section">
