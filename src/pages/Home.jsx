@@ -6,8 +6,6 @@ const Home = () => {
     <div className="home">
       <h1>Welcome to Capstone I</h1>
       <div>
-        <ChatComponent 
-        />
       </div>
     </div>
   );
