@@ -1,0 +1,118 @@
+/* ===== Notification Cards ===== */
+:root{
+  --notif-bg: #fff;
+  --notif-border: #e9e9ef;
+  --notif-text: #111827;
+  --notif-muted: #6b7280;
+  --notif-accent: #2563eb;   /* unread dot / accents */
+  --notif-hover: #f8fafc;
+  --notif-unread-bg: #f3f7ff;
+  --notif-unread-border: #bfd8ff;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.04);
+  --shadow-md: 0 4px 18px rgba(0,0,0,.06);
+}
+
+/* container holding all notifications */
+.notif-list{
+  display: grid;
+  gap: 12px;
+}
+
+/* single card */
+.notif-card{
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  background: var(--notif-bg);
+  border: 1px solid var(--notif-border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+  color: var(--notif-text);
+  cursor: pointer;
+  transition: transform .06s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
+}
+.notif-card:hover{
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+  background: var(--notif-hover);
+}
+.notif-card:focus-visible{
+  outline: 2px solid var(--notif-accent);
+  outline-offset: 2px;
+}
+
+/* unread state */
+.notif-unread{
+  background: var(--notif-unread-bg);
+  border-color: var(--notif-unread-border);
+}
+
+/* avatar */
+.notif-avatar{
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex: 0 0 44px;
+  background: #f1f5f9;
+}
+
+/* main content */
+.notif-main{
+  display: grid;
+  gap: 6px;
+  min-width: 0; /* allow text ellipsis */
+  width: 100%;
+}
+
+/* message line */
+.notif-text{
+  line-height: 1.35;
+  font-size: 14.5px;
+  word-break: break-word;
+}
+.notif-text strong{
+  font-weight: 700;
+}
+
+/* meta row: time + unread dot */
+.notif-meta{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--notif-muted);
+}
+.notif-time{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.notif-dot{
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--notif-accent);
+  flex: 0 0 8px;
+}
+
+/* empty / loading helpers (optional) */
+.notif-empty,
+.notif-loading{
+  color: var(--notif-muted);
+  padding: 14px 0;
+  font-size: 14px;
+}
+
+/* small screens */
+@media (max-width: 480px){
+  .notif-card{
+    padding: 10px 12px;
+    border-radius: 10px;
+  }
+  .notif-avatar{
+    width: 40px; height: 40px; flex-basis: 40px;
+  }
+  .notif-text{ font-size: 14px; }
+}

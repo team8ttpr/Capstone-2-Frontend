@@ -19,6 +19,13 @@ const Friends = () => {
   const [online, setOnline] = useState(new Set());
 
   useEffect(() => {
+    if (me?.id) {
+      console.log("Registering socket with userId", me.id);
+      socket.emit("register", me.id);
+    }
+  }, [me]);
+
+  useEffect(() => {
     console.log("socket id:", socket.id);
     const onSnapshot = (ids) => {
       console.log("presence:snapshot", ids);
@@ -96,6 +103,10 @@ const Friends = () => {
       toggleFollow(username);
     }
   };
+
+  if (!Array.isArray(followers) || !Array.isArray(following)) {
+    return <div style={{ opacity: 0.7 }}>Loading friends…</div>;
+  }
 
   const renderList = () => {
     const lowerQuery = query.trim().toLowerCase();
