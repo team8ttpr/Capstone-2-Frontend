@@ -1,12 +1,12 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useContext } from "react";
 import MiniDrawer from "../components/MiniDrawer.jsx";
 import FriendCard from "../components/FriendCard";
 import FriendNavbar from "../components/FriendNavbar";
 import SearchBar from "../components/SearchBar";
 import axios from "axios";
-import AddFriendForm from "../components/AddFriendForm.jsx"; // <- fixed
+import AddFriendForm from "../components/AddFriendForm.jsx";
 import { API_URL } from "../shared.js";
-import { socket } from "../ws";
+import { PresenceContext } from "../ws";
 
 const Friends = () => {
   const [me, setMe] = useState(null);
@@ -16,29 +16,14 @@ const Friends = () => {
   const [activeTab, onTabChange] = useState("friends");
   const [query, setQuery] = useState("");
   const [showSearch, setShowSearch] = useState(false);
-  const [online, setOnline] = useState(new Set());
+
+  const { online, socket } = useContext(PresenceContext);
 
   useEffect(() => {
-    console.log("socket id:", socket.id);
-    const onSnapshot = (ids) => {
-      console.log("presence:snapshot", ids);
-      setOnline(new Set(ids.map(String)));
-    };
-    const onUpdate = (p) => {
-      console.log("presence:update", p);
-      setOnline((prev) => {
-        const next = new Set(prev);
-        p.online ? next.add(String(p.userId)) : next.delete(String(p.userId));
-        return next;
-      });
-    };
-    socket.on("presence:snapshot", onSnapshot);
-    socket.on("presence:update", onUpdate);
-    return () => {
-      socket.off("presence:snapshot", onSnapshot);
-      socket.off("presence:update", onUpdate);
-    };
-  }, []);
+    if (me?.id) {
+      socket.emit("register", me.id);
+    }
+  }, [me, socket]);
 
   const loadFriends = useCallback(async () => {
     try {
@@ -83,7 +68,6 @@ const Friends = () => {
         {},
         { withCredentials: true }
       );
-      // IMPORTANT: refresh lists so each user has a real id for presence
       await loadFriends();
     } finally {
       setBusy((prev) => ({ ...prev, [username]: false }));
@@ -96,6 +80,10 @@ const Friends = () => {
       toggleFollow(username);
     }
   };
+
+  if (!Array.isArray(followers) || !Array.isArray(following)) {
+    return <div style={{ opacity: 0.7 }}>Loading friends…</div>;
+  }
 
   const renderList = () => {
     const lowerQuery = query.trim().toLowerCase();
@@ -122,7 +110,7 @@ const Friends = () => {
           isMe={me?.username === u.username}
           busy={!!busy[u.username]}
           onToggleFollow={() => handleToggleFollow(u.username, true)}
-          isOnline={online.has(String(u.id))} // <- pass presence
+          isOnline={online.has(String(u.id))}
         />
       ));
     }
@@ -138,7 +126,7 @@ const Friends = () => {
             isMe={me?.username === u.username}
             busy={!!busy[u.username]}
             onToggleFollow={() => handleToggleFollow(u.username, amIFollowing)}
-            isOnline={online.has(String(u.id))} // <- pass presence
+            isOnline={online.has(String(u.id))}
           />
         );
       });
@@ -153,7 +141,7 @@ const Friends = () => {
           isMe={me?.username === u.username}
           busy={!!busy[u.username]}
           onToggleFollow={() => handleToggleFollow(u.username, true)}
-          isOnline={online.has(String(u.id))} // <- pass presence
+          isOnline={online.has(String(u.id))}
         />
       ));
     }
