@@ -1,6 +1,8 @@
 import React from "react";
 import { Pie, Bar } from "react-chartjs-2";
 import { Chart, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement } from "chart.js";
+import "../style/GenreCharts.css";
+
 Chart.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement);
 
 const GenreCharts = ({ topGenres, artistsByGenre, onChartClick, chartType = "pie", chartSize = 180 }) => {
@@ -83,18 +85,14 @@ const GenreCharts = ({ topGenres, artistsByGenre, onChartClick, chartType = "pie
   };
 
   return (
-    <div>
+    <>
       {chartType === "pie" && (
-        <>
-          <Pie data={pieData} options={pieOptions} width={chartSize} height={chartSize} />
-        </>
+        <Pie data={pieData} options={pieOptions} width={chartSize} height={chartSize} />
       )}
       {chartType === "bar" && (
-        <>
-          <Bar data={barData} options={barOptions} width={chartSize} height={chartSize} />
-        </>
+        <Bar data={barData} options={barOptions} width={chartSize} height={chartSize} />
       )}
-    </div>
+    </>
   );
 };
 

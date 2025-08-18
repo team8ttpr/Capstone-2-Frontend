@@ -31,7 +31,9 @@ import Profile from "./pages/profile";
 import PublicProfile from "./pages/publicprofile";
 import ShareProfile from "./pages/shareProfile";
 import SinglePostView from "./pages/SinglePostView";
+import AI from "./pages/AI";
 import { socket, PresenceContext } from "./ws";
+
 
 function App() {
   const [user, setUser] = useState(null);
@@ -228,6 +230,7 @@ function App() {
             path="/social"
             element={<Navigate to="/social/feed" replace />}
           />
+          
           <Route path="/social/feed" element={<Feed user={user} />} />
           <Route path="/social/messages" element={<Messages user={user} />} />
           <Route path="/social/mypost" element={<MyPost user={user} />} />
@@ -240,6 +243,8 @@ function App() {
           <Route path="/profile/:username" element={<PublicProfile user={user} />} />
           <Route path="/share/:username" element={<ShareProfile />} />
           <Route path="/post/:id" element={<SinglePostView user={user} />} />
+
+          <Route path="/ai" element={<AI />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>

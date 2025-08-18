@@ -2,6 +2,7 @@ import React from "react";
 import MiniDrawer from '../components/MiniDrawer';
 import UserListeningHistory from '../components/UserListeningHistory';
 import TopGenresAndArtists from '../components/TopGenresAndArtists';
+import RecommendationsOfTheDay from '../components/RecommendationsOfTheDay';
 
 const Analytics = () => {
   const getGreeting = () => {
@@ -20,7 +21,14 @@ const Analytics = () => {
           <p>This is what you recently listened to:</p>
         </div>
         <UserListeningHistory />
-        <TopGenresAndArtists />
+        <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start', flexWrap: 'wrap' }}>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <TopGenresAndArtists />
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <RecommendationsOfTheDay />
+          </div>
+        </div>
       </div>
     </div>
   );
