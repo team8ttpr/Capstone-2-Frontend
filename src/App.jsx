@@ -31,10 +31,12 @@ import Profile from "./pages/profile";
 import PublicProfile from "./pages/publicprofile";
 import ShareProfile from "./pages/shareProfile";
 import SinglePostView from "./pages/SinglePostView";
+import { socket, PresenceContext } from "./ws";
 
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [online, setOnline] = useState(new Set());
   const navigate = useNavigate();
   const location = useLocation();
   const hideNavBar = location.pathname.startsWith("/share/");
@@ -157,26 +159,47 @@ function App() {
     }
   };
 
+  // --- Presence logic ---
+  useEffect(() => {
+    const onSnapshot = (ids) => {
+      setOnline(new Set(ids.map(String)));
+    };
+    const onUpdate = (p) => {
+      setOnline((prev) => {
+        const next = new Set(prev);
+        p.online ? next.add(String(p.userId)) : next.delete(String(p.userId));
+        return next;
+      });
+    };
+    socket.on("presence:snapshot", onSnapshot);
+    socket.on("presence:update", onUpdate);
+    return () => {
+      socket.off("presence:snapshot", onSnapshot);
+      socket.off("presence:update", onUpdate);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (user?.id) {
+      socket.emit("register", user.id);
+    }
+  }, [user]);
+
   if (loading || auth0Loading) {
     return <div>Loading...</div>;
   }
 
   return (
-    <div>
+    <PresenceContext.Provider value={{ online, setOnline, socket }}>
       {!hideNavBar && <NavBar user={user} onLogout={handleLogout} />}
       <div className="app">
         <Routes>
-          {/* Auth Routes */}
           <Route path="/auth" element={<Auth setUser={setUser} />} />
-
-          {/* Main Routes */}
           <Route path="/" element={<Home />} />
           <Route
             path="/callback/spotify"
             element={<SpotifyCallback setUser={setUser} />}
           />
-
-          {/* Dashboard Routes */}
           <Route
             path="/dashboard"
             element={<Navigate to="/dashboard/analytics" replace />}
@@ -201,8 +224,6 @@ function App() {
             path="/dashboard/toptracks"
             element={<TopTracks user={user} />}
           />
-
-          {/* Social Routes */}
           <Route
             path="/social"
             element={<Navigate to="/social/feed" replace />}
@@ -215,18 +236,14 @@ function App() {
             path="/social/notifications"
             element={<Notifications user={user} />}
           />
-
-          {/* Profile Route */}
           <Route path="/profile" element={<Profile user={user} />} />
           <Route path="/profile/:username" element={<PublicProfile user={user} />} />
           <Route path="/share/:username" element={<ShareProfile />} />
           <Route path="/post/:id" element={<SinglePostView user={user} />} />
-
-          {/* 404 Route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
-    </div>
+    </PresenceContext.Provider>
   );
 }
 
