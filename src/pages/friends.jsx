@@ -104,6 +104,10 @@ const Friends = () => {
     }
   };
 
+  if (!Array.isArray(followers) || !Array.isArray(following)) {
+    return <div style={{ opacity: 0.7 }}>Loading friends…</div>;
+  }
+
   const renderList = () => {
     const lowerQuery = query.trim().toLowerCase();
     const filterUsers = (users) => {
