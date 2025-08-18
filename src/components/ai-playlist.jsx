@@ -1,9 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
+import axios from "axios";
+import { API_URL } from "../shared";
 import '../style/GenerateUI.css';
 
-const ChatComponent = ({ onSendMessage, isLoading }) => {
+const ChatComponent = () => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
   const textareaRef = useRef(null);
 
@@ -14,24 +17,34 @@ const ChatComponent = ({ onSendMessage, isLoading }) => {
     }
   }, [message]);
 
-
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (message.trim() === '') return;
-
-    
     const userMessage = { text: message, sender: 'user' };
     setMessages(prev => [...prev, userMessage]);
-
-    onSendMessage(message, (aiResponse) => {
-      
-      setMessages(prev => [...prev, { text: aiResponse, sender: 'ai' }]);
-    });
-
-    setMessage('');
+    setLoading(true);
+    try {
+      const res = await axios.post(
+        `${API_URL}/auth/spotify/ai-playlist`,
+        { prompt: message },
+        { withCredentials: true } 
+      );
+      if (res.data.playlistUrl) {
+        setMessages(prev => [...prev, { text: res.data.playlistUrl, sender: 'ai' }]);
+      } else if (res.data.message) {
+        setMessages(prev => [...prev, { text: res.data.message, sender: 'ai' }]);
+      } else {
+        setMessages(prev => [...prev, { text: "Sorry, something went wrong.", sender: 'ai' }]);
+      }
+    } catch (err) {
+      setMessages(prev => [...prev, { text: "Error: Could not generate playlist.", sender: 'ai' }]);
+    } finally {
+      setLoading(false);
+      setMessage('');
+    }
   };
 
   const handleKeyDown = (e) => {
@@ -52,7 +65,7 @@ const ChatComponent = ({ onSendMessage, isLoading }) => {
             {msg.text}
           </div>
         ))}
-        {isLoading && (
+        {loading && (
           <div className="message-bubble ai-message">
             <div className="loading-indicator">
               <div className="dot"></div>
@@ -63,7 +76,6 @@ const ChatComponent = ({ onSendMessage, isLoading }) => {
         )}
         <div ref={messagesEndRef} />
       </div>
-      
       <div className="input-container">
         <textarea
           ref={textareaRef}
@@ -75,7 +87,7 @@ const ChatComponent = ({ onSendMessage, isLoading }) => {
         />
         <button 
           onClick={handleSendMessage}
-          disabled={isLoading || message.trim() === ''}
+          disabled={loading || message.trim() === ''}
         >
           <svg viewBox="0 0 24 24" width="24" height="24">
             <path fill="currentColor" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
