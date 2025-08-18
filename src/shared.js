@@ -3,7 +3,7 @@ const isProduction = typeof window !== 'undefined' &&
    window.location.hostname.includes('vercel.app'));
 
 export const API_URL = isProduction 
-  ? "https://capstone-2-backend-three.vercel.app"
+  ? "https://capstone-2-backend-6wpm.onrender.com"
   : "http://localhost:8080";
 
 export const FRONTEND_URL = isProduction 
