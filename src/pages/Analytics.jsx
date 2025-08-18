@@ -22,8 +22,12 @@ const Analytics = () => {
         </div>
         <UserListeningHistory />
         <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start', flexWrap: 'wrap' }}>
-          <TopGenresAndArtists />
-          <RecommendationsOfTheDay />
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <TopGenresAndArtists />
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <RecommendationsOfTheDay />
+          </div>
         </div>
       </div>
     </div>

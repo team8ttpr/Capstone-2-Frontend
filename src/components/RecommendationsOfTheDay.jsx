@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { API_URL } from "../shared";
 import SpotifyEmbed from "./SpotifyEmbed";
-import "../style/RecommendedSongs.css";
+import "../style/RecommendationsOfTheDay.css";
 
 const RecommendationsOfTheDay = () => {
   const [tracks, setTracks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     axios
@@ -22,22 +23,36 @@ const RecommendationsOfTheDay = () => {
       });
   }, []);
 
+  const handlePrev = () => {
+    setCurrentIndex((prev) => (prev === 0 ? tracks.length - 1 : prev - 1));
+  };
+
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev === tracks.length - 1 ? 0 : prev + 1));
+  };
+
   if (loading) return <div>Loading recommendations...</div>;
   if (error) return <div>{error}</div>;
   if (!tracks.length) return <div>No recommendations found.</div>;
 
+  const currentTrack = tracks[currentIndex];
+
   return (
-    <div className="recommendations-day-container" style={{ maxHeight: '480px', overflowY: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+    <>
       <h3>Recommendations of the Day</h3>
       <h5>AI-powered</h5>
-      <div className="recommendations-day-list" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%' }}>
-        {tracks.map((track) => (
-          <div className="recommendation-embed" key={track.id || track.uri}>
-            <SpotifyEmbed type="track" id={track.id} width="100%" height={80} />
-          </div>
-        ))}
+      <div className="recommendations-day-list" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+        <button onClick={handlePrev} className="arrow-btn" aria-label="Previous" style={{ marginRight: '1rem' }}>
+          &#8592;
+        </button>
+        <div className="recommendation-embed">
+          <SpotifyEmbed type="track" id={currentTrack.id} width="400" height={400} />
+        </div>
+        <button onClick={handleNext} className="arrow-btn" aria-label="Next" style={{ marginLeft: '1rem' }}>
+          &#8594;
+        </button>
       </div>
-    </div>
+    </>
   );
 };
 
