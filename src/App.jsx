@@ -32,6 +32,7 @@ import PublicProfile from "./pages/publicprofile";
 import ShareProfile from "./pages/shareProfile";
 import SinglePostView from "./pages/SinglePostView";
 
+
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -207,6 +208,7 @@ function App() {
             path="/social"
             element={<Navigate to="/social/feed" replace />}
           />
+          
           <Route path="/social/feed" element={<Feed user={user} />} />
           <Route path="/social/messages" element={<Messages user={user} />} />
           <Route path="/social/mypost" element={<MyPost user={user} />} />
@@ -221,6 +223,8 @@ function App() {
           <Route path="/profile/:username" element={<PublicProfile user={user} />} />
           <Route path="/share/:username" element={<ShareProfile />} />
           <Route path="/post/:id" element={<SinglePostView user={user} />} />
+          
+
 
           {/* 404 Route */}
           <Route path="*" element={<NotFound />} />
