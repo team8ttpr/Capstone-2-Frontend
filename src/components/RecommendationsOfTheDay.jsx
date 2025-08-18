@@ -29,6 +29,7 @@ const RecommendationsOfTheDay = () => {
   return (
     <div className="recommendations-day-container" style={{ maxHeight: '480px', overflowY: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
       <h3>Recommendations of the Day</h3>
+      <h5>AI-powered</h5>
       <div className="recommendations-day-list" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%' }}>
         {tracks.map((track) => (
           <div className="recommendation-embed" key={track.id || track.uri}>
