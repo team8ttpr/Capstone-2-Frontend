@@ -30,13 +30,9 @@ const RecommendationsOfTheDay = () => {
     <div className="recommendations-day-container" style={{ maxHeight: '480px', overflowY: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
       <h3>Recommendations of the Day</h3>
       <div className="recommendations-day-list" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%' }}>
-        {tracks.slice(0, 5).map((track) => (
+        {tracks.map((track) => (
           <div className="recommendation-embed" key={track.id || track.uri}>
             <SpotifyEmbed type="track" id={track.id} width="100%" height={80} />
-            <div className="recommendation-info">
-              <span className="track-name">{track.name}</span>
-              <span className="track-artist">{track.artist}</span>
-            </div>
           </div>
         ))}
       </div>
