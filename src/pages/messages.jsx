@@ -85,22 +85,10 @@ const Messages = ({ user }) => {
 
   const handleSendMessage = async (content) => {
     if (!selectedFriend) return;
-    console.log("Sending message", { to: selectedFriend.id, content });
-    socketRef.current.emit("send_message", {
-      to: selectedFriend.id,
-      content,
-    });
-    console.log("Emitted send_message event to socket server");
-    setMessages((prev) => [
-      ...prev,
-      {
-        id: Date.now(),
-        senderId: user.id,
-        receiverId: selectedFriend.id,
-        content,
-        createdAt: new Date().toISOString(),
-      },
-    ]);
+  socketRef.current.emit("send_message", {
+    to: selectedFriend.id,
+    content,
+  });
     try {
       await axios.post(
         `${API_URL}/api/messages/${selectedFriend.id}`,
