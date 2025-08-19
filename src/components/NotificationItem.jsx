@@ -3,10 +3,12 @@ import { Link } from "react-router-dom";
 import "../style/NotificationItem.css";
 
 const NotificationItem = ({ n, onClick }) => {
-  const actorName = n.actor?.username || "someone";
+  const actorName =
+    n.actor?.spotifyDisplayName || n.actor?.username || "someone";
   const avatar =
-    n.actor?.avatarURL ||
-    n.actor?.profileImage ||
+    n.actor?.spotifyProfileImage || // <-- correct casing
+    n.actor?.profileImage || // nice fallback if you store a manual profile image
+    n.actor?.avatarURL || // final fallback
     "/img/avatar-placeholder.png";
   const time = new Date(n.createdAt).toLocaleString();
 
