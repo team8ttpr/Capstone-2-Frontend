@@ -51,6 +51,13 @@ function App() {
   } = useAuth0();
 
   useEffect(() => {
+  if (user?.id) {
+    console.log("Registering socket for user:", user.id);
+    socket.emit("register", user.id);
+  }
+}, [user]);
+
+  useEffect(() => {
     const requestInterceptor = axios.interceptors.request.use(
       (config) => {
         const token = localStorage.getItem("authToken");

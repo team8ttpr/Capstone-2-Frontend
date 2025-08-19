@@ -6,9 +6,9 @@ const NotificationItem = ({ n, onClick }) => {
   const actorName =
     n.actor?.spotifyDisplayName || n.actor?.username || "someone";
   const avatar =
-    n.actor?.spotifyProfileImage || // <-- correct casing
-    n.actor?.profileImage || // nice fallback if you store a manual profile image
-    n.actor?.avatarURL || // final fallback
+    n.actor?.spotifyProfileImage ||
+    n.actor?.profileImage ||
+    n.actor?.avatarURL ||
     "/img/avatar-placeholder.png";
   const time = new Date(n.createdAt).toLocaleString();
 
@@ -32,6 +32,13 @@ const NotificationItem = ({ n, onClick }) => {
         <strong>{actorName}</strong> commented on your{" "}
         {n.postId ? <Link to={`/post/${n.postId}`}>post</Link> : "post"}:{" "}
         <em>{n.content}</em>
+      </span>
+    );
+  } else if (n.type === "message") {
+    body = (
+      <span>
+        <strong>{actorName}</strong> sent you a{" "}
+        <Link to={`/social/messages`}>message</Link>
       </span>
     );
   }

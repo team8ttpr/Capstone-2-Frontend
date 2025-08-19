@@ -6,7 +6,7 @@ import MessageInput from "../components/MessageInput";
 import "../style/messages.css";
 import axios from "axios";
 import { API_URL } from "../shared";
-import { io } from "socket.io-client";
+import { socket } from "../ws"; // <-- Use the shared socket instance
 
 const Messages = ({ user }) => {
   const [friends, setFriends] = useState([]);
@@ -15,35 +15,39 @@ const Messages = ({ user }) => {
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
 
-  const socketRef = useRef();
   const selectedFriendRef = useRef(selectedFriend);
+
+  useEffect(() => {
+  const logAny = (event, ...args) => {
+    console.log("SOCKET EVENT:", event, ...args);
+  };
+  socket.onAny(logAny);
+  return () => socket.offAny(logAny);
+}, []);
 
   useEffect(() => {
     selectedFriendRef.current = selectedFriend;
   }, [selectedFriend]);
 
+  // Register user with socket after login
   useEffect(() => {
-    socketRef.current = io(API_URL, {
-      withCredentials: true,
-      auth: { token: localStorage.getItem("token") },
-    });
+    if (user && user.id) {
+      socket.emit("register", user.id);
+    }
+  }, [user]);
 
-    socketRef.current.on("connect", () => {
-      if (user && user.id) {
-        socketRef.current.emit("register", user.id);
-      }
-      socketRef.current.emit("test_event", { hello: "world" });
-    });
-
-    socketRef.current.on("receive_message", (msg) => {
-      const friend = selectedFriendRef.current;
-      if (
-        friend &&
-        (msg.senderId === friend.id || msg.receiverId === friend.id)
-      ) {
-        setMessages((prev) => [...prev, msg]);
-      }
-    });
+  // Socket event listeners
+  useEffect(() => {
+    const handleReceiveMessage = (msg) => {
+  console.log("handleReceiveMessage called with:", msg);
+  const friend = selectedFriendRef.current;
+  if (
+    friend &&
+    (msg.senderId === friend.id || msg.receiverId === friend.id)
+  ) {
+    setMessages((prev) => [...prev, msg]);
+  }
+};
 
     const handleTyping = ({ from }) => {
       if (selectedFriendRef.current && from === selectedFriendRef.current.id) {
@@ -55,8 +59,6 @@ const Messages = ({ user }) => {
         setIsTyping(false);
       }
     };
-    socketRef.current.on("typing", handleTyping);
-    socketRef.current.on("stop_typing", handleStopTyping);
 
     const handleMessagesRead = ({ by }) => {
       setMessages((prev) =>
@@ -65,19 +67,18 @@ const Messages = ({ user }) => {
         )
       );
     };
-    socketRef.current.on("messages_read", handleMessagesRead);
 
-    socketRef.current.on("test_event", () => {});
+    socket.on("receive_message", handleReceiveMessage);
+    socket.on("typing", handleTyping);
+    socket.on("stop_typing", handleStopTyping);
+    socket.on("messages_read", handleMessagesRead);
 
     return () => {
-      socketRef.current.disconnect();
+      socket.off("receive_message", handleReceiveMessage);
+      socket.off("typing", handleTyping);
+      socket.off("stop_typing", handleStopTyping);
+      socket.off("messages_read", handleMessagesRead);
     };
-  }, []);
-
-  useEffect(() => {
-    if (socketRef.current && socketRef.current.connected && user && user.id) {
-      socketRef.current.emit("register", user.id);
-    }
   }, [user]);
 
   useEffect(() => {
@@ -100,8 +101,8 @@ const Messages = ({ user }) => {
   }, [selectedFriend]);
 
   useEffect(() => {
-    if (socketRef.current && selectedFriend && messages.length > 0) {
-      socketRef.current.emit("read_messages", { from: selectedFriend.id });
+    if (socket && selectedFriend && messages.length > 0) {
+      socket.emit("read_messages", { from: selectedFriend.id });
     }
   }, [selectedFriend, messages.length]);
 
@@ -121,7 +122,7 @@ const Messages = ({ user }) => {
           }
         );
         const { url, type } = res.data;
-        socketRef.current.emit("send_message", {
+        socket.emit("send_message", {
           to: selectedFriend.id,
           content: content || "",
           type: type.startsWith("image/") ? "image" : "file",
@@ -129,7 +130,7 @@ const Messages = ({ user }) => {
         });
       } catch (err) {}
     } else {
-      socketRef.current.emit("send_message", {
+      socket.emit("send_message", {
         to: selectedFriend.id,
         content,
         type: "text",
@@ -138,12 +139,12 @@ const Messages = ({ user }) => {
   };
 
   const handleTyping = () => {
-    if (socketRef.current && selectedFriend)
-      socketRef.current.emit("typing", { to: selectedFriend.id });
+    if (socket && selectedFriend)
+      socket.emit("typing", { to: selectedFriend.id });
   };
   const handleStopTyping = () => {
-    if (socketRef.current && selectedFriend)
-      socketRef.current.emit("stop_typing", { to: selectedFriend.id });
+    if (socket && selectedFriend)
+      socket.emit("stop_typing", { to: selectedFriend.id });
   };
 
   return (
