@@ -1,3 +1,8 @@
+body {
+  background: linear-gradient(135deg, #181c1f 60%, #1db954 100%);
+  min-height: 100vh;
+}
+
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -7,7 +12,7 @@
   left: 0; 
   right: 0; 
   z-index: 100;
-  background: linear-gradient(90deg, #181c1f 60%, #23272a 100%);
+  background: linear-gradient(90deg, #1db954 0%, #181c1f 100%);
   padding: 1rem 2rem;
   border-bottom: 2px solid #1db954;
   height: 70px;
@@ -18,10 +23,10 @@
 .nav-brand a {
   font-size: 1.7rem;
   font-weight: bold;
-  color: #1db954;
+  color: #fff;
   text-decoration: none;
   letter-spacing: 1px;
-  text-shadow: 0 2px 8px rgba(29,185,84,0.12);
+  text-shadow: 0 2px 8px #1db95488;
   transition: color 0.2s;
 }
 
@@ -54,26 +59,26 @@
 }
 
 .nav-link {
-  color: #e6e6e6;
+  color: #e0ffe0;
+  background: rgba(29,185,84,0.10);
   text-decoration: none;
   padding: 0.5rem 1rem;
   border-radius: 25px;
   transition: background 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s;
   font-weight: 600;
-  background: none;
 }
 
 .nav-link:hover {
-  color: #1db954;
-  background-color: #23272a;
+  color: #fff;
+  background-color: #1db954;
   transform: scale(1.07);
 }
 
 .nav-link.active {
-  background: #1db95433;
-  color: #1db954;
+  background: #1db954;
+  color: #fff;
   font-weight: 700;
-  box-shadow: 0 2px 8px #1db95422;
+  box-shadow: 0 2px 8px #1db95444;
 }
 
 .user-section {
@@ -83,14 +88,14 @@
 }
 
 .username {
-  color: #1db954;
+  color: #fff;
   font-weight: 600;
   font-size: 1rem;
 }
 
 .logout-btn {
   background: linear-gradient(90deg, #1db954 0%, #1ed760 100%);
-  color: #23272a;
+  color: #181c1f;
   border: none;
   padding: 0.5rem 1.2rem;
   border-radius: 9999px;
@@ -102,7 +107,7 @@
 }
 
 .logout-btn:hover {
-  background: #23272a;
+  background: #181c1f;
   color: #1db954;
   border: 2px solid #1db954;
   transform: scale(1.07);
