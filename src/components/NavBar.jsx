@@ -1,8 +1,9 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import "../style/NavBarStyles.css";
 
 const NavBar = ({ user, onLogout }) => {
+  const location = useLocation();
   return (
     <nav className="navbar">
       <div className="nav-brand">
@@ -11,19 +12,19 @@ const NavBar = ({ user, onLogout }) => {
 
       <div className="nav-center">
         <div className="nav-section">
-          <Link to="/dashboard" className="nav-link">Dashboard</Link>
+          <Link to="/dashboard" className={`nav-link${location.pathname.startsWith('/dashboard') ? ' active' : ''}`}>Dashboard</Link>
         </div>
         
         <div className="nav-section">
-          <Link to="/social" className="nav-link">Social</Link>
+          <Link to="/social" className={`nav-link${location.pathname.startsWith('/social') ? ' active' : ''}`}>Social</Link>
         </div>
 
         <div className="nav-section">
-          <Link to="/ai" className="nav-link">AI Playlist</Link>
+          <Link to="/ai" className={`nav-link${location.pathname.startsWith('/ai') ? ' active' : ''}`}>AI Playlist</Link>
         </div>
 
         <div className="nav-section">
-          <Link to="/profile" className="nav-link">My Profile</Link>
+          <Link to="/profile" className={`nav-link${location.pathname.startsWith('/profile') ? ' active' : ''}`}>My Profile</Link>
         </div>
       </div>
 
@@ -37,7 +38,7 @@ const NavBar = ({ user, onLogout }) => {
           </div>
         ) : (
           <div className="auth-links">
-            <Link to="/auth" className="nav-link">
+            <Link to="/auth" className={`nav-link${location.pathname.startsWith('/auth') ? ' active' : ''}`}>
               Log In
             </Link>
           </div>
