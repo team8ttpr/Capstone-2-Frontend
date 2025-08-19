@@ -18,8 +18,6 @@ const UserListeningHistory = () => {
       .catch((err) => {
         if (err.response?.status === 401) {
           setError("Session expired. Please log in again.");
-          // Optionally, redirect to login page here
-          // window.location.href = "/auth";
         } else {
           setError("Failed to fetch listening history");
         }

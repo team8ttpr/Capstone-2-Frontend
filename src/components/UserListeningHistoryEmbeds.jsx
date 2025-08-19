@@ -12,7 +12,7 @@ const UserListeningHistoryEmbeds = ({ recentTracks }) => {
       <div className="listening-history-embeds-scroll">
         {recentTracks.map((item) => (
           <div className="embed-item" key={item.track.id}>
-            <SpotifyEmbed type="track" id={item.track.id} width="100%" height={80} />
+            <SpotifyEmbed type="track" id={item.track.id} width="100%" height={80} theme="light" />
             <div className="embed-details">
               Album: {item.track.album}
               {item.timeAgo && !item.timeAgo.startsWith("NaN") && (
