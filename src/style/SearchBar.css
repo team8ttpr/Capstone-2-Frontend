@@ -3,26 +3,33 @@
   justify-content: center;
   margin: 1rem auto;
   width: 100%;
+  border: 2px solid #27c93f; /* Green border */
+  border-radius: 40px;
+  padding: 1.5rem 0;
+  background: transparent;
+  box-sizing: border-box;
 }
 
 .search-input input {
   width: 100%;
   max-width: 700px;
   padding: 0.6rem 1rem;
-  border: 1px solid #ccc;
-  border-radius: 25px;
+  border: 1px solid #333;
+  border-radius: 18px;
   outline: none;
-  font-size: 1rem;
-  background-color: #fff;
+  font-size: 1.2rem;
+  background-color: #23232a;
+  color: #fff;
   transition: all 0.3s ease;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 }
 
 .search-input input:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 6px rgba(0, 123, 255, 0.3);
+  border-color: #27c93f;
+  box-shadow: 0 0 6px rgba(39, 201, 63, 0.3);
 }
 
 .search-input input::placeholder {
-  color: #999;
+  color: #bdbdbd;
+  opacity: 1;
 }

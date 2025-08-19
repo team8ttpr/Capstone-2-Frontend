@@ -5,11 +5,14 @@ import "../style/NotificationItem.css";
 const NotificationItem = ({ n, onClick }) => {
   const actorName =
     n.actor?.spotifyDisplayName || n.actor?.username || "someone";
-  const avatar =
-    n.actor?.spotifyProfileImage ||
-    n.actor?.profileImage ||
-    n.actor?.avatarURL ||
-    "/img/avatar-placeholder.png";
+  const avatar = (profile) => {
+  return (
+    profile?.profileImage ||
+    profile?.spotifyProfileImage ||
+    profile?.avatarURL ||
+    "/default-avatar.png"
+  );
+};
   const time = new Date(n.createdAt).toLocaleString();
 
   let body = null;

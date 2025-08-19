@@ -7,6 +7,8 @@ import axios from "axios";
 import AddFriendForm from "../components/AddFriendForm.jsx";
 import { API_URL } from "../shared.js";
 import { PresenceContext } from "../ws";
+import { Button } from "@mui/material";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
 
 const Friends = () => {
   const [me, setMe] = useState(null);
@@ -82,7 +84,7 @@ const Friends = () => {
   };
 
   if (!Array.isArray(followers) || !Array.isArray(following)) {
-    return <div style={{ opacity: 0.7 }}>Loading friends…</div>;
+    return <div style={{ opacity: 0.7, color: "#fff" }}>Loading friends…</div>;
   }
 
   const renderList = () => {
@@ -157,12 +159,21 @@ const Friends = () => {
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
+              color: "#fff", // Make heading white
             }}
           >
             Friends
-            <button onClick={() => setShowSearch(true)}>+ Add Friend</button>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<PersonAddIcon />}
+              onClick={() => setShowSearch(true)}
+              sx={{ borderRadius: 2, fontWeight: 600, boxShadow: "none" }}
+            >
+              Add Friend
+            </Button>
           </h1>
-          <FriendNavbar activeTab={activeTab} onTabChange={onTabChange} />
+          <FriendNavbar activeTab={activeTab} onTabChange={onTabChange} textColor="#fff" />
           <SearchBar
             onSearch={setQuery}
             placeholder={

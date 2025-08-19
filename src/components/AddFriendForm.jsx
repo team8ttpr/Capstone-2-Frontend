@@ -72,7 +72,7 @@ export default function AddFriendForm({ onClose, onFollowChange }) {
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: "rgba(0,0,0,0.45)",
+        backgroundColor: "rgba(10,12,16,0.85)",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -82,16 +82,17 @@ export default function AddFriendForm({ onClose, onFollowChange }) {
     >
       <div
         style={{
-          background: "#fff",
-          borderRadius: "12px",
-          padding: "20px",
+          background: "#18181c",
+          borderRadius: "14px",
+          padding: "22px",
           width: "420px",
           maxWidth: "90vw",
           height: "520px",
           maxHeight: "90vh",
-          boxShadow: "0 8px 30px rgba(0,0,0,0.25)",
+          boxShadow: "0 8px 30px rgba(0,0,0,0.45)",
           display: "flex",
           flexDirection: "column",
+          border: "1.5px solid #232323",
         }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -103,7 +104,9 @@ export default function AddFriendForm({ onClose, onFollowChange }) {
             marginBottom: "12px",
           }}
         >
-          <h2 style={{ margin: 0, fontSize: "1.25rem" }}>Add Friend</h2>
+          <h2 style={{ margin: 0, fontSize: "1.25rem", color: "#fff" }}>
+            Add Friend
+          </h2>
           <button
             onClick={onClose}
             style={{
@@ -111,7 +114,13 @@ export default function AddFriendForm({ onClose, onFollowChange }) {
               background: "transparent",
               fontSize: "1.2rem",
               cursor: "pointer",
+              color: "#fff",
+              opacity: 0.7,
+              transition: "opacity 0.2s",
             }}
+            onMouseOver={e => (e.currentTarget.style.opacity = 1)}
+            onMouseOut={e => (e.currentTarget.style.opacity = 0.7)}
+            aria-label="Close"
           >
             ✕
           </button>
@@ -126,8 +135,11 @@ export default function AddFriendForm({ onClose, onFollowChange }) {
             width: "100%",
             padding: "10px 12px",
             borderRadius: "8px",
-            border: "1px solid #ccc",
+            border: "1px solid #333",
             outline: "none",
+            background: "#23232a",
+            color: "#fff",
+            marginBottom: 4,
           }}
         />
 
@@ -135,7 +147,7 @@ export default function AddFriendForm({ onClose, onFollowChange }) {
           style={{
             flex: 1,
             minHeight: "180px",
-            border: "1px dashed #bbb",
+            border: "1px dashed #333",
             borderRadius: "8px",
             display: "flex",
             flexDirection: "column",
@@ -143,25 +155,26 @@ export default function AddFriendForm({ onClose, onFollowChange }) {
             padding: "10px",
             overflowY: "auto",
             marginTop: "8px",
+            background: "#202024",
           }}
         >
           {loading && (
             <div
               style={{
                 textAlign: "center",
-                color: "#777",
+                color: "#aaa",
                 fontStyle: "italic",
               }}
             >
               Loading…
             </div>
           )}
-          {error && <div style={{ color: "#b00" }}>{error}</div>}
+          {error && <div style={{ color: "#ff6b6b" }}>{error}</div>}
           {!loading && !error && filteredUsers.length === 0 && (
             <div
               style={{
                 textAlign: "center",
-                color: "#777",
+                color: "#aaa",
                 fontStyle: "italic",
               }}
             >
