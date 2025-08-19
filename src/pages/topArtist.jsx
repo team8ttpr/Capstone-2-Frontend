@@ -4,7 +4,6 @@ import { API_URL } from '../shared';
 import { useNavigate } from 'react-router-dom';
 import '../style/TopArtist.css';
 import MiniDrawer from '../components/MiniDrawer';
-import SpotifyEmbed from '../components/SpotifyEmbed';
 
 const TopArtist = ({ user }) => {
   const [topArtists, setTopArtists] = useState([]);
@@ -97,8 +96,8 @@ const TopArtist = ({ user }) => {
       <div className="dashboard-main-content">
         <div className="top-artist-container">
           <div className="header-section">
-            <h1>Your Top Artists</h1>
-            <p>Discover your most listened to artists, {user.username}!</p>
+            <h1 style={{ color: '#e0ffe0', textShadow: '0 2px 12px rgba(0,0,0,0.18)' }}>Your Top Artists</h1>
+            <p style={{ color: '#b6ffb6', fontWeight: 600 }}>Discover your most listened to artists, {user.username}!</p>
           </div>
 
           {error && (
@@ -129,43 +128,38 @@ const TopArtist = ({ user }) => {
             {topArtists.length > 0 ? (
               <div className="artists-embed-list">
                 {topArtists.map((artist, index) => {
-                  const artistId = getSpotifyArtistId(artist);
-                  
+                  const artistImage = artist.images && artist.images.length > 0 ? artist.images[0].url : null;
                   return (
                     <div key={artist.id} className="artist-embed-item">
                       <div className="artist-rank">#{index + 1}</div>
-                      {artistId ? (
-                        <SpotifyEmbed 
-                          type="artist" 
-                          id={artistId} 
-                          width="80%" 
-                          height="352" 
-                        />
+                      {artistImage ? (
+                        <img src={artistImage} alt={artist.name} className="artist-image" />
                       ) : (
                         <div className="embed-fallback">
                           <div className="fallback-content">
                             <h4>{artist.name}</h4>
-                            <div className="artist-genres">
-                              {artist.genres.slice(0, 3).map((genre, idx) => (
-                                <span key={idx} className="genre-tag">
-                                  {genre}
-                                </span>
-                              ))}
-                            </div>
-                            <p className="popularity">Popularity: {artist.popularity}%</p>
-                            <p className="followers">{artist.followers.total.toLocaleString()} followers</p>
-                            {artist.external_urls?.spotify && (
-                              <a 
-                                href={artist.external_urls.spotify} 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                className="spotify-link"
-                              >
-                                Open in Spotify
-                              </a>
-                            )}
                           </div>
                         </div>
+                      )}
+                      <h4 style={{ color: '#e0ffe0', margin: '0.5rem 0 0.2rem 0', fontWeight: 700 }}>{artist.name}</h4>
+                      <div className="artist-genres">
+                        {artist.genres.slice(0, 3).map((genre, idx) => (
+                          <span key={idx} className="genre-tag">
+                            {genre}
+                          </span>
+                        ))}
+                      </div>
+                      <p className="popularity">Popularity: {artist.popularity}%</p>
+                      <p className="followers">{artist.followers.total.toLocaleString()} followers</p>
+                      {artist.external_urls?.spotify && (
+                        <a 
+                          href={artist.external_urls.spotify} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="spotify-link"
+                        >
+                          Open in Spotify
+                        </a>
                       )}
                     </div>
                   );
