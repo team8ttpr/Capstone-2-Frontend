@@ -17,8 +17,7 @@ const Analytics = () => {
       <MiniDrawer />
       <div className="dashboard-main-content">
         <div className="dashboard-summary">
-          <h1>{getGreeting()}!</h1>
-          <p>This is what you recently listened to:</p>
+          <h1 style={{ fontSize: '2.2rem', fontWeight: 700, color: '#1db954', marginBottom: '1.2rem', textShadow: '0 2px 12px rgba(0,0,0,0.18)' }}>{getGreeting()}!</h1>
         </div>
         <UserListeningHistory />
         <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start', flexWrap: 'wrap' }}>

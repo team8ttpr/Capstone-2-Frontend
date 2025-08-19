@@ -13,8 +13,19 @@ const GenreCharts = ({ topGenres, artistsByGenre, onChartClick, chartType = "pie
       {
         data: topGenres.map((g) => g.count),
         backgroundColor: [
-          "#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF", "#FF9F40", "#C9CBCF",
+          "#1db954", // Spotify green
+          "#36A2EB", // blue
+          "#FF6384", // pink
+          "#FFCE56", // yellow
+          "#4BC0C0", // teal
+          "#9966FF", // purple
+          "#b6ffb6", // light green
+          "#14532d", // dark green
+          "#101c1c", // deep dark
+          "#222", // neutral dark
         ],
+        borderColor: "#222",
+        borderWidth: 2,
       },
     ],
   };
@@ -26,7 +37,20 @@ const GenreCharts = ({ topGenres, artistsByGenre, onChartClick, chartType = "pie
       {
         label: "Genre Count",
         data: topGenres.map((g) => g.count),
-        backgroundColor: "rgba(54, 162, 235, 0.6)",
+        backgroundColor: [
+          "#1db954",
+          "#36A2EB",
+          "#FF6384",
+          "#FFCE56",
+          "#4BC0C0",
+          "#9966FF",
+          "#b6ffb6",
+          "#14532d",
+          "#101c1c",
+          "#222",
+        ],
+        borderColor: "#222",
+        borderWidth: 2,
       },
     ],
   };
@@ -85,14 +109,15 @@ const GenreCharts = ({ topGenres, artistsByGenre, onChartClick, chartType = "pie
   };
 
   return (
-    <>
+    <div className="genre-charts-container">
+      {/* <div className="genre-charts-title">Top Genres</div> */}
       {chartType === "pie" && (
         <Pie data={pieData} options={pieOptions} width={chartSize} height={chartSize} />
       )}
       {chartType === "bar" && (
         <Bar data={barData} options={barOptions} width={chartSize} height={chartSize} />
       )}
-    </>
+    </div>
   );
 };
 

@@ -12,7 +12,7 @@ const RecommendationsOfTheDay = () => {
 
   useEffect(() => {
     axios
-      .get(`${API_URL}/auth/spotify/ai-recommendations`, { withCredentials: true })
+      .get(`${API_URL}/auth/spotify/ai-recommendation`, { withCredentials: true }) //add s
       .then((res) => {
         setTracks(res.data.tracks || []);
         setLoading(false);
