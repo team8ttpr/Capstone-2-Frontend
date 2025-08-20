@@ -240,6 +240,7 @@
   margin: 0 auto;
   border-radius: 12px !important;
   margin: 0 !important;
+  padding: 0 !important;
 }
 
 .modal-header {
@@ -256,6 +257,16 @@
   font-weight: 700;
   color: #fff;
 }
+
+.modal-content {
+  padding: 0 !important;
+  margin: 0 !important;
+  width: 100% !important;
+  box-sizing: border-box;
+} 
+
+.modal-option { border-top: none; border-bottom: 1px solid #145c2c !important; }
+.modal-option:first-child { border-top: 1px solid #145c2c !important; }
 
 .close-modal-btn {
   background: none;
