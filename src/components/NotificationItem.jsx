@@ -1,11 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../style/NotificationItem.css";
 
-const NotificationItem = ({ n, onClick }) => {
-  const actorName =
-    n.actor?.spotifyDisplayName || n.actor?.username || "someone";
-  const avatar = (profile) => {
+const avatar = (profile) => {
   return (
     profile?.profileImage ||
     profile?.spotifyProfileImage ||
@@ -13,26 +10,52 @@ const NotificationItem = ({ n, onClick }) => {
     "/default-avatar.png"
   );
 };
+
+const NotificationItem = ({ n, onClick, fading }) => {
+  const [localFading, setLocalFading] = useState(false);
+
+  const actorName =
+    n.actor?.spotifyDisplayName || n.actor?.username || "someone";
+  const actorUsername = n.actor?.username || "";
+
   const time = new Date(n.createdAt).toLocaleString();
 
   let body = null;
   if (n.type === "new_follower") {
     body = (
       <span>
-        <strong>{actorName}</strong> followed you
+        <Link
+          to={`/profile/${actorUsername}`}
+          style={{ color: "#fff", fontWeight: 700, textDecoration: "none" }}
+        >
+          {actorName}
+        </Link>{" "}
+        followed you
       </span>
     );
   } else if (n.type === "post_liked") {
     body = (
       <span>
-        <strong>{actorName}</strong> liked your{" "}
+        <Link
+          to={`/profile/${actorUsername}`}
+          style={{ color: "#fff", fontWeight: 700, textDecoration: "none" }}
+        >
+          {actorName}
+        </Link>{" "}
+        liked your{" "}
         {n.postId ? <Link to={`/post/${n.postId}`}>post</Link> : "post"}
       </span>
     );
   } else if (n.type === "comment") {
     body = (
       <span>
-        <strong>{actorName}</strong> commented on your{" "}
+        <Link
+          to={`/profile/${actorUsername}`}
+          style={{ color: "#fff", fontWeight: 700, textDecoration: "none" }}
+        >
+          {actorName}
+        </Link>{" "}
+        commented on your{" "}
         {n.postId ? <Link to={`/post/${n.postId}`}>post</Link> : "post"}:{" "}
         <em>{n.content}</em>
       </span>
@@ -40,29 +63,75 @@ const NotificationItem = ({ n, onClick }) => {
   } else if (n.type === "message") {
     body = (
       <span>
-        <strong>{actorName}</strong> sent you a{" "}
-        <Link to={`/social/messages`}>message</Link>
+        <Link
+          to={`/profile/${actorUsername}`}
+          style={{ color: "#fff", fontWeight: 700, textDecoration: "none" }}
+        >
+          {actorName}
+        </Link>{" "}
+        sent you a <Link to={`/social/messages`}>message</Link>
       </span>
     );
   }
 
+  // Handle fade out and then call onClick (dismiss)
+  const handleDismiss = () => {
+    setLocalFading(true);
+  };
+
+  useEffect(() => {
+    if (localFading) {
+      const timer = setTimeout(() => {
+        onClick?.(n);
+      }, 500); // 500ms fade duration
+      return () => clearTimeout(timer);
+    }
+  }, [localFading, n, onClick]);
+
   return (
-    <div
-      className={`notif-card ${n.seen ? "" : "notif-unread"}`}
-      onClick={() => onClick?.(n)}
-      role="button"
-      tabIndex={0}
-    >
-      <img className="notif-avatar" src={avatar} alt={`${actorName} avatar`} />
-      <div className="notif-main">
-        <div className="notif-text">{body}</div>
-        <div className="notif-meta">
-          <span className="notif-time">{time}</span>
-          {!n.seen && <span className="notif-dot" aria-label="unread" />}
-        </div>
+  <div
+    className={`notif-card ${n.seen ? "" : "notif-unread"}${localFading || fading ? " notif-fade" : ""}`}
+    tabIndex={0}
+  >
+    <div className="notif-avatar-wrap">
+      <Link to={`/profile/${actorUsername}`}>
+        <img
+          className="notif-avatar"
+          src={avatar(n.actor)}
+          alt={`${actorName} avatar`}
+          style={{ cursor: "pointer" }}
+        />
+      </Link>
+    </div>
+    <div className="notif-main">
+      <div className="notif-text">{body}</div>
+      <div className="notif-meta">
+        <span className="notif-time">{time}</span>
+        {!n.seen && <span className="notif-dot" aria-label="unread" />}
       </div>
     </div>
-  );
+    <button
+      className="notif-dismiss-btn"
+      onClick={handleDismiss}
+      aria-label="Dismiss notification"
+      tabIndex={0}
+      style={{
+        marginLeft: 16,
+        background: "none",
+        border: "none",
+        color: "#bdbdbd",
+        fontSize: 22,
+        cursor: "pointer",
+        borderRadius: "50%",
+        transition: "background 0.2s, color 0.2s",
+      }}
+      onMouseOver={e => (e.currentTarget.style.color = "#fff")}
+      onMouseOut={e => (e.currentTarget.style.color = "#bdbdbd")}
+    >
+      &times;
+    </button>
+  </div>
+);
 };
 
-export default NotificationItem;
+export default NotificationItem
