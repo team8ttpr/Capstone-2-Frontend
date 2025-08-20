@@ -74,8 +74,7 @@ const filtered = useMemo(() => {
       <MiniDrawer menuType="social" />
       <div className="dashboard-main-content">
         <div className="dashboard-summary">
-          <h1>My Posts</h1>
-          <p>This is the page for user's posts and drafts.</p>
+          <h1 style={{ textAlign: "left", color: "white" }} >My Posts</h1>
 
           {/* Filter Buttons */}
           <div

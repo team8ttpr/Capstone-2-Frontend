@@ -1,47 +1,45 @@
-/* SinglePostView.css */
+.single-post-root {
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+  background: #18181c;
+}
 
 .fullscreen-post {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 2rem;
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 0;
+  background: #18181c;
+  border-radius: 24px;
+  border: 2px solid #145c2c;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4);
   font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  color: #333;
-}
-
-.open-comments-btn {
-  position: fixed;
-  right: 24px;
-  bottom: 24px;
-  z-index: 1090;
-  background: #7b68ee;
   color: #fff;
-  border: 2px solid #000;
-  border-radius: 999px;
-  padding: 10px 16px;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 6px 18px rgba(123,104,238,.3);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
-.open-comments-btn:hover { background:#6c5ce7; }
 
 .post-header {
   display: flex;
   align-items: center;
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #eee;
+  margin-bottom: 0;
+  padding: 24px 32px 16px 32px;
+  border-bottom: 2px solid #145c2c;
+  background: #18181c;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
 }
 
 .profile-image {
-  width: 50px;
-  height: 50px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   object-fit: cover;
-  margin-right: 1rem;
-  border: 2px solid #1DB954;
+  margin-right: 16px;
+  border: 2px solid #145c2c;
+  background: #23232a;
+  cursor: pointer;
 }
 
 .user-meta {
@@ -50,14 +48,15 @@
 }
 
 .username {
-  font-weight: 600;
-  font-size: 1.1rem;
-  color: #222;
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #fff;
+  cursor: pointer;
 }
 
 .post-date {
-  font-size: 0.85rem;
-  color: #888;
+  font-size: 0.95rem;
+  color: #bdbdbd;
   margin-top: 0.2rem;
 }
 
@@ -72,47 +71,61 @@
   font-size: 2rem;
   font-weight: 700;
   margin: 0;
-  color: #222;
+  color: #fff;
 }
 
 .post-status {
-  background-color: #f0f0f0;
-  padding: 0.3rem 0.8rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
+  color: #145c2c;
   font-weight: 600;
-  color: #555;
+  margin-left: 12px;
+  text-transform: uppercase;
+  font-size: 0.95rem;
+  background: none;
+  padding: 0;
 }
 
 .content-row {
   display: flex;
-  flex-direction: column;
-  gap: 2rem;
+  gap: 32px;
 }
 
 .description-section {
   line-height: 1.6;
+  flex: 2;
 }
 
 .post-description {
   font-size: 1.1rem;
   margin-bottom: 1.5rem;
-  color: #444;
+  color: #fff;
+}
+
+.original-poster-btn {
+  margin: 10px 0 0 0;
+  background: #23232a;
+  color: #1db954;
+  border: 2px solid #145c2c;
+  border-radius: 8px;
+  padding: 6px 16px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+}
+
+.original-poster-btn:hover {
+  background: #1a2b1e;
+  color: #fff;
+  border-color: #1db954;
 }
 
 .track-info {
+  margin-top: 24px;
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  font-size: 0.9rem;
-  color: #666;
-}
-
-.views {
-  background-color: #f8f8f8;
-  padding: 0.3rem 0.8rem;
-  border-radius: 4px;
-  font-weight: 600;
+  font-size: 0.95rem;
+  color: #bdbdbd;
 }
 
 .artists {
@@ -120,46 +133,88 @@
 }
 
 .duration {
-  color: #888;
+  color: #bdbdbd;
+  margin-left: 16px;
 }
 
-.spotify-embed {
-  width: 100%;
-  border-radius: 8px;
+.spotify-embed-large {
+  flex: 1;
+  min-width: 352px;
+  max-width: 352px;
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  background: #23232a;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 352px;
+}
+
+.spotify-embed-large iframe {
+  border-radius: 16px;
+  width: 352px;
+  height: 352px;
+  background: #23232a;
 }
 
 .post-actions {
+  border-top: 2px solid #145c2c;
+  background: #18181c;
+  padding: 20px 32px;
   display: flex;
-  justify-content: space-around;
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid #eee;
+  gap: 24px;
+  align-items: center;
+  justify-content: flex-start;
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
 }
 
-.action-btn {
+.concept-action-btn {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  background: none;
-  border: none;
-  padding: 0.6rem 1.2rem;
+  gap: 8px;
+  background: #23232a;
+  border: 2px solid #145c2c;
   border-radius: 8px;
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: #555;
+  padding: 8px 18px;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #fff;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background 0.2s, color 0.2s, border 0.2s;
 }
 
-.action-btn:hover {
-  background-color: #f5f5f5;
-  color: #1DB954;
+.concept-action-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
-.action-icon {
-  font-size: 1.1rem;
+.concept-action-btn:hover {
+  background: #1a2b1e;
+  color: #1db954;
+  border-color: #1db954;
+}
+
+.concept-action-btn.liked,
+.concept-action-btn[aria-pressed="true"] {
+  color: #e1306c;
+  border-color: #e1306c;
+}
+
+.concept-action-btn svg {
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.action-label {
+  font-size: 1rem;
+}
+
+.like-count {
+  margin-left: 4px;
+  font-weight: 600;
+  color: #e1306c;
 }
 
 .loading-screen,
@@ -170,22 +225,158 @@
   align-items: center;
   height: 100vh;
   font-size: 1.2rem;
-  color: #555;
+  color: #bdbdbd;
 }
 
-/* Responsive adjustments */
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal {
+  background: #18181c;
+  color: #fff;
+  border: 2px solid #145c2c;
+  border-radius: 16px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.modal-header {
+  border-bottom: 2px solid #145c2c;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  background: #18181c;
+}
+
+.close-modal-btn {
+  background: none;
+  border: none;
+  color: #bdbdbd;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  padding: 0;
+  background: transparent;
+}
+
+.modal-option {
+  background: #18181c;
+  color: #fff;
+  border-bottom: 1px solid #145c2c;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.modal-option:last-child {
+  border-bottom: none;
+}
+
+.modal-option:hover {
+  background: #23232a;
+}
+
+.option-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #1db954;
+  background: rgba(20, 92, 44, 0.13);
+  color: #1db954;
+  font-size: 1.3rem;
+}
+
+.option-icon.copy {
+  border-color: #1da1f2;
+  background: rgba(29, 161, 242, 0.1);
+  color: #1da1f2;
+}
+
+.option-details h4 {
+  color: #fff;
+  margin: 0;
+  font-size: 1.08rem;
+}
+
+.option-details p {
+  color: #bdbdbd;
+  margin: 0;
+  font-size: 0.97rem;
+}
+
+.check-icon {
+  margin-left: auto;
+  color: #1db954;
+}
+
+@media (max-width: 1100px) {
+  .single-post-root {
+    flex-direction: column;
+  }
+  .fullscreen-post {
+    margin: 40px 0;
+  }
+  .spotify-embed-large,
+  .spotify-embed-large iframe {
+    min-width: 100%;
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
 @media (max-width: 768px) {
   .fullscreen-post {
-    padding: 1.5rem;
+    padding: 0.5rem;
     border-radius: 0;
   }
-  
   .post-title {
     font-size: 1.6rem;
   }
-  
   .content-row {
     flex-direction: column;
+    gap: 1.2rem;
+  }
+  .post-header {
+    padding: 18px 12px 12px 12px;
+    border-radius: 0;
+  }
+  .post-actions {
+    padding: 14px 12px;
+    border-radius: 0;
+  }
+  .spotify-embed-large,
+  .spotify-embed-large iframe {
+    min-width: 100%;
+    max-width: 100%;
+    width: 100%;
+    height: 352px;
   }
 }
 
@@ -194,8 +385,15 @@
     flex-direction: column;
     gap: 0.5rem;
   }
-  
-  .action-btn {
+  .concept-action-btn {
     justify-content: center;
+    width: 100%;
+  }
+  .spotify-embed-large,
+  .spotify-embed-large iframe {
+    min-width: 100%;
+    max-width: 100%;
+    width: 100%;
+    height: 352px;
   }
 }
