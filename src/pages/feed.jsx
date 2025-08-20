@@ -50,20 +50,21 @@ const Feed = ({ user }) => {
       <div className="dashboard-main-content">
         <div className="dashboard-summary">
           <h1 style={{ textAlign: "left", color: "white" }}>Feed</h1>
-
           <SearchBar onSearch={setQuery} />
 
           {filtered.length === 0 ? (
             <p style={{ textAlign: "center" }}>No matching posts.</p>
           ) : (
-            filtered.map((post) => (
-              <PostCard
-                key={post.id}
-                post={post}
-                currentUser={user}
-                onPostUpdate={handlePostUpdate}
-              />
-            ))
+            <div className="feed-posts">
+              {filtered.map((post) => (
+                <PostCard
+                  key={post.id}
+                  post={post}
+                  currentUser={user}
+                  onPostUpdate={handlePostUpdate}
+                />
+              ))}
+            </div>
           )}
         </div>
       </div>
