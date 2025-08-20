@@ -91,8 +91,8 @@ const MyPlaylist = ({ user }) => {
       <div className="dashboard-main-content">
         <div className="my-playlist-container">
           <div className="header-section">
-            <h1>My Playlists</h1>
-            <p>Your personal music collections, {user.username}!</p>
+            <h1 style={{ color: '#e0ffe0', textShadow: '0 2px 12px rgba(0,0,0,0.18)' }}>My Playlists</h1>
+            <p style={{ color: '#b6ffb6', fontWeight: 600 }}>Your personal music collections, {user.username}!</p>
           </div>
 
           {error && (
@@ -117,8 +117,8 @@ const MyPlaylist = ({ user }) => {
                         <SpotifyEmbed
                           type="playlist"
                           id={playlistId}
-                          width="100%"
-                          height="352"
+                          width="240"
+                          height="600"
                         />
                       ) : (
                         <div className="embed-fallback">
@@ -155,7 +155,9 @@ const MyPlaylist = ({ user }) => {
               <div className="no-data">
                 <h3>No Playlists Found</h3>
                 <p>You don't have any playlists yet.</p>
-                <p>Create some playlists on Spotify and they'll appear here!</p>
+                <p>
+                  Create some playlists on Spotify and they'll appear here!
+                </p>
               </div>
             )}
           </div>

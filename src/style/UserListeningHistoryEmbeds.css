@@ -15,19 +15,20 @@
 .embed-item {
   min-width: 250px;
   max-width: 300px;
-  background: #f9f9f9;
+  background: #222; /* dark background */
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   padding: 8px;
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  color: #e0ffe0; /* light green text */
 }
 
 .embed-details {
   font-size: 0.95em;
   margin-top: 4px;
-  color: #333;
+  color: #b6ffb6; /* lighter green for details */
 }
 
 .listening-history-embeds-scroll::-webkit-scrollbar {
@@ -35,10 +36,10 @@
 }
 
 .listening-history-embeds-scroll::-webkit-scrollbar-thumb {
-  background: #888;
+  background: #14532d; /* green thumb */
   border-radius: 4px;
 }
 
 .listening-history-embeds-scroll::-webkit-scrollbar-track {
-  background: #eee;
+  background: #222;
 }

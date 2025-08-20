@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { API_URL } from "../shared";
 import UserListeningHistoryEmbeds from "./UserListeningHistoryEmbeds";
+import '../style/UserListeningHistory.css';
 
 const UserListeningHistory = () => {
   const [recentTracks, setRecentTracks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
     axios
@@ -18,8 +20,6 @@ const UserListeningHistory = () => {
       .catch((err) => {
         if (err.response?.status === 401) {
           setError("Session expired. Please log in again.");
-          // Optionally, redirect to login page here
-          // window.location.href = "/auth";
         } else {
           setError("Failed to fetch listening history");
         }
@@ -46,12 +46,20 @@ const UserListeningHistory = () => {
 
   return (
     <div>
-      <UserListeningHistoryEmbeds
-        recentTracks={recentTracks.map((item) => ({
-          ...item,
-          timeAgo: getTimeAgo(item.track.played_at),
-        }))}
-      />
+      <div
+        className="user-listening-history-greeting"
+        onClick={() => setCollapsed(!collapsed)}
+      >
+        {collapsed ? "▶" : "▼"} Your Recent Listening History
+      </div>
+      {!collapsed && (
+        <UserListeningHistoryEmbeds
+          recentTracks={recentTracks.map((item) => ({
+            ...item,
+            timeAgo: getTimeAgo(item.track.played_at),
+          }))}
+        />
+      )}
     </div>
   );
 };

@@ -1,0 +1,28 @@
+/* UserListeningHistory greeting styles */
+.user-listening-history-greeting {
+  cursor: pointer;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #1db954;
+  margin-bottom: 0.7rem;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  transition: color 0.2s, background 0.2s;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+}
+.user-listening-history-greeting:hover {
+  background: #1db954;
+  color: #fff;
+}
+
+.user-listening-history-loading {
+  color: #888;
+  font-style: italic;
+  margin-bottom: 1rem;
+}
+
+.user-listening-history-error {
+  color: #ff4d4f;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
