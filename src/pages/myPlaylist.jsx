@@ -135,7 +135,6 @@ const MyPlaylist = ({ user }) => {
                               By: {playlist.owner.display_name}
                             </p>
                             {playlist.external_urls?.spotify && (
-                              
                               <a
                                 href={playlist.external_urls.spotify}
                                 target="_blank"
@@ -167,3 +166,4 @@ const MyPlaylist = ({ user }) => {
 };
 
 export default MyPlaylist;
+ 
