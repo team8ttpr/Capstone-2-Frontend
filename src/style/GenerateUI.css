@@ -1,4 +1,4 @@
-.chat-container {
+/* .chat-container {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -239,5 +239,309 @@
   
   .message-bubble {
     max-width: 90%;
+  }
+}
+  */
+
+  :root {
+  --spotify-black: #121212;
+  /* --spotify-dark-gray: #181818; */
+  --spotify-light-gray: #282828;
+  --spotify-text: #ffffff;
+  --spotify-green: #1DB954;
+  --spotify-light-green: #1ED760;
+  --spotify-dark-green: #14532d;
+}
+
+.chat-overlay {
+  position: fixed;
+  top: 70px; 
+  left: 0;
+  width: 100vw;
+  height: calc(100vh - 70px); 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  z-index: 10;
+}
+
+.chat-container {
+  width: 700px;
+  height: 85vh;
+  background: rgba(16,44,32,0.10); 
+  border-radius: 18px;
+  box-shadow: 0 4px 32px rgba(16,44,32,0.10);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+  position: relative;
+  background-color: var(--spotify-dark-gray);
+}
+
+.chat-header {
+  background-color: var(--spotify-black);
+  color: white;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--spotify-light-gray);
+}
+
+.chat-title {
+  font-size: 18px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.chat-title::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--spotify-green);
+}
+
+.messages-container {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background-color: var(--spotify-dark-gray);
+  padding: 1.2rem 1rem 1rem 1rem;
+  margin-bottom: 90px;
+}
+
+.message-bubble {
+  max-width: 85%;
+  padding: 16px 20px;
+  border-radius: 18px;
+  line-height: 1.5;
+  word-wrap: break-word;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  align-self: flex-start;
+  background: var(--spotify-light-gray);
+  color: var(--spotify-text);
+  font-size: 1.05rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  margin-top: 0.5rem;
+  border: 1px solid #333;
+}
+
+.ai-message {
+  align-self: flex-start;
+  background-color: var(--spotify-light-gray);
+  border: 1px solid #333;
+  border-radius: 18px 18px 18px 4px;
+  margin-right: auto;
+  color: var(--spotify-text);
+}
+
+.user-message {
+  align-self: flex-end;
+  background: linear-gradient(90deg, var(--spotify-green) 0%, var(--spotify-dark-green) 100%);
+  color: white;
+  border-radius: 18px 18px 4px 18px;
+  margin-left: auto;
+  font-weight: 600;
+}
+
+.input-container {
+  display: flex;
+  padding: 15px;
+  border-top: 1px solid var(--spotify-light-gray);
+  background-color: var(--spotify-black);
+  align-items: flex-end;
+  width: 100%;
+  background: rgba(16, 28, 28, 0.7); /* Made transparent */
+  padding: 1.5rem;
+  border-bottom-left-radius: 18px;
+  border-bottom-right-radius: 18px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  backdrop-filter: blur(10px); /* Added for frosted glass effect */
+}
+
+.input-container textarea {
+  flex: 1;
+  border: 1px solid rgba(51, 51, 51, 0.6); /* More transparent border */
+  border-radius: 20px;
+  padding: 14px 18px;
+  font-size: 16px;
+  resize: none;
+  max-height: 150px;
+  background-color: rgba(42, 42, 42, 0.6); /* Made transparent */
+  color: var(--spotify-text);
+  outline: none;
+  overflow-y: auto;
+  font-family: inherit;
+  transition: all 0.2s;
+  min-height: 44px;
+  max-height: 120px;
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+}
+
+.input-container textarea:focus {
+  background-color: rgba(51, 51, 51, 0.7); /* More transparent */
+  border-color: var(--spotify-green);
+  box-shadow: 0 0 0 2px rgba(29, 185, 84, 0.2);
+}
+
+.input-container textarea::placeholder {
+  color: rgba(136, 136, 136, 0.8); /* Slightly transparent placeholder */
+}
+
+.input-container button {
+  margin-left: 12px;
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--spotify-green), var(--spotify-dark-green));
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  box-shadow: 0 2px 5px rgba(29, 185, 84, 0.3);
+  border-radius: 12px;
+  padding: 0.75rem 1.2rem;
+}
+
+.input-container button:disabled {
+  background: rgba(68, 68, 68, 0.7); /* More transparent */
+  cursor: not-allowed;
+  box-shadow: none;
+  color: #b6ffb6;
+}
+
+.input-container button:not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(29, 185, 84, 0.4);
+  background: linear-gradient(135deg, var(--spotify-light-green), var(--spotify-dark-green));
+}
+
+.input-container button:not(:disabled):active {
+  transform: translateY(0);
+}
+
+.loading-indicator {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  background-color: var(--spotify-light-gray);
+  border-radius: 18px;
+  width: fit-content;
+  padding: 8px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--spotify-green);
+  animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+@keyframes bounce {
+  0%, 80%, 100% { 
+    transform: scale(0);
+  }
+  40% { 
+    transform: scale(1);
+  }
+}
+
+.spotify-embed-container {
+  background: var(--spotify-light-gray);
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 8px 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border: 1px solid #333;
+}
+
+.spotify-embed-iframe {
+  border-radius: 12px 12px 0 0;
+  border: none;
+}
+
+.spotify-embed-actions {
+  padding: 12px 16px;
+  background: var(--spotify-black);
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid #333;
+}
+
+.spotify-open-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--spotify-green);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.spotify-open-button:hover {
+  background: var(--spotify-light-green);
+  transform: scale(1.02);
+}
+
+.ai-message .spotify-embed-container {
+  max-width: 500px;
+  margin: 8px 0;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: #aaa;
+  cursor: pointer;
+  font-size: 20px;
+  padding: 5px;
+  transition: color 0.2s;
+}
+
+.close-button:hover {
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .chat-container {
+    width: 95vw;
+    height: 85vh;
+  }
+  
+  .message-bubble {
+    max-width: 90%;
+  }
+  
+  .chat-overlay {
+    top: 60px;
+    height: calc(100vh - 60px);
   }
 }

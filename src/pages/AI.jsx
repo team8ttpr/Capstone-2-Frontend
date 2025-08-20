@@ -14,9 +14,6 @@ const AI = () => {
 
   return (
     <div className="ai-page-container">
-      <div className="ai-page-header">
-      <h2>AI Playlist Chat</h2>
-      </div>
       <ChatComponent onSendMessage={handleSendMessage} isLoading={loading} />
     </div>
   );
