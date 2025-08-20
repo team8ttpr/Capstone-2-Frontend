@@ -21,6 +21,12 @@ const ChatComponent = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  
+  const getPlaylistIdFromUrl = (url) => {
+    const match = url.match(/open\.spotify\.com\/playlist\/([a-zA-Z0-9]+)/);
+    return match ? match[1] : null;
+  };
+
   const handleSendMessage = async () => {
     if (message.trim() === '') return;
     const userMessage = { text: message, sender: 'user' };
@@ -32,8 +38,19 @@ const ChatComponent = () => {
         { prompt: message },
         { withCredentials: true } 
       );
+      
+      if (res.data.message) {
+      setMessages(prev => [...prev, { text: res.data.message, sender: 'ai' }]);
+    }
       if (res.data.playlistUrl) {
-        setMessages(prev => [...prev, { text: res.data.playlistUrl, sender: 'ai' }]);
+      
+        const playlistId = getPlaylistIdFromUrl(res.data.playlistUrl);
+        setMessages(prev => [...prev, { 
+          text: res.data.playlistUrl, 
+          sender: 'ai', 
+          type: 'playlist',
+          playlistId: playlistId 
+        }]);
       } else if (res.data.message) {
         setMessages(prev => [...prev, { text: res.data.message, sender: 'ai' }]);
       } else {
@@ -45,6 +62,36 @@ const ChatComponent = () => {
       setLoading(false);
       setMessage('');
     }
+  };
+
+  
+  const SpotifyEmbed = ({ playlistId }) => {
+    return (
+      <div className="spotify-embed-container">
+        <iframe
+          src={`https://open.spotify.com/embed/playlist/${playlistId}?utm_source=generator&theme=0`}
+          width="100%"
+          height="380"
+          frameBorder="0"
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          loading="lazy"
+          className="spotify-embed-iframe"
+        />
+        <div className="spotify-embed-actions">
+          <a 
+            href={`https://open.spotify.com/playlist/${playlistId}`}
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="spotify-open-button"
+          >
+            <svg viewBox="0 0 24 24" width="16" height="16">
+              <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-6h2v6zm4 0h-2V7h2v10z"/>
+            </svg>
+            Open in Spotify
+          </a>
+        </div>
+      </div>
+    );
   };
 
   const handleKeyDown = (e) => {
@@ -62,7 +109,11 @@ const ChatComponent = () => {
             key={index} 
             className={`message-bubble ${msg.sender === 'user' ? 'user-message' : 'ai-message'}`}
           >
-            {msg.text}
+            {msg.type === 'playlist' && msg.playlistId ? (
+              <SpotifyEmbed playlistId={msg.playlistId} />
+            ) : (
+              msg.text
+            )}
           </div>
         ))}
         {loading && (
