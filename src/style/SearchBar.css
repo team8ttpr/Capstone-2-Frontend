@@ -25,7 +25,7 @@
 }
 
 .search-input input:focus {
-  border-color: #27c93f;
+  border-color: #1db954;
   box-shadow: 0 0 6px rgba(39, 201, 63, 0.3);
 }
 
