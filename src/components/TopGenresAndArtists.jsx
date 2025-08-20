@@ -47,33 +47,19 @@ const TopGenresAndArtists = () => {
   return (
     <div style={{ display: "flex", alignItems: "flex-start", position: "relative" }}>
       <div style={{ flex: "0 0 340px", minWidth: 240, maxWidth: 340 }}>
-        <h2>Top Genres</h2>
-        <div className="chart-type-selector" style={{ display: "flex", gap: "8px", marginBottom: "12px" }}>
+        <h2 style={{ fontSize: '2rem', fontWeight: 700, color: '#fff', marginBottom: '1.2rem', textShadow: '0 2px 12px rgba(0,0,0,0.18)', background: 'linear-gradient(90deg, #1db954 0%, #14532d 100%)', borderRadius: '10px', padding: '0.75rem 1.2rem', boxShadow: '0 2px 8px rgba(0,0,0,0.10)' }}>Top Genres</h2>
+        <div className="chart-type-selector">
           <button
             className={`chart-type-btn${chartType === "pie" ? " active" : ""}`}
             onClick={() => setChartType("pie")}
-            style={{
-              padding: "6px 16px",
-              borderRadius: "6px",
-              border: chartType === "pie" ? "2px solid #36A2EB" : "1px solid #ccc",
-              background: chartType === "pie" ? "#eaf6ff" : "#fff",
-              fontWeight: chartType === "pie" ? "bold" : "normal",
-              cursor: "pointer"
-            }}
+            type="button"
           >
             Pie Chart
           </button>
           <button
             className={`chart-type-btn${chartType === "bar" ? " active" : ""}`}
             onClick={() => setChartType("bar")}
-            style={{
-              padding: "6px 16px",
-              borderRadius: "6px",
-              border: chartType === "bar" ? "2px solid #36A2EB" : "1px solid #ccc",
-              background: chartType === "bar" ? "#eaf6ff" : "#fff",
-              fontWeight: chartType === "bar" ? "bold" : "normal",
-              cursor: "pointer"
-            }}
+            type="button"
           >
             Bar Chart
           </button>

@@ -6,14 +6,15 @@
 }
 
 .chart-type-btn {
-  background: #fff;
-  border: 2px solid #e9ecef;
+  background: rgba(16, 44, 32, 0.85);
+  border: 2px solid #1db954;
+  color: #e0ffe0;
+  box-shadow: 0 2px 8px rgba(29, 185, 84, 0.08);
   padding: 0.75rem 1.5rem;
   border-radius: 25px;
   cursor: pointer;
   font-size: 0.95rem;
   font-weight: 500;
-  color: #495057;
   transition: all 0.2s ease;
   white-space: nowrap;
   min-width: 120px;
@@ -23,16 +24,22 @@
 }
 
 .chart-type-btn:hover {
-  background: #f8f9fa;
+  background: #1db954;
+  color: #fff;
   border-color: #1db954;
-  color: #1db954;
   transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(29, 185, 84, 0.18);
 }
 
 .chart-type-btn.active {
+  background: linear-gradient(90deg, #14532d 0%, #1db954 100%);
+  color: #fff;
   border-color: #1db954;
-  color: #1db954;
-  background: #eaf6ff;
+  box-shadow: 0 2px 12px rgba(29, 185, 84, 0.22);
   font-weight: bold;
+}
+
+.chart-type-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(29, 185, 84, 0.18);
 }

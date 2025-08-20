@@ -104,8 +104,12 @@ const TopTracks = ({ user }) => {
       <div className="dashboard-main-content">
         <div className="top-tracks-container">
           <div className="header-section">
-            <h1>Your Top Tracks</h1>
-            <p>Your most played songs, {user.username}!</p>
+            <h1 style={{ color: "#e0ffe0", textShadow: "0 2px 12px rgba(0,0,0,0.18)" }}>
+              Your Top Tracks
+            </h1>
+            <p style={{ color: "#b6ffb6", fontWeight: 600 }}>
+              Your most played songs, {user.username}!
+            </p>
           </div>
 
           {error && (
@@ -118,7 +122,7 @@ const TopTracks = ({ user }) => {
           )}
 
           <div className="time-range-selector">
-            <h3>Time Period:</h3>
+            <h3 style={{ color: "#e0ffe0", fontWeight: 600 }}>Time Period:</h3>
             <div className="time-range-buttons">
               {Object.entries(timeRangeLabels).map(([value, label]) => (
                 <button
@@ -149,6 +153,7 @@ const TopTracks = ({ user }) => {
                           id={trackId}
                           width="100%"
                           height="152"
+                          theme="light"
                         />
                       ) : (
                         <div className="embed-fallback">
