@@ -49,7 +49,7 @@ const Feed = ({ user }) => {
       <MiniDrawer menuType="social" />
       <div className="dashboard-main-content">
         <div className="dashboard-summary">
-          <h1 style={{ textAlign: "center" }}>Feed</h1>
+          <h1 style={{ textAlign: "left", color: "white" }}>Feed</h1>
           <SearchBar onSearch={setQuery} />
 
           {filtered.length === 0 ? (
