@@ -46,11 +46,79 @@ const Notifications = () => {
     };
   }, []);
 
+  // Dismiss all notifications with fade out
+  const handleDismissAll = () => {
+    setNotifs((prev) =>
+      prev.map((n) => ({ ...n, fading: true }))
+    );
+    setTimeout(() => setNotifs([]), 500); // match fade duration
+    // Optionally, call backend to mark all as dismissed
+    axios.post(`${API_URL}/api/notifications/dismiss-all`, {}, { withCredentials: true }).catch(() => {});
+  };
+
+  // Dismiss single notification (with fade)
+  const handleDismiss = (notifId) => {
+    setNotifs((prev) =>
+      prev.map((n) =>
+        n.id === notifId ? { ...n, fading: true } : n
+      )
+    );
+    setTimeout(
+      () =>
+        setNotifs((prev) =>
+          prev.filter((n) => n.id !== notifId)
+        ),
+      500
+    );
+    // Optionally, call backend to mark as dismissed
+    axios.post(`${API_URL}/api/notifications/${notifId}/dismiss`, {}, { withCredentials: true }).catch(() => {});
+  };
+
   return (
     <div className="dashboard-layout">
       <MiniDrawer menuType="social" />
       <div className="dashboard-main-content">
-        <h1>Notifications</h1>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <h1
+            style={{
+              color: "#fff",
+              marginBottom: "0.7rem",
+              fontWeight: 800,
+              fontSize: "2.2rem",
+              letterSpacing: "-1px",
+            }}
+          >
+            Notifications
+          </h1>
+          {notifs.length > 0 && (
+            <button
+              onClick={handleDismissAll}
+              style={{
+                background: "#1db954",
+                color: "#fff",
+                border: "none",
+                borderRadius: "8px",
+                padding: "8px 18px",
+                fontWeight: 600,
+                fontSize: "1rem",
+                cursor: "pointer",
+                marginLeft: "1rem",
+                transition: "background 0.2s",
+              }}
+            >
+              Dismiss All
+            </button>
+          )}
+        </div>
+        <div
+          style={{
+            width: "100%",
+            height: "3px",
+            background: "linear-gradient(90deg, #1db954 0%, #27c93f 100%)",
+            borderRadius: "2px",
+            marginBottom: "1.5rem",
+          }}
+        />
         {loading ? (
           <div className="notif-loading">Loading…</div>
         ) : notifs.length === 0 ? (
@@ -61,11 +129,8 @@ const Notifications = () => {
               <NotificationItem
                 key={n.id}
                 n={n}
-                onClick={() =>
-                  setNotifs((prev) =>
-                    prev.map((x) => (x.id === n.id ? { ...x, seen: true } : x))
-                  )
-                }
+                fading={n.fading}
+                onClick={() => handleDismiss(n.id)}
               />
             ))}
           </div>
