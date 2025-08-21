@@ -1,25 +1,25 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { API_URL } from "../shared";
-import '../style/GenerateUI.css';
+import "../style/GenerateUI.css";
 
 const ChatComponent = () => {
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [aiTyping, setAiTyping] = useState('');
+  const [aiTyping, setAiTyping] = useState("");
   const messagesEndRef = useRef(null);
   const textareaRef = useRef(null);
 
   useEffect(() => {
     if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = "auto";
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
   }, [message]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, aiTyping]);
 
   const getPlaylistIdFromUrl = (url) => {
@@ -28,65 +28,55 @@ const ChatComponent = () => {
   };
 
   const handleSendMessage = async () => {
-    if (message.trim() === '') return;
-    const userMessage = { text: message, sender: 'user' };
-    setMessages(prev => [...prev, userMessage]);
+    if (message.trim() === "") return;
+
+    const userMessage = { text: message, sender: "user" };
+    setMessages((prev) => [...prev, userMessage]);
     setLoading(true);
-    setAiTyping('');
+    setAiTyping("");
+
     try {
       const res = await axios.post(
         `${API_URL}/auth/spotify/ai-playlist`,
         { prompt: message },
-        { withCredentials: true } 
+        { withCredentials: true }
       );
-      
-      if (res.data.playlistUrl) {
-        const playlistId = getPlaylistIdFromUrl(res.data.playlistUrl);
-        let aiText = res.data.message || "Here's your playlist!";
-        
-        // Type out AI message character by character
-        let i = 1;
-        setAiTyping(aiText[0] || '');
-        const typeInterval = setInterval(() => {
-          setAiTyping(aiText.slice(0, i + 1));
-          i++;
-          if (i > aiText.length) {
-            clearInterval(typeInterval);
-            setMessages(prev => [...prev, { 
-              text: aiText, 
-              sender: 'ai', 
-              type: 'playlist',
-              playlistId: playlistId 
-            }]);
-            setAiTyping('');
-            setLoading(false);
+
+      let aiText = res.data.message || "Here's your playlist!";
+      const playlistId = res.data.playlistUrl
+        ? getPlaylistIdFromUrl(res.data.playlistUrl)
+        : null;
+
+      let i = 1;
+      setAiTyping(aiText[0] || "");
+      const typeInterval = setInterval(() => {
+        setAiTyping(aiText.slice(0, i + 1));
+        i++;
+        if (i > aiText.length) {
+          clearInterval(typeInterval);
+
+          setMessages((prev) => [...prev, { text: aiText, sender: "ai" }]);
+
+          if (playlistId) {
+            setMessages((prev) => [
+              ...prev,
+              { type: "playlist", sender: "ai", playlistId },
+            ]);
           }
-        }, 18); // speed of typing
-      } else if (res.data.message) {
-        let aiText = res.data.message;
-        // Type out AI message character by character
-        let i = 1;
-        setAiTyping(aiText[0] || '');
-        const typeInterval = setInterval(() => {
-          setAiTyping(aiText.slice(0, i + 1));
-          i++;
-          if (i > aiText.length) {
-            clearInterval(typeInterval);
-            setMessages(prev => [...prev, { text: aiText, sender: 'ai' }]);
-            setAiTyping('');
-            setLoading(false);
-          }
-        }, 18); // speed of typing
-      } else {
-        setMessages(prev => [...prev, { text: "Sorry, something went wrong.", sender: 'ai' }]);
-        setLoading(false);
-      }
+
+          setAiTyping("");
+          setLoading(false);
+        }
+      }, 18);
     } catch (err) {
-      setMessages(prev => [...prev, { text: "Error: Could not generate playlist.", sender: 'ai' }]);
-      setAiTyping('');
+      setMessages((prev) => [
+        ...prev,
+        { text: "Error: Could not generate playlist.", sender: "ai" },
+      ]);
+      setAiTyping("");
       setLoading(false);
     } finally {
-      setMessage('');
+      setMessage("");
     }
   };
 
@@ -103,14 +93,17 @@ const ChatComponent = () => {
           className="spotify-embed-iframe"
         />
         <div className="spotify-embed-actions">
-          <a 
+          <a
             href={`https://open.spotify.com/playlist/${playlistId}`}
-            target="_blank" 
+            target="_blank"
             rel="noopener noreferrer"
             className="spotify-open-button"
           >
             <svg viewBox="0 0 24 24" width="16" height="16">
-              <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-6h2v6zm4 0h-2V7h2v10z"/>
+              <path
+                fill="currentColor"
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-6h2v6zm4 0h-2V7h2v10z"
+              />
             </svg>
             Open in Spotify
           </a>
@@ -120,7 +113,7 @@ const ChatComponent = () => {
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
     }
@@ -135,11 +128,13 @@ const ChatComponent = () => {
         </div>
         <div className="messages-container">
           {messages.map((msg, index) => (
-            <div 
-              key={index} 
-              className={`message-bubble ${msg.sender === 'user' ? 'user-message' : 'ai-message'}`}
+            <div
+              key={index}
+              className={`message-bubble ${
+                msg.sender === "user" ? "user-message" : "ai-message"
+              }`}
             >
-              {msg.type === 'playlist' && msg.playlistId ? (
+              {msg.type === "playlist" && msg.playlistId ? (
                 <SpotifyEmbed playlistId={msg.playlistId} />
               ) : (
                 msg.text
@@ -147,9 +142,7 @@ const ChatComponent = () => {
             </div>
           ))}
           {aiTyping && (
-            <div className="message-bubble ai-message">
-              {aiTyping}
-            </div>
+            <div className="message-bubble ai-message">{aiTyping}</div>
           )}
           {loading && !aiTyping && (
             <div className="message-bubble ai-message">
@@ -171,12 +164,15 @@ const ChatComponent = () => {
             placeholder="Describe the playlist you want to create..."
             rows="1"
           />
-          <button 
+          <button
             onClick={handleSendMessage}
-            disabled={loading || message.trim() === ''}
+            disabled={loading || message.trim() === ""}
           >
             <svg viewBox="0 0 24 24" width="24" height="24">
-              <path fill="currentColor" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+              <path
+                fill="currentColor"
+                d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"
+              ></path>
             </svg>
           </button>
         </div>
