@@ -3,6 +3,7 @@ import SearchComponent from './SearchComponent';
 import SpotifyEmbed from './SpotifyEmbed';
 import '../style/SearchComponent.css';
 //for profile
+import '../style/MusicSelector.css';
 const MusicSelector = ({
   initialItems = [],
   maxItems = 5,
@@ -101,6 +102,7 @@ const MusicSelector = ({
                     <label style={{ marginLeft: 24 }}>
                       Size:
                       <select
+                        className="size-dropdown"
                         value={selectedItems[idx].widthMode || defaultWidthMode}
                         onChange={e => handleSettingChange(idx, 'widthMode', e.target.value)}
                         style={{ marginLeft: 8 }}
