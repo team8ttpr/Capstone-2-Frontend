@@ -106,8 +106,18 @@ const Messages = ({ user }) => {
     }
   }, [selectedFriend, messages.length]);
 
-  const handleSendMessage = async ({ content, file, fileType }) => {
+  const handleSendMessage = async ({ content, file, fileType, spotifyEmbedUrl }) => {
     if (!selectedFriend) return;
+
+    if (spotifyEmbedUrl) {
+      socket.emit("send_message", {
+        to: selectedFriend.id,
+        content: "", // No text content for embed
+        type: "spotify_embed",
+        spotifyEmbedUrl,
+      });
+      return;
+    }
 
     if (file) {
       const formData = new FormData();

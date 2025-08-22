@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import SpotifyEmbed from "./SpotifyEmbed";
 
 const MessageThread = ({ messages, currentUserId, isTyping }) => {
   const bottomRef = useRef();
@@ -26,6 +27,20 @@ const MessageThread = ({ messages, currentUserId, isTyping }) => {
             <a href={msg.fileUrl} target="_blank" rel="noopener noreferrer">
               Download file
             </a>
+          ) : msg.spotifyEmbedUrl ? (
+            <SpotifyEmbed
+              type={(() => {
+                const m = msg.spotifyEmbedUrl.match(/spotify\.com\/(track|album|artist|playlist)\//);
+                return m ? m[1] : msg.embedType || "track";
+              })()}
+              id={(() => {
+                const m = msg.spotifyEmbedUrl.match(/spotify\.com\/(?:track|album|artist|playlist)\/([a-zA-Z0-9]+)/);
+                return m ? m[1] : msg.embedId || "";
+              })()}
+              width={320}
+              height={80}
+              theme="dark"
+            />
           ) : null}
           {msg.content && <span>{msg.content}</span>}
           <div className="message-meta">
