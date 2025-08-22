@@ -190,6 +190,7 @@ const SinglePostView = ({ user }) => {
           open={commentsOpen}
           onClose={() => setCommentsOpen(false)}
           currentUser={user}
+          postOwnerId={post.userId}
         />
       </div>
       <div className={`fullscreen-post${commentsOpen ? " comments-open" : ""}`}>

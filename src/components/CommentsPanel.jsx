@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { API_URL } from "../shared";
 import "../style/CommentsPanel.css";
+import { socket } from "../ws";
 
 function buildTree(list) {
   const byId = new Map();
@@ -33,7 +34,13 @@ function buildTree(list) {
   return roots;
 }
 
-export default function CommentsPanel({ postId, open, onClose, currentUser }) {
+export default function CommentsPanel({
+  postId,
+  open,
+  onClose,
+  currentUser,
+  postOwnerId,
+}) {
   const [comments, setComments] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -102,6 +109,23 @@ export default function CommentsPanel({ postId, open, onClose, currentUser }) {
       setComments((prev) => [created, ...prev]);
       setInput("");
       setReplyTo(null);
+
+      // Emit live comment notification if not self-comment
+      const ownerId = created.postOwnerId || postOwnerId;
+      if (
+        currentUser &&
+        created &&
+        created.author &&
+        ownerId &&
+        created.author.id !== ownerId
+      ) {
+        socket.emit("send_comment_notification", {
+          postOwnerId: ownerId,
+          commenterId: created.author.id,
+          postId,
+          commentText: created.content,
+        });
+      }
     } catch (error) {
       if (error.response?.status === 401) {
         setError("You must be logged in to comment");

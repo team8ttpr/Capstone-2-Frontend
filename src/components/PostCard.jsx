@@ -7,6 +7,7 @@ import ForkPlaylistModal from "./ForkPlaylistModal";
 import ShareModal from "./ShareModal";
 import PostOptionsModal from "./PostOptionModal";
 import { useNavigate } from "react-router-dom";
+import { socket } from "../ws";
 
 const getProfileImage = (profile) => {
   return (
@@ -93,19 +94,31 @@ const PostCard = ({ post, currentUser, onPostUpdate }) => {
   };
 
   // --- Repost functionality ---
-  const handleRepost = async () => {
-    setShowShareModal(false);
-    try {
-      await axios.post(
-        `${API_URL}/api/posts/${post.id}/repost`,
-        {},
-        { withCredentials: true }
-      );
-      if (onPostUpdate) onPostUpdate();
-    } catch (e) {
-      alert("Failed to repost.");
+const handleRepost = async () => {
+  setShowShareModal(false);
+  try {
+    const res = await axios.post(
+      `${API_URL}/api/posts/${post.id}/repost`,
+      {},
+      { withCredentials: true }
+    );
+    if (onPostUpdate) onPostUpdate();
+
+    if (
+      currentUser &&
+      post.userId &&
+      currentUser.id !== post.userId
+    ) {
+      socket.emit("send_repost_notification", {
+        postOwnerId: post.userId,
+        reposterId: currentUser.id,
+        postId: post.id,
+      });
     }
-  };
+  } catch (e) {
+    alert("Failed to repost.");
+  }
+};
 
   const handleEdit = () => {
     setShowEditModal(true);
