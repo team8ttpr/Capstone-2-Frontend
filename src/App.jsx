@@ -33,12 +33,16 @@ import ShareProfile from "./pages/shareProfile";
 import SinglePostView from "./pages/SinglePostView";
 import AI from "./pages/AI";
 import { socket, PresenceContext } from "./ws";
-
+import RedirectSpotify from "./pages/RedirectSpotify";
+import SpotifyGuard from "./utils/SpotifyGuard";
 
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [online, setOnline] = useState(new Set());
+  const [spotifyConnected, setSpotifyConnected] = useState(false);
+  const [spotifyCheckDone, setSpotifyCheckDone] = useState(false);
+
   const navigate = useNavigate();
   const location = useLocation();
   const hideNavBar = location.pathname.startsWith("/share/");
@@ -51,11 +55,50 @@ function App() {
   } = useAuth0();
 
   useEffect(() => {
-  if (user?.id) {
-    console.log("Registering socket for user:", user.id);
-    socket.emit("register", user.id);
-  }
-}, [user]);
+    let alive = true;
+
+    const run = async () => {
+      if (!user) {
+        if (alive) {
+          setSpotifyConnected(false);
+          setSpotifyCheckDone(true);
+        }
+        return;
+      }
+
+      try {
+        const res = await axios.get(`${API_URL}/auth/spotify/profile`, {
+          withCredentials: true,
+        });
+        console.log("[spotify/profile] status:", res.status, res.data);
+        if (!alive) return;
+        setSpotifyConnected(!!res.data?.connected);
+      } catch (e) {
+        console.log(
+          "[spotify/profile] ERROR:",
+          e?.response?.status,
+          e?.response?.data || e?.message
+        );
+        if (!alive) return;
+        setSpotifyConnected(false);
+      } finally {
+        if (alive) setSpotifyCheckDone(true);
+      }
+    };
+
+    setSpotifyCheckDone(false);
+    run();
+    return () => {
+      alive = false;
+    };
+  }, [user]);
+
+  useEffect(() => {
+    if (user?.id) {
+      console.log("Registering socket for user:", user.id);
+      socket.emit("register", user.id);
+    }
+  }, [user]);
 
   useEffect(() => {
     const requestInterceptor = axios.interceptors.request.use(
@@ -209,35 +252,76 @@ function App() {
             path="/callback/spotify"
             element={<SpotifyCallback setUser={setUser} />}
           />
+          {/* dashboard index -> analytics */}
           <Route
             path="/dashboard"
-            element={<Navigate to="/dashboard/analytics" replace />}
+            element={
+              <SpotifyGuard
+                user={user}
+                spotifyConnected={spotifyConnected}
+                spotifyCheckDone={spotifyCheckDone}
+              >
+                <Navigate to="/dashboard/analytics" replace />
+              </SpotifyGuard>
+            }
           />
+
           <Route
             path="/dashboard/analytics"
-            element={<Analytics user={user} />}
+            element={
+              <SpotifyGuard
+                user={user}
+                spotifyConnected={spotifyConnected}
+                spotifyCheckDone={spotifyCheckDone}
+              >
+                <Analytics user={user} />
+              </SpotifyGuard>
+            }
           />
+
           <Route
             path="/dashboard/topartist"
-            element={<TopArtist user={user} />}
+            element={
+              <SpotifyGuard
+                user={user}
+                spotifyConnected={spotifyConnected}
+                spotifyCheckDone={spotifyCheckDone}
+              >
+                <TopArtist user={user} />
+              </SpotifyGuard>
+            }
           />
+
           <Route
             path="/dashboard/toptracks"
-            element={<TopTracks user={user} />}
+            element={
+              <SpotifyGuard
+                user={user}
+                spotifyConnected={spotifyConnected}
+                spotifyCheckDone={spotifyCheckDone}
+              >
+                <TopTracks user={user} />
+              </SpotifyGuard>
+            }
           />
+
           <Route
             path="/dashboard/myplaylist"
-            element={<MyPlaylist user={user} />}
-          />
-          <Route
-            path="/dashboard/toptracks"
-            element={<TopTracks user={user} />}
+            element={
+              <SpotifyGuard
+                user={user}
+                spotifyConnected={spotifyConnected}
+                spotifyCheckDone={spotifyCheckDone}
+              >
+                <MyPlaylist user={user} />
+              </SpotifyGuard>
+            }
           />
           <Route
             path="/social"
             element={<Navigate to="/social/feed" replace />}
           />
-          
+
           <Route path="/social/feed" element={<Feed user={user} />} />
           <Route path="/social/messages" element={<Messages user={user} />} />
           <Route path="/social/mypost" element={<MyPost user={user} />} />
@@ -247,11 +331,27 @@ function App() {
             element={<Notifications user={user} />}
           />
           <Route path="/profile" element={<Profile user={user} />} />
-          <Route path="/profile/:username" element={<PublicProfile user={user} />} />
+          <Route
+            path="/profile/:username"
+            element={<PublicProfile user={user} />}
+          />
           <Route path="/share/:username" element={<ShareProfile />} />
           <Route path="/post/:id" element={<SinglePostView user={user} />} />
 
-          <Route path="/ai" element={<AI />} />
+          <Route
+            path="/ai"
+            element={
+              <SpotifyGuard
+                user={user}
+                spotifyConnected={spotifyConnected}
+                spotifyCheckDone={spotifyCheckDone}
+              >
+                <AI />
+              </SpotifyGuard>
+            }
+          />
+          <Route path="/redirect-spotify" element={<RedirectSpotify />} />
+
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
