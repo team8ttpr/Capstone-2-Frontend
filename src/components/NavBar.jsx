@@ -210,6 +210,7 @@ const NavBar = ({ user, onLogout }) => {
                           key={notif.id}
                           n={notif}
                           onClick={() => handleDismiss(notif.id)}
+                          showRelativeTime={true}
                         />
                       ))}
                     </div>
