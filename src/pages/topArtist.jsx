@@ -110,7 +110,7 @@ const TopArtist = ({ user }) => {
           )}
 
           <div className="time-range-selector">
-            <h3>Time Period:</h3>
+            <h3 style={{ color: "#e0ffe0" }}>Time Period:</h3>
             <div className="time-range-buttons">
               {Object.entries(timeRangeLabels).map(([value, label]) => (
                 <button

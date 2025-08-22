@@ -2,8 +2,9 @@ import React, { useEffect, useState, useRef } from "react";
 import FriendCard from "./FriendCard.jsx";
 import { API_URL } from "../shared.js";
 import axios from "axios";
+import { socket } from "../ws";
 
-export default function AddFriendForm({ onClose, onFollowChange }) {
+export default function AddFriendForm({ onClose, onFollowChange, currentUser }) {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -37,7 +38,7 @@ export default function AddFriendForm({ onClose, onFollowChange }) {
 
   const handleToggleFollow = async (username) => {
     try {
-      await axios.post(
+      const res = await axios.post(
         `${API_URL}/api/profile/${username}/follow`,
         {},
         { withCredentials: true }
@@ -49,6 +50,19 @@ export default function AddFriendForm({ onClose, onFollowChange }) {
         )
       );
       if (onFollowChange) onFollowChange();
+
+      const followedUser = users.find((u) => u.username === username);
+      if (
+        followedUser &&
+        followedUser.id &&
+        currentUser &&
+        currentUser.id !== followedUser.id
+      ) {
+        socket.emit("send_follow_notification", {
+          followedUserId: followedUser.id,
+          followerId: currentUser.id,
+        });
+      }
     } catch (err) {
       console.error(err);
     }
@@ -118,8 +132,8 @@ export default function AddFriendForm({ onClose, onFollowChange }) {
               opacity: 0.7,
               transition: "opacity 0.2s",
             }}
-            onMouseOver={e => (e.currentTarget.style.opacity = 1)}
-            onMouseOut={e => (e.currentTarget.style.opacity = 0.7)}
+            onMouseOver={(e) => (e.currentTarget.style.opacity = 1)}
+            onMouseOut={(e) => (e.currentTarget.style.opacity = 0.7)}
             aria-label="Close"
           >
             ✕
