@@ -51,7 +51,7 @@ const Home = () => {
   return (
     <div className="home">
       <div className="home-title">
-        <img src="https://res.cloudinary.com/di9wb90kg/image/upload/v1755880885/spotter-logo-green_wt4lln.png" alt="Spotter Logo" className="spotter-logo" />
+        <img src="https://res.cloudinary.com/di9wb90kg/image/upload/v1755882923/spotterLogo_c4j6rr.png" alt="Spotter Logo" className="spotter-logo" />
         <span>Welcome to Spotter</span>
       </div>
       <div className="home-intro">

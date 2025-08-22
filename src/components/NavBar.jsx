@@ -8,7 +8,13 @@ const NavBar = ({ user, onLogout }) => {
   return (
     <nav className="navbar">
       <div className="nav-brand">
-        <Link to="/">Capstone-2</Link>
+        <Link to="/">
+          <img
+            src="https://res.cloudinary.com/di9wb90kg/image/upload/v1755882970/logoWhite_tjqsw6.png"
+            alt="Spotter Logo"
+            style={{ height: "54px", verticalAlign: "middle" }}
+          />
+        </Link>
       </div>
 
       <div className="nav-center">
