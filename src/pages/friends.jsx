@@ -173,7 +173,11 @@ const Friends = () => {
               Add Friend
             </Button>
           </h1>
-          <FriendNavbar activeTab={activeTab} onTabChange={onTabChange} textColor="#fff" />
+          <FriendNavbar
+            activeTab={activeTab}
+            onTabChange={onTabChange}
+            textColor="#fff"
+          />
           <SearchBar
             onSearch={setQuery}
             placeholder={
@@ -188,6 +192,7 @@ const Friends = () => {
             <AddFriendForm
               onClose={() => setShowSearch(false)}
               onFollowChange={loadFriends}
+              currentUser={me}
             />
           )}
           {renderList()}

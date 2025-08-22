@@ -72,6 +72,19 @@ const NotificationItem = ({ n, onClick, fading }) => {
         sent you a <Link to={`/social/messages`}>message</Link>
       </span>
     );
+  } else if (n.type === "repost") {
+    body = (
+      <span>
+        <Link
+          to={`/profile/${actorUsername}`}
+          style={{ color: "#fff", fontWeight: 700, textDecoration: "none" }}
+        >
+          {actorName}
+        </Link>{" "}
+        reposted your{" "}
+        {n.postId ? <Link to={`/post/${n.postId}`}>post</Link> : "post"}
+      </span>
+    );
   }
 
   // Handle fade out and then call onClick (dismiss)
@@ -89,49 +102,51 @@ const NotificationItem = ({ n, onClick, fading }) => {
   }, [localFading, n, onClick]);
 
   return (
-  <div
-    className={`notif-card ${n.seen ? "" : "notif-unread"}${localFading || fading ? " notif-fade" : ""}`}
-    tabIndex={0}
-  >
-    <div className="notif-avatar-wrap">
-      <Link to={`/profile/${actorUsername}`}>
-        <img
-          className="notif-avatar"
-          src={avatar(n.actor)}
-          alt={`${actorName} avatar`}
-          style={{ cursor: "pointer" }}
-        />
-      </Link>
-    </div>
-    <div className="notif-main">
-      <div className="notif-text">{body}</div>
-      <div className="notif-meta">
-        <span className="notif-time">{time}</span>
-        {!n.seen && <span className="notif-dot" aria-label="unread" />}
-      </div>
-    </div>
-    <button
-      className="notif-dismiss-btn"
-      onClick={handleDismiss}
-      aria-label="Dismiss notification"
+    <div
+      className={`notif-card ${n.seen ? "" : "notif-unread"}${
+        localFading || fading ? " notif-fade" : ""
+      }`}
       tabIndex={0}
-      style={{
-        marginLeft: 16,
-        background: "none",
-        border: "none",
-        color: "#bdbdbd",
-        fontSize: 22,
-        cursor: "pointer",
-        borderRadius: "50%",
-        transition: "background 0.2s, color 0.2s",
-      }}
-      onMouseOver={e => (e.currentTarget.style.color = "#fff")}
-      onMouseOut={e => (e.currentTarget.style.color = "#bdbdbd")}
     >
-      &times;
-    </button>
-  </div>
-);
+      <div className="notif-avatar-wrap">
+        <Link to={`/profile/${actorUsername}`}>
+          <img
+            className="notif-avatar"
+            src={avatar(n.actor)}
+            alt={`${actorName} avatar`}
+            style={{ cursor: "pointer" }}
+          />
+        </Link>
+      </div>
+      <div className="notif-main">
+        <div className="notif-text">{body}</div>
+        <div className="notif-meta">
+          <span className="notif-time">{time}</span>
+          {!n.seen && <span className="notif-dot" aria-label="unread" />}
+        </div>
+      </div>
+      <button
+        className="notif-dismiss-btn"
+        onClick={handleDismiss}
+        aria-label="Dismiss notification"
+        tabIndex={0}
+        style={{
+          marginLeft: 16,
+          background: "none",
+          border: "none",
+          color: "#bdbdbd",
+          fontSize: 22,
+          cursor: "pointer",
+          borderRadius: "50%",
+          transition: "background 0.2s, color 0.2s",
+        }}
+        onMouseOver={(e) => (e.currentTarget.style.color = "#fff")}
+        onMouseOut={(e) => (e.currentTarget.style.color = "#bdbdbd")}
+      >
+        &times;
+      </button>
+    </div>
+  );
 };
 
-export default NotificationItem
+export default NotificationItem;
