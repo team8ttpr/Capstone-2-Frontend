@@ -10,6 +10,7 @@ const NavBar = ({ user, onLogout }) => {
   const location = useLocation();
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState([]);
+  const [userInfo, setUserInfo] = useState(null);
   const notifRef = useRef();
 
   useEffect(() => {
@@ -29,6 +30,15 @@ const NavBar = ({ user, onLogout }) => {
         .catch(() => setNotifications([]));
     }
   }, [showNotifications, user]);
+
+  useEffect(() => {
+    if (user && user.id) {
+      axios
+        .get(`${API_URL}/api/profile/${user.username || user.id}`, { withCredentials: true })
+        .then((res) => setUserInfo(res.data))
+        .catch(() => setUserInfo(null));
+    }
+  }, [user]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -223,14 +233,35 @@ const NavBar = ({ user, onLogout }) => {
       </div>
 
       <div className="nav-links">
-        {user ? (
+        {userInfo && (
           <div className="user-section">
-            <span className="username">Welcome, {user.username}!</span>
+            <img
+              src={userInfo.profileImage || userInfo.spotifyProfileImage || userInfo.avatarURL || userInfo.avatar || "/default-avatar.png"}
+              alt="Profile"
+              style={{
+                width: 36,
+                height: 36,
+                borderRadius: "50%",
+                objectFit: "cover",
+                marginRight: 3,
+                boxShadow: "0 1px 4px #1db95444",
+                background: "#23232a",
+                border: "2px solid #232323"
+              }}
+            />
+            <span style={{ color: "#fff", fontWeight: 600, fontSize: "1.15rem", maxWidth: 120, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", marginRight: 6 }}>
+              {userInfo.firstName && userInfo.lastName
+                ? `${userInfo.firstName} ${userInfo.lastName}`
+                : userInfo.displayName
+                ? userInfo.displayName
+                : userInfo.username}
+            </span>
             <button onClick={onLogout} className="logout-btn">
               Logout
             </button>
           </div>
-        ) : (
+        )}
+        {!userInfo && (
           <div className="auth-links">
             <Link
               to="/auth"
