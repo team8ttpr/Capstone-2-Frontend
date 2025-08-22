@@ -56,14 +56,16 @@ const Feed = ({ user }) => {
           {filtered.length === 0 ? (
             <p style={{ textAlign: "center" }}>No matching posts.</p>
           ) : (
-            filtered.map((post) => (
-              <PostCard
-                key={post.id}
-                post={post}
-                currentUser={user}
-                onPostUpdate={handlePostUpdate}
-              />
-            ))
+            <div className="feed-posts">
+              {filtered.map((post) => (
+                <PostCard
+                  key={post.id}
+                  post={post}
+                  currentUser={user}
+                  onPostUpdate={handlePostUpdate}
+                />
+              ))}
+            </div>
           )}
         </div>
       </div>
