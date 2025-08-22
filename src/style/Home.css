@@ -81,6 +81,18 @@
   overflow: visible;
 }
 
+.snapshot-card.clickable {
+  transition: box-shadow 0.2s, transform 0.2s;
+  box-shadow: 0 4px 24px rgba(30,217,96,0.28);
+}
+
+.snapshot-card.clickable:hover {
+  background: #232526;
+  color: #1db954;
+  transform: scale(1.04) translateY(-4px);
+  box-shadow: 0 8px 32px rgba(30,217,96,0.38);
+}
+
 .snapshot-card:hover {
   transform: scale(1.06) translateY(-6px);
   box-shadow: 0 8px 32px rgba(30,217,96,0.28);
