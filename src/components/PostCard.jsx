@@ -245,7 +245,7 @@ const handleRepost = async () => {
     ) {
       return;
     }
-    navigate(`/post/${post.id}`);
+    console.log("hi");
   };
 
   return (
