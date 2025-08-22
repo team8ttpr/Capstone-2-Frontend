@@ -41,25 +41,14 @@ const SearchComponent = ({
       setError("");
       setHasSearched(true);
 
-      console.log("Searching for:", searchQuery);
-      console.log("API URL:", API_URL);
-
       const response = await axios.get(`${API_URL}/api/search-songs`, {
         params: { q: searchQuery.trim() },
         withCredentials: true,
         timeout: 10000,
       });
 
-      console.log("Search response:", response.data);
       setResults(response.data);
     } catch (err) {
-      console.error("Search error details:", {
-        message: err.message,
-        response: err.response?.data,
-        status: err.response?.status,
-        url: err.config?.url,
-      });
-
       if (err.code === "ECONNABORTED") {
         setError("Search timed out. Please try again.");
       } else if (err.response?.status === 500) {
@@ -92,13 +81,13 @@ const SearchComponent = ({
     }
   };
 
-const handleResultClick = (result, e) => {
-  e.preventDefault();
-  e.stopPropagation();
-  if (onResultSelect) {
-    onResultSelect(result);
-  }
-};
+  const handleResultClick = (result, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (onResultSelect) {
+      onResultSelect(result);
+    }
+  };
 
   const getSpotifyId = (item) => {
     if (item.spotify_url) {

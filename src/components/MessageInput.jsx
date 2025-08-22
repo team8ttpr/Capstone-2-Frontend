@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import AttachFileIcon from "@mui/icons-material/AttachFile";
 
 const MessageInput = ({ onSend, onTyping, onStopTyping }) => {
   const [value, setValue] = useState("");
@@ -43,6 +44,12 @@ const MessageInput = ({ onSend, onTyping, onStopTyping }) => {
     }
   };
 
+  const handleAttachClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
   return (
     <form className="message-input" onSubmit={handleSend}>
       <input
@@ -52,12 +59,28 @@ const MessageInput = ({ onSend, onTyping, onStopTyping }) => {
         onChange={handleChange}
         onBlur={() => onStopTyping && onStopTyping()}
       />
+      <button
+        type="button"
+        onClick={handleAttachClick}
+        style={{
+          background: "transparent",
+          border: "none",
+          cursor: "pointer",
+          marginLeft: 8,
+          display: "flex",
+          alignItems: "center",
+        }}
+        aria-label="Attach file"
+        title="Attach file"
+      >
+        <AttachFileIcon style={{ color: "#1db954" }} />
+      </button>
       <input
         type="file"
         ref={fileInputRef}
         accept="image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         onChange={handleFileChange}
-        style={{ marginLeft: 8 }}
+        style={{ display: "none" }}
       />
       {file && (
         <span style={{ marginLeft: 8, display: "inline-flex", alignItems: "center" }}>

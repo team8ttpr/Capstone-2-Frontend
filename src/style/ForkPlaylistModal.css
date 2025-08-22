@@ -1,120 +1,291 @@
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,.45);
+  background: rgba(0, 0, 0, 0.8);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  padding: 2rem;
+  backdrop-filter: blur(4px);
 }
 
 .fork-modal {
-  background: #fff;
-  border: 2px solid #000;
+  background: #1e1e1e;
   border-radius: 16px;
-  width: 520px;
-  max-width: calc(100vw - 40px);
-  max-height: calc(100vh - 40px);
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border: 1px solid #333;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0,0,0,.3);
-  animation: slideUp .25s ease-out;
-  color: #000;
 }
 
 .fork-modal .fork-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 24px;
-  border-bottom: 2px solid #000;
-  background: #fafafa;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 0;
+  padding-right: 0;
+  border-bottom: 1px solid #333;
+  background: #18181c;
   flex-shrink: 0;
 }
+
 .fork-modal .fork-title {
-  margin: 0;
-  font-size: 1.25rem;
-  font-weight: 700;
+  margin-left: 24px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
 }
+
 .fork-modal .fork-close {
   background: none;
   border: none;
   cursor: pointer;
-  color: #000;
-  padding: 4px;
-  border-radius: 8px;
+  color: #b3b3b3;
+  padding: 0.5rem;
+  border-radius: 50%;
   width: 32px;
   height: 32px;
   display: grid;
   place-items: center;
+  font-size: 1.5rem;
+  transition: all 0.2s ease;
+  margin-right: 24px;
 }
-.fork-modal .fork-close:hover { background: #f0f0f0; }
+.fork-modal .fork-close:hover {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+}
 
 .fork-modal .fork-content {
-  padding: 20px 24px;
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-top: 0;
+  padding-bottom: 0;
   flex: 1;
-  overflow: auto; 
-  scrollbar-gutter: stable both-edges;  
+  overflow: auto;
+  scrollbar-gutter: stable both-edges;
+  background: #1e1e1e;
+  color: #fff;
 }
 
 .fork-modal .fork-info {
-  background: #f8f9fa;
-  border: 2px solid #e0e0e0;
+  background: #23232a;
+  border: 1px solid #333;
   border-radius: 10px;
   padding: 16px;
   margin-bottom: 20px;
+  margin-top: 20px;
 }
-.fork-modal .fork-info h4 { margin: 0 0 8px; font-weight: 700; font-size: 1rem; }
-.fork-modal .fork-info p  { margin: 0; color: #666; font-size: 14px; }
+.fork-modal .fork-info h4 {
+  margin: 0 0 8px;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #1db954;
+}
+.fork-modal .fork-info p {
+  margin: 0;
+  color: #b3b3b3;
+  font-size: 14px;
+}
 
-.fork-modal .form-group { margin-bottom: 20px; }
+.fork-modal .form-group {
+  margin-bottom: 20px;
+}
 .fork-modal .form-label {
-  display: block; margin-bottom: 8px; font-weight: 700; font-size: .95rem; color: #000;
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #b3ffb3;
 }
 .fork-modal .text-input {
-  width: 100%; padding: 12px 16px; font-size: 16px;
-  border: 2px solid #000; border-radius: 10px;
-  background: #fff; color: #000; transition: border-color .2s, box-shadow .2s;
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 16px;
+  border: 1px solid #444;
+  border-radius: 10px;
+  background: #18181c;
+  color: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 .fork-modal .text-input:focus {
-  outline: none; border-color: #7b68ee; box-shadow: 0 0 0 3px rgba(123,104,238,.12);
+  outline: none;
+  border-color: #1db954;
+  box-shadow: 0 0 0 2px rgba(29, 185, 84, 0.2);
 }
 
+/* Toggle Switch Styles - identical to EditProfileModal */
 .fork-modal .checkbox-label {
-  display: flex; align-items: flex-start; gap: 12px; cursor: pointer; color: #000; font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  color: #fff;
+  font-weight: 600;
+  position: relative;
 }
-.fork-modal .checkbox-label input[type="checkbox"] { position: absolute; opacity: 0; pointer-events: none; }
-.fork-modal .checkmark {
-  width: 20px; height: 20px; border: 2px solid #000; border-radius: 4px; background: #fff; position: relative; flex-shrink: 0;
+
+.fork-modal .toggle-switch {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  gap: 0.75rem;
+  width: auto;
+  flex: none;
 }
-.fork-modal .checkbox-label input[type="checkbox"]:checked + .checkmark {
-  background: #7b68ee; border-color: #7b68ee;
+
+.fork-modal .toggle-switch input[type="checkbox"] {
+  opacity: 0;
+  width: 0;
+  height: 0;
 }
-.fork-modal .checkbox-label input[type="checkbox"]:checked + .checkmark::after {
-  content: ""; position: absolute; left: 6px; top: 2px; width: 6px; height: 10px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg);
+
+.fork-modal .toggle-slider {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  background: #333;
+  border-radius: 34px;
+  transition: background 0.4s;
+  cursor: pointer;
 }
-.fork-modal .checkbox-text { flex: 1; color: #000; }
-.fork-modal .help-text { margin: 4px 0 0; font-size: 13px; color: #666; }
+
+.fork-modal .toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  top: 3px;
+  background-color: #fff;
+  border-radius: 50%;
+  transition: transform 0.4s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.18);
+}
+
+.fork-modal .toggle-switch input[type="checkbox"]:checked + .toggle-slider {
+  background: linear-gradient(90deg, #1db954 60%, #1ed760 100%);
+}
+
+.fork-modal .toggle-switch input[type="checkbox"]:focus + .toggle-slider {
+  box-shadow: 0 0 1px #1db954;
+}
+
+.fork-modal .toggle-switch input[type="checkbox"]:checked + .toggle-slider:before {
+  transform: translateX(20px);
+}
+
+.fork-modal .checkbox-text {
+  flex: 1;
+  color: #b3ffb3;
+}
+.fork-modal .help-text {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #b3b3b3;
+}
 
 .fork-modal .fork-error {
-  background: rgba(255,0,0,.05);
-  border: 2px solid #ff0000;
-  color: #ff0000;
-  padding: 12px 16px;
+  background: #5a1a1a;
+  border: 1px solid #8b2635;
+  color: #ffdddd;
+  padding: 1rem;
   border-radius: 8px;
-  font-size: 14px; font-weight: 600;
+  font-size: 14px;
+  font-weight: 600;
   margin-bottom: 20px;
+  text-align: center;
 }
 
 .fork-modal .fork-actions {
-  display: flex; justify-content: flex-end; gap: 12px;
-  padding: 20px 24px; border-top: 2px solid #000; background: #fafafa; flex-shrink: 0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 0;
+  padding-right: 0;
+  border-top: 1px solid #333;
+  color: #fff !important;
+  background: #1e1e1e !important;
+  border-color: #333 !important;
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
-.fork-modal .btn { padding: 12px 24px; border-radius: 50px; font-weight: 700; font-size: .9rem; border: 2px solid; cursor: pointer; transition: .2s; }
-.fork-modal .btn-cancel { background: #fff; color: #555; border-color: #e0e0e0; }
-.fork-modal .btn-cancel:hover { background: #f0f0f0; color: #000; border-color: #000; }
-.fork-modal .btn-primary { background: #7b68ee; color: #fff; border-color: #7b68ee; }
-.fork-modal .btn-primary:hover { background: #6c5ce7; border-color: #6c5ce7; box-shadow: 0 4px 12px rgba(123,104,238,.3); transform: translateY(-1px); }
 
-@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.fork-modal .btn {
+  padding: 0.75rem 2rem;
+  border-radius: 25px;
+  font-weight: 600;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.fork-modal .btn-cancel {
+  background: #444;
+  color: #fff;
+}
+.fork-modal .btn-cancel:hover {
+  background: #555;
+}
+.fork-modal .btn-primary {
+  background: #1db954;
+  color: #000;
+}
+.fork-modal .btn-primary:hover {
+  background: #1ed760;
+  color: #000;
+  transform: translateY(-1px);
+}
+
+.fork-modal .btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 600px) {
+  .modal-overlay {
+    padding: 1rem;
+  }
+  .fork-modal {
+    max-width: 98vw;
+    padding: 0;
+  }
+  .fork-modal .fork-header,
+  .fork-modal .fork-actions {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .fork-modal .fork-content {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .fork-modal .fork-title {
+    margin-left: 10px;
+  }
+  .fork-modal .fork-close {
+    margin-right: 10px;
+  }
+}

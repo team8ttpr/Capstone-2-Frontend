@@ -30,8 +30,9 @@ const PostCard = ({ post, currentUser, onPostUpdate }) => {
 
   const avatar = getProfileImage(userData);
 
-  const [isLiked, setIsLiked] = useState(post.isLiked || false);
-  const [likesCount, setLikesCount] = useState(post.likesCount || 0);
+  const [isLiked, setIsLiked] = useState(false);
+  const [likesCount, setLikesCount] = useState(0);
+  const [likeBusy, setLikeBusy] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [showPostModal, setShowPostModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -42,43 +43,44 @@ const PostCard = ({ post, currentUser, onPostUpdate }) => {
   const isDraft = post.status === "draft";
 
   useEffect(() => {
-    setIsLiked(post.isLiked || false);
-    setLikesCount(post.likesCount || 0);
+    setIsLiked(Boolean(post.isLiked));
+    setLikesCount(Number(post.likesCount) || 0);
   }, [post.isLiked, post.likesCount]);
 
-  const handleLike = async () => {
-    if (!currentUser) {
-      return;
-    }
-
+  const handleLike = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!currentUser) return;
+    if (likeBusy) return;
+    setLikeBusy(true);
     try {
       const response = await axios.post(
         `${API_URL}/api/posts/${post.id}/like`,
         {},
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       );
-
-      if (response.status === 200) {
-        const data = response.data;
-        setIsLiked(data.isLiked);
-        setLikesCount(data.likesCount);
-
-        if (onPostUpdate) {
-          onPostUpdate(post.id, {
-            isLiked: data.isLiked,
-            likesCount: data.likesCount,
-          });
-        }
+      const data = response.data || {};
+      if (typeof data.isLiked === "boolean") setIsLiked(data.isLiked);
+      if (typeof data.likesCount === "number") setLikesCount(data.likesCount);
+      if (data.isLiked === undefined && data.likesCount === undefined) {
+        setIsLiked((v) => !v);
+        setLikesCount((c) => (isLiked ? Math.max(0, c - 1) : c + 1));
+      }
+      if (onPostUpdate) {
+        onPostUpdate(post.id, {
+          isLiked: data.isLiked,
+          likesCount: data.likesCount,
+        });
       }
     } catch (error) {
       console.error("Error liking post:", error);
-      console.error("Error response:", error.response?.data);
+    } finally {
+      setLikeBusy(false);
     }
   };
 
-  const handleShare = () => {
+  const handleShare = (e) => {
+    e.stopPropagation();
     setShowShareModal(true);
   };
 
@@ -130,7 +132,8 @@ const PostCard = ({ post, currentUser, onPostUpdate }) => {
     }
   };
 
-  const handleFork = () => {
+  const handleFork = (e) => {
+    e.stopPropagation();
     if (!currentUser) {
       return;
     }
@@ -144,8 +147,9 @@ const PostCard = ({ post, currentUser, onPostUpdate }) => {
   };
 
   const isSpotifyPlaylist = () => {
-    const isPlaylist = (post.spotifyType && post.spotifyType.toLowerCase() === "playlist") || 
-                       (post.spotifyEmbedUrl && post.spotifyEmbedUrl.includes("/playlist/"));
+    const isPlaylist =
+      (post.spotifyType && post.spotifyType.toLowerCase() === "playlist") ||
+      (post.spotifyEmbedUrl && post.spotifyEmbedUrl.includes("/playlist/"));
     return isPlaylist;
   };
 
@@ -164,8 +168,9 @@ const PostCard = ({ post, currentUser, onPostUpdate }) => {
     });
   };
 
-  const handleComment = () => {
-    navigate(`/post/${post.id}`);
+  const handleComment = (e) => {
+    e.stopPropagation();
+    navigate(`/post/${post.id}?commentsOpen=1`);
   };
 
   const getSpotifyEmbedUrl = () => {
@@ -197,10 +202,13 @@ const PostCard = ({ post, currentUser, onPostUpdate }) => {
   const shareText = encodeURIComponent(
     `${post.title ? post.title + " - " : ""}Check out this post on Capstone-2!`
   );
-  const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(postUrl)}&text=${shareText}`;
+  const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+    postUrl
+  )}&text=${shareText}`;
 
   // --- Repost tag logic ---
-  const repostUsername = post.originalPosterUsername || post.originalPoster || "original";
+  const repostUsername =
+    post.originalPosterUsername || post.originalPoster || "original";
   const handleRepostUserClick = (e) => {
     e.stopPropagation();
     if (repostUsername) {
@@ -215,18 +223,42 @@ const PostCard = ({ post, currentUser, onPostUpdate }) => {
     }
   };
 
+  // Card click navigation (ignoring buttons/links)
+  const handleCardClick = (e) => {
+    if (
+      e.target.closest("button") ||
+      e.target.closest("a") ||
+      e.target.closest(".concept-action-btn")
+    ) {
+      return;
+    }
+    navigate(`/post/${post.id}`);
+  };
+
   return (
-    <div className={`concept-post-card ${isDraft ? "post-draft" : ""}`}>
+    <div
+      className={`concept-post-card ${isDraft ? "post-draft" : ""}`}
+      style={{ cursor: "pointer" }}
+      onClick={handleCardClick}
+    >
       <div className="concept-post-header">
         <div className="header-left">
-          <div className="author-avatar" style={{ cursor: "pointer" }} onClick={handleAuthorClick}>
+          <div
+            className="author-avatar"
+            style={{ cursor: "pointer" }}
+            onClick={handleAuthorClick}
+          >
             {avatar ? (
               <img src={avatar} alt={username} />
             ) : (
               <div className="default-avatar">{getDefaultAvatar(username)}</div>
             )}
           </div>
-          <div className="author-name" style={{ cursor: "pointer" }} onClick={handleAuthorClick}>
+          <div
+            className="author-name"
+            style={{ cursor: "pointer" }}
+            onClick={handleAuthorClick}
+          >
             {username}
           </div>
         </div>
@@ -239,7 +271,10 @@ const PostCard = ({ post, currentUser, onPostUpdate }) => {
           {isDraft && <div className="draft-badge">DRAFT</div>}
           <button
             className="post-menu-button"
-            onClick={() => setShowPostModal(true)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowPostModal(true);
+            }}
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
@@ -257,8 +292,7 @@ const PostCard = ({ post, currentUser, onPostUpdate }) => {
                 <span
                   style={{ color: "#1db954", cursor: "pointer" }}
                   onClick={handleRepostUserClick}
-                >
-                </span>
+                ></span>
               </div>
             )}
           </div>
@@ -316,25 +350,33 @@ const PostCard = ({ post, currentUser, onPostUpdate }) => {
             </button>
 
             <button
-              className={`concept-action-btn like-btn ${isLiked ? "liked" : ""}`}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                handleLike();
+              className={`concept-action-btn like-btn${
+                isLiked ? " liked" : ""
+              }`}
+              onClick={handleLike}
+              disabled={likeBusy}
+              aria-pressed={isLiked}
+              aria-label={isLiked ? "Unlike" : "Like"}
+              title={isLiked ? "Unlike" : "Like"}
+              style={{
+                background: isLiked ? "rgba(225,48,108,0.13)" : "#23232a",
+                borderColor: "#e1306c",
               }}
             >
               <svg
+                className="like-heart"
                 width="16"
                 height="16"
                 viewBox="0 0 24 24"
                 fill="currentColor"
+                style={{ transition: "color 0.2s" }}
               >
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
               </svg>
-              <span className="action-label">Like</span>
-              {likesCount > 0 && (
-                <span className="like-count">{likesCount}</span>
-              )}
+              <span className="action-label" style={{ color: "#fff" }}>
+                Like
+              </span>
+              <span className="like-count">{likesCount}</span>
             </button>
 
             {isSpotifyPlaylist() && currentUser && (

@@ -183,18 +183,63 @@
 
 .comment-btn { border-color: #1da1f2; color: #1da1f2; background: #23232a; }
 .comment-btn:hover { background: rgba(29, 161, 242, 0.12); }
-.like-btn { border-color: #e1306c; color: #e1306c; background: #23232a; }
-.like-btn:hover { background: rgba(225, 48, 108, 0.13); }
-.like-btn.liked { background: #e1306c; color: #fff; }
+
+.like-btn {
+  border-color: #145c2c !important;
+  color: #1db954 !important;
+  background: #23232a !important;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+}
+.like-btn:hover {
+  background: rgba(29, 185, 84, 0.13) !important;
+  color: #1db954 !important;
+  border-color: #1db954 !important;
+}
+.like-btn .like-heart {
+  color: #fff;
+  transition: color 0.2s;
+}
+.like-btn.liked {
+  background: rgba(225, 48, 108, 0.13) !important;
+  color: #e1306c !important;
+  border-color: #e1306c !important;
+}
+.like-btn.liked .like-heart {
+  color: #e1306c !important;
+}
+.like-btn.liked:hover .like-heart {
+  color: #e1306c !important;
+}
+.like-btn:hover .like-heart {
+  color: #1db954 !important;
+}
+.like-btn .action-label {
+  color: #fff !important;
+}
+.like-count {
+  margin-left: 4px;
+  font-weight: 600;
+  color: #fff;
+  font-size: 1em;
+  position: static;
+  background: none;
+  border: none;
+  min-width: 0;
+  height: auto;
+  border-radius: 0;
+  display: inline;
+  align-items: unset;
+  justify-content: unset;
+}
+
 .share-btn { border-color: #1db954; color: #1db954; background: #23232a; }
-.share-btn:hover { background: rgba(29, 185, 84, 0.13); }
 
 .like-count {
   position: absolute;
   top: -8px;
   right: -8px;
   background: #e1306c;
-  color: #fff;
+  color: #fff !important;
   font-size: 0.7rem;
   font-weight: 700;
   min-width: 18px;
@@ -206,7 +251,6 @@
   border: 2px solid #23232a;
 }
 
-/* Modal Styles */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -240,7 +284,6 @@
   margin: 0 auto;
   border-radius: 12px !important;
   margin: 0 !important;
-  padding: 0 !important;
 }
 
 .modal-header {
@@ -257,16 +300,6 @@
   font-weight: 700;
   color: #fff;
 }
-
-.modal-content {
-  padding: 0 !important;
-  margin: 0 !important;
-  width: 100% !important;
-  box-sizing: border-box;
-} 
-
-.modal-option { border-top: none; border-bottom: 1px solid #145c2c !important; }
-.modal-option:first-child { border-top: 1px solid #145c2c !important; }
 
 .close-modal-btn {
   background: none;
@@ -404,9 +437,25 @@
   .modal-option { padding: 16px; }
   .option-icon { width: 40px; height: 40px; }
 }
-.feed-posts {
-  display: flex;
-  flex-direction: column;
-  align-items: center;   /* centers horizontally */
-  gap: 24px;             /* spacing between posts */
+
+.like-btn .like-heart {
+  color: #fff;
+  transition: color 0.2s;
+}
+.like-btn:hover .like-heart {
+  color: #1db954 !important;
+}
+.like-btn.liked .like-heart {
+  color: #e1306c !important;
+}
+.like-btn.liked:hover .like-heart {
+  color: #e1306c !important;
+}
+
+.share-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background: rgba(29, 185, 84, 0.13);
+  color: #1db954;
+  border-color: #1db954;
 }

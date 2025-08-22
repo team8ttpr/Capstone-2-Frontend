@@ -85,7 +85,7 @@ export default function AddFriendForm({ onClose, onFollowChange }) {
           background: "#18181c",
           borderRadius: "14px",
           padding: "22px",
-          width: "420px",
+          width: "580px",
           maxWidth: "90vw",
           height: "520px",
           maxHeight: "90vh",
