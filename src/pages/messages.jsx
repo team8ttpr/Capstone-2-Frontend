@@ -112,7 +112,7 @@ const Messages = ({ user }) => {
     if (spotifyEmbedUrl) {
       socket.emit("send_message", {
         to: selectedFriend.id,
-        content: "", // No text content for embed
+        content: "", // No text if sending embed
         type: "spotify_embed",
         spotifyEmbedUrl,
       });

@@ -71,10 +71,21 @@
 }
 
 .messages-theme .message-meta {
-  font-size: 0.75em;
-  color: var(--spotify-light);
+  font-size: 0.85em;
+  color: #f3f3f3; 
   margin-top: 4px;
   text-align: right;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 1px #222; 
+}
+
+.messages-theme .read-receipt {
+  color: #ffe066 !important; 
+  font-size: 1.05em;
+  margin-left: 6px;
+  vertical-align: middle;
+  text-shadow: 0 1px 2px #222;
 }
 
 .messages-theme .message-input {
