@@ -38,7 +38,7 @@ const SpotifyCallback = ({ setUser }) => {
           }
 
           setUser(response.data.user);
-          navigate('/dashboard/toptracks');
+          navigate('/dashboard/analytics');
           return;
         }
 
