@@ -1,9 +1,13 @@
 .login-container {
-  min-height: 100vh;
+  min-height: calc(100vh - 80px); /* full height minus navbar */
   display: flex;
-  margin-top: 70px;
-  overflow-y: auto;
+  align-items: center;   /* vertical centering */
+  justify-content: center; /* horizontal centering if needed */
+  margin-top: 80px;
+  padding: 20px;
+  overflow: hidden;
 }
+
 
 .auth-panel {
   width: 100%;
@@ -339,10 +343,10 @@
   z-index: 2;
 }
 .carousel-nav-left {
-  left: 1rem;
+  left: -5rem;
 }
 .carousel-nav-right {
-  right: 1rem;
+  right: -5rem;
 }
 .nav-icon {
   width: 24px;
