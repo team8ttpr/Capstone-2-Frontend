@@ -1,6 +1,7 @@
 import React from "react";
 import '../style/Home.css';
 import { User, MessageCircle, Settings, LayoutDashboard } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 import SpotterLogo from '../assets/spotter-logo-green.png';
 
@@ -36,6 +37,8 @@ const SNAPSHOTS = [
 ];
 
 const Home = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="home">
       <div className="home-title">
@@ -46,6 +49,7 @@ const Home = () => {
         Where music meets community.<br />
         Discover, chat, and customize your profile in a friendly, playful space.
       </div>
+      <button className="get-started-btn" onClick={() => navigate('/auth')}>Get Started</button>
       <div className="home-snapshots">
         {SNAPSHOTS.map(snap => (
           <div className="snapshot-card static-snapshot" key={snap.key}>

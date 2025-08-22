@@ -245,3 +245,22 @@
   from { opacity: 0; transform: translateY(20px) scale(0.96); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
+
+.get-started-btn {
+  margin-top: 18px;
+  background: #1db954;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 32px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(30,217,96,0.10);
+  transition: background 0.2s, transform 0.2s;
+}
+.get-started-btn:hover {
+  background: #232526;
+  color: #1db954;
+  transform: scale(1.06);
+}
