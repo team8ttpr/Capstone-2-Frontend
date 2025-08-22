@@ -4,7 +4,8 @@ import "../style/SinglePostView.css";
 import { API_URL } from "../shared";
 import CommentsPanel from "../components/CommentsPanel";
 import MiniDrawer from "../components/MiniDrawer";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
+import ForkPlaylistModal from "../components/ForkPlaylistModal";
 
 const getProfileImage = (profile) => {
   return (
@@ -24,26 +25,36 @@ const SinglePostView = ({ user }) => {
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [likes, setLikes] = useState(0);
-  const [liked, setLiked] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
+  const [likesCount, setLikesCount] = useState(0);
   const [likeBusy, setLikeBusy] = useState(false);
   const [commentsOpen, setCommentsOpen] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
   const [forkBusy, setForkBusy] = useState(false);
   const [originalPosterUsername, setOriginalPosterUsername] = useState(null);
+  const [showForkModal, setShowForkModal] = useState(false);
 
   const postUrl = `${window.location.origin}/post/${id}`;
 
+  const location = useLocation();
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get("commentsOpen") === "1") {
+      setCommentsOpen(true);
+    }
+  }, [location.search]);
+  
   useEffect(() => {
     if (id) fetchPost();
-    // eslint-disable-next-line
   }, [id]);
 
   useEffect(() => {
     if (post?.original_post_id) {
       axios
-        .get(`${API_URL}/api/posts/${post.original_post_id}`, { withCredentials: true })
+        .get(`${API_URL}/api/posts/${post.original_post_id}`, {
+          withCredentials: true,
+        })
         .then((res) => {
           setOriginalPosterUsername(res.data?.author?.username || null);
         })
@@ -59,9 +70,10 @@ const SinglePostView = ({ user }) => {
         withCredentials: true,
       });
       const p = res.data;
+      console.log("Fetched post:", p);
       setPost(p);
-      setLikes(Number(p?.likesCount ?? 0));
-      setLiked(Boolean(p?.isLiked ?? false));
+      setLikesCount(Number(p?.likesCount ?? 0));
+      setIsLiked(Boolean(p?.isLiked));
     } catch (error) {
       setError("Failed to load post.");
     } finally {
@@ -83,11 +95,11 @@ const SinglePostView = ({ user }) => {
         { withCredentials: true }
       );
       const data = res.data || {};
-      if (typeof data.isLiked === "boolean") setLiked(data.isLiked);
-      if (typeof data.likesCount === "number") setLikes(data.likesCount);
+      if (typeof data.isLiked === "boolean") setIsLiked(data.isLiked);
+      if (typeof data.likesCount === "number") setLikesCount(data.likesCount);
       if (data.isLiked === undefined && data.likesCount === undefined) {
-        setLiked((v) => !v);
-        setLikes((c) => (liked ? Math.max(0, c - 1) : c + 1));
+        setIsLiked((v) => !v);
+        setLikesCount((c) => (isLiked ? Math.max(0, c - 1) : c + 1));
       }
     } catch (e) {
       // ignore
@@ -160,12 +172,27 @@ const SinglePostView = ({ user }) => {
   const shareText = encodeURIComponent(
     `${post.title ? post.title + " - " : ""}Check out this post on Capstone-2!`
   );
-  const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(postUrl)}&text=${shareText}`;
+  const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+    postUrl
+  )}&text=${shareText}`;
 
   return (
     <div className="single-post-root">
-      <MiniDrawer />
-      <div className="fullscreen-post">
+      <MiniDrawer menuType="social" />
+      {/* Comments Panel */}
+      <div
+        className={
+          commentsOpen ? "comments-panel-animate" : "comments-panel-hidden"
+        }
+      >
+        <CommentsPanel
+          postId={post?.id || post?._id}
+          open={commentsOpen}
+          onClose={() => setCommentsOpen(false)}
+          currentUser={user}
+        />
+      </div>
+      <div className={`fullscreen-post${commentsOpen ? " comments-open" : ""}`}>
         {/* Header */}
         <header className="post-header">
           <div className="user-info">
@@ -218,8 +245,8 @@ const SinglePostView = ({ user }) => {
               <div className="spotify-embed-large">
                 <iframe
                   src={post.spotifyEmbedUrl.replace("embed/", "embed/")}
-                  width="352"
-                  height="352"
+                  width="100%"
+                  height="152"
                   allowtransparency="true"
                   allow="encrypted-media"
                   title={`Spotify ${post.spotifyType}: ${post.title}`}
@@ -244,35 +271,43 @@ const SinglePostView = ({ user }) => {
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
               <path d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h11c.55 0 1-.45 1-1z" />
             </svg>
-            <span className="action-label">Comment</span>
+            <span className="action-label" style={{ color: "#fff" }}>
+              Comment
+            </span>
           </button>
 
           <button
-            className={`concept-action-btn like-btn${liked ? " liked" : ""}`}
+            className={`concept-action-btn like-btn${isLiked ? " liked" : ""}`}
             onClick={toggleLike}
             disabled={likeBusy}
-            aria-pressed={liked}
-            aria-label={liked ? "Unlike" : "Like"}
-            title={liked ? "Unlike" : "Like"}
+            aria-pressed={isLiked}
+            aria-label={isLiked ? "Unlike" : "Like"}
+            title={isLiked ? "Unlike" : "Like"}
+            style={{
+              background: isLiked ? "rgba(225,48,108,0.13)" : "#23232a",
+              borderColor: "#e1306c",
+            }}
           >
             <svg
+              className="like-heart"
               width="16"
               height="16"
               viewBox="0 0 24 24"
-              fill={liked ? "#e1306c" : "#fff"}
+              fill="currentColor"
               style={{ transition: "fill 0.2s" }}
             >
               <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
             </svg>
-            <span className="action-label">Like</span>
-            <span className="like-count">{likes}</span>
+            <span className="action-label" style={{ color: "#fff" }}>
+              Like
+            </span>
+            <span className="like-count">{likesCount}</span>
           </button>
 
           {isSpotifyPlaylist() && user && (
             <button
               className="concept-action-btn fork-btn"
-              onClick={handleFork}
-              disabled={forkBusy}
+              onClick={() => setShowForkModal(true)}
               aria-label="Fork playlist"
               title="Fork playlist"
             >
@@ -297,26 +332,15 @@ const SinglePostView = ({ user }) => {
             aria-label="Share"
             title="Share"
           >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-            >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
               <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z" />
             </svg>
-            <span className="action-label">Share</span>
+            <span className="action-label" style={{ color: "#fff" }}>
+              Share
+            </span>
           </button>
         </footer>
       </div>
-
-      {/* Comments Panel */}
-      <CommentsPanel
-        postId={post?.id || post?._id}
-        open={commentsOpen}
-        onClose={() => setCommentsOpen(false)}
-        currentUser={user}
-      />
 
       {/* Share/Repost Modal */}
       {shareOpen && (
@@ -374,8 +398,16 @@ const SinglePostView = ({ user }) => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <div className="option-icon" style={{ color: "#1da1f2", borderColor: "#1da1f2" }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <div
+                  className="option-icon"
+                  style={{ color: "#1da1f2", borderColor: "#1da1f2" }}
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
                     <path d="M22.46 5.924c-.793.352-1.646.59-2.542.697a4.48 4.48 0 0 0 1.964-2.475 8.94 8.94 0 0 1-2.828 1.082A4.48 4.48 0 0 0 16.11 4c-2.488 0-4.505 2.017-4.505 4.505 0 .353.04.698.117 1.028C7.728 9.37 4.1 7.548 1.671 4.905a4.48 4.48 0 0 0-.609 2.267c0 1.563.796 2.942 2.008 3.753a4.48 4.48 0 0 1-2.04-.564v.057c0 2.184 1.553 4.006 3.617 4.422a4.48 4.48 0 0 1-2.035.077c.574 1.793 2.24 3.098 4.215 3.133A8.99 8.99 0 0 1 2 19.54a12.7 12.7 0 0 0 6.88 2.017c8.26 0 12.785-6.842 12.785-12.785 0-.195-.004-.39-.013-.583A9.13 9.13 0 0 0 24 4.59a8.97 8.97 0 0 1-2.54.697z" />
                   </svg>
                 </div>
@@ -397,14 +429,22 @@ const SinglePostView = ({ user }) => {
                 </div>
                 <div className="option-details">
                   <h4>Repost</h4>
-                  <p>
-                    Repost to your account
-                  </p>
+                  <p>Repost to your account</p>
                 </div>
               </button>
             </div>
           </div>
         </div>
+      )}
+      {showForkModal && (
+        <ForkPlaylistModal
+          post={post}
+          onClose={() => setShowForkModal(false)}
+          onSuccess={() => {
+            setShowForkModal(false);
+            fetchPost();
+          }}
+        />
       )}
     </div>
   );

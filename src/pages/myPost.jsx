@@ -69,7 +69,7 @@ const filtered = useMemo(() => {
   );
 }, [posts, query, filter]);
 
-  return (
+return (
     <div className="dashboard-layout">
       <MiniDrawer menuType="social" />
       <div className="dashboard-main-content">
@@ -86,11 +86,14 @@ const filtered = useMemo(() => {
               className={filter === "all" ? "active" : ""}
               style={{
                 padding: "0.5rem 1rem",
-                border: "1px solid #ddd",
+                border: filter === "all" ? "2px solid #1db954" : "1px solid #23232a",
                 borderRadius: "6px",
-                background: filter === "all" ? "#007bff" : "white",
-                color: filter === "all" ? "white" : "#333",
+                background: filter === "all" ? "#23232a" : "#18181c",
+                color: filter === "all" ? "#1db954" : "#fff",
+                fontWeight: filter === "all" ? 700 : 500,
                 cursor: "pointer",
+                boxShadow: filter === "all" ? "0 2px 8px rgba(29,185,84,0.08)" : "none",
+                transition: "all 0.2s",
               }}
             >
               All
@@ -100,11 +103,14 @@ const filtered = useMemo(() => {
               className={filter === "draft" ? "active" : ""}
               style={{
                 padding: "0.5rem 1rem",
-                border: "1px solid #ddd",
+                border: filter === "draft" ? "2px solid #1db954" : "1px solid #23232a",
                 borderRadius: "6px",
-                background: filter === "draft" ? "#007bff" : "white",
-                color: filter === "draft" ? "white" : "#333",
+                background: filter === "draft" ? "#23232a" : "#18181c",
+                color: filter === "draft" ? "#1db954" : "#fff",
+                fontWeight: filter === "draft" ? 700 : 500,
                 cursor: "pointer",
+                boxShadow: filter === "draft" ? "0 2px 8px rgba(29,185,84,0.08)" : "none",
+                transition: "all 0.2s",
               }}
             >
               Draft
@@ -114,11 +120,14 @@ const filtered = useMemo(() => {
               className={filter === "published" ? "active" : ""}
               style={{
                 padding: "0.5rem 1rem",
-                border: "1px solid #ddd",
+                border: filter === "published" ? "2px solid #1db954" : "1px solid #23232a",
                 borderRadius: "6px",
-                background: filter === "published" ? "#007bff" : "white",
-                color: filter === "published" ? "white" : "#333",
+                background: filter === "published" ? "#23232a" : "#18181c",
+                color: filter === "published" ? "#1db954" : "#fff",
+                fontWeight: filter === "published" ? 700 : 500,
                 cursor: "pointer",
+                boxShadow: filter === "published" ? "0 2px 8px rgba(29,185,84,0.08)" : "none",
+                transition: "all 0.2s",
               }}
             >
               Published
@@ -156,9 +165,10 @@ const filtered = useMemo(() => {
                 style={{
                   textAlign: "center",
                   padding: "3rem",
-                  background: "#f8f9fa",
+                  background: "#18181c",
                   borderRadius: "8px",
-                  border: "1px solid #e9ecef",
+                  border: "1px solid #23232a",
+                  color: "#fff",
                 }}
               >
                 <h3>No posts found</h3>
@@ -174,7 +184,7 @@ const filtered = useMemo(() => {
                     padding: "0.75rem 1.5rem",
                     border: "none",
                     borderRadius: "6px",
-                    background: "#007bff",
+                    background: "#1db954",
                     color: "white",
                     cursor: "pointer",
                     fontSize: "1rem",
