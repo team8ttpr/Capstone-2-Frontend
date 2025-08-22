@@ -335,6 +335,14 @@
   border-radius: 4px;
 }
 
+.modal-content {
+  padding: 0 !important;
+  margin: 0 !important;
+  width: 100% !important;
+  box-sizing: border-box;
+}
+.modal-option { border-top: none; border-bottom: 1px solid #145c2c !important; }
+.modal-option:first-child { border-top: 1px solid #145c2c !important; }
 .modal-option {
   display: flex;
   align-items: center;
