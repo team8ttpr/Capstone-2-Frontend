@@ -10,11 +10,11 @@ export default function RedirectSpotify() {
         textAlign: "center",
       }}
     >
-      <h2 style={{ fontSize: "3rem", marginBottom: "1rem" }}>Spotify needed</h2>
-      <p style={{ fontSize: "1.5rem" }}>
+      <h2 style={{ fontSize: "6rem", marginBottom: "1rem" }}>Spotify needed</h2>
+      <p style={{ fontSize: "3rem" }}>
         This section requires a Spotify-connected account.
       </p>
-      <p style={{ fontSize: "1.5rem" }}>
+      <p style={{ fontSize: "3rem" }}>
         Go link Spotify in Settings or continue using the rest of the app.
       </p>
     </div>
