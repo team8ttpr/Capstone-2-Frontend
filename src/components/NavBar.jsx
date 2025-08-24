@@ -136,21 +136,6 @@ const NavBar = ({ user, onLogout }) => {
       <div className="nav-links">
         {userInfo && (
           <div className="user-section">
-            <img
-              src={userInfo.profileImage || userInfo.spotifyProfileImage || userInfo.avatarURL || userInfo.avatar || "/default-avatar.png"}
-              alt="Profile"
-              style={{
-                width: 36,
-                height: 36,
-                borderRadius: "50%",
-                objectFit: "cover",
-                marginRight: 3,
-                boxShadow: "0 1px 4px #1db95444",
-                background: "#23232a",
-                border: "2px solid #232323"
-              }}
-            />
-            {/* Bell icon for notifications - moved next to profile picture */}
             <div
               className="nav-section"
               style={{ position: "relative" }}
@@ -249,6 +234,20 @@ const NavBar = ({ user, onLogout }) => {
                 </div>
               )}
             </div>
+            <img
+              src={userInfo.profileImage || userInfo.spotifyProfileImage || userInfo.avatarURL || userInfo.avatar || "/default-avatar.png"}
+              alt="Profile"
+              style={{
+                width: 36,
+                height: 36,
+                borderRadius: "50%",
+                objectFit: "cover",
+                marginRight: 3,
+                boxShadow: "0 1px 4px #1db95444",
+                background: "#23232a",
+                border: "2px solid #232323"
+              }}
+            />
             <span style={{ color: "#fff", fontWeight: 600, fontSize: "1.15rem", maxWidth: 120, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", marginRight: 6 }}>
               {userInfo.firstName && userInfo.lastName
                 ? `${userInfo.firstName} ${userInfo.lastName}`
