@@ -83,13 +83,13 @@ const Login = ({ setUser }) => {
     }));
   };
 
+  // Just redirect to Spotify login
   const handleSpotifyLogin = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
       const response = await axios.get(`${API_URL}/auth/spotify/login-url`);
       window.location.href = response.data.authUrl;
     } catch (error) {
-      console.error("Spotify login error:", error.message);
       setError("Failed to connect to Spotify");
       setLoading(false);
     }
@@ -120,8 +120,8 @@ const Login = ({ setUser }) => {
           localStorage.setItem("authToken", response.data.token);
         }
 
-        setUser(response.data.user); // Use the setUser prop
-        navigate("/dashboard/analytics"); // Navigate to dashboard
+        setUser(response.data.user);
+        navigate("/dashboard/analytics");
       } else {
         // Signup
         const response = await axios.post(
@@ -164,7 +164,7 @@ const Login = ({ setUser }) => {
   };
 
   const handleAuth0Login = () => {
-    loginWithRedirect();
+    // Placeholder for Auth0 login if used
   };
 
   if (auth0Loading) {
@@ -185,7 +185,7 @@ const Login = ({ setUser }) => {
             <div className="logo-icon">
               <Music className="logo-music-icon" />
             </div>
-            <span className="logo-text">capstone-2</span>
+            <span className="logo-text">Spotter</span>
           </div>
 
           {/* Title */}
@@ -199,7 +199,7 @@ const Login = ({ setUser }) => {
           {/* Note about Spotify access */}
           <div className="spotify-note">
             <p className="spotify-note-text">
-              For full access to all features,
+              For full access to all features
             </p>
           </div>
 
@@ -301,7 +301,7 @@ const Login = ({ setUser }) => {
               onClick={() => setIsLogin(!isLogin)}
               className="auth-switch-btn"
             >
-              {isLogin ? "Sign up for Spotter" : "Log in here"}
+              {isLogin ? "Sign up for Capstone-2" : "Log in here"}
             </button>
           </div>
         </div>
