@@ -84,6 +84,7 @@ const EditProfileModal = ({ profile, onClose, onUpdate }) => {
         withCredentials: true
       });
       onUpdate(response.data);
+      window.location.reload(); 
     } catch (error) {
       console.error('Error updating profile:', error);
       setError(error.response?.data?.error || 'Failed to update profile');

@@ -11,14 +11,29 @@ const avatar = (profile) => {
   );
 };
 
-const NotificationItem = ({ n, onClick, fading }) => {
+
+function timeAgo(date) {
+  const now = new Date();
+  const diff = Math.floor((now - date) / 1000); // seconds
+  if (diff < 60) return `${diff} sec ago`;
+  if (diff < 3600) return `${Math.floor(diff / 60)} min ago`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)} hour${Math.floor(diff / 3600) === 1 ? '' : 's'} ago`;
+  if (diff < 604800) return `${Math.floor(diff / 86400)} day${Math.floor(diff / 86400) === 1 ? '' : 's'} ago`;
+  if (diff < 2592000) return `${Math.floor(diff / 604800)} week${Math.floor(diff / 604800) === 1 ? '' : 's'} ago`;
+  if (diff < 31536000) return `${Math.floor(diff / 2592000)} month${Math.floor(diff / 2592000) === 1 ? '' : 's'} ago`;
+  return `${Math.floor(diff / 31536000)} year${Math.floor(diff / 31536000) === 1 ? '' : 's'} ago`;
+}
+
+const NotificationItem = ({ n, onClick, fading, showRelativeTime }) => {
   const [localFading, setLocalFading] = useState(false);
 
   const actorName =
     n.actor?.spotifyDisplayName || n.actor?.username || "someone";
   const actorUsername = n.actor?.username || "";
 
-  const time = new Date(n.createdAt).toLocaleString();
+  const time = showRelativeTime
+    ? timeAgo(new Date(n.createdAt))
+    : new Date(n.createdAt).toLocaleString();
 
   let body = null;
   if (n.type === "new_follower") {
