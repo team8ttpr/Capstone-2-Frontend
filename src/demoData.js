@@ -7,11 +7,11 @@
 const minutesAgo = (m) => new Date(Date.now() - m * 60 * 1000).toISOString();
 
 export const DEMO_RECENT_TRACKS = [
-  { track: { id: "0VjIjW4GlU5eMxbDg6jJ7q", name: "Blinding Lights", artists: ["The Weeknd"], album: "After Hours", played_at: minutesAgo(8) } },
-  { track: { id: "463CkQjx2Zk1yXoBuierM9", name: "Levitating", artists: ["Dua Lipa"], album: "Future Nostalgia", played_at: minutesAgo(35) } },
-  { track: { id: "4LRPiXqCikLlN15c3yImP7", name: "As It Was", artists: ["Harry Styles"], album: "Harry's House", played_at: minutesAgo(92) } },
-  { track: { id: "2Fxmhks0bxGSBdJ92vM42m", name: "bad guy", artists: ["Billie Eilish"], album: "WHEN WE ALL FALL ASLEEP, WHERE DO WE GO?", played_at: minutesAgo(180) } },
-  { track: { id: "6Uj1ctrBOjOas8xZXGqKk4", name: "Heat Waves", artists: ["Glass Animals"], album: "Dreamland", played_at: minutesAgo(310) } },
+  { track: { id: "0VjIjW4GlU5eMxbDg6jJ7q", name: "Blinding Lights", artists: ["The Weeknd"], played_at: minutesAgo(8) } },
+  { track: { id: "463CkQjx2Zk1yXoBuierM9", name: "Levitating", artists: ["Dua Lipa"], played_at: minutesAgo(35) } },
+  { track: { id: "4LRPiXqCikLlN15c3yImP7", name: "As It Was", artists: ["Harry Styles"], played_at: minutesAgo(92) } },
+  { track: { id: "2Fxmhks0bxGSBdJ92vM42m", name: "bad guy", artists: ["Billie Eilish"], played_at: minutesAgo(180) } },
+  { track: { id: "6Uj1ctrBOjOas8xZXGqKk4", name: "Heat Waves", artists: ["Glass Animals"], played_at: minutesAgo(310) } },
 ];
 
 export const DEMO_TOP_GENRES = [
