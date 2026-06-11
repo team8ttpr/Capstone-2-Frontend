@@ -19,6 +19,8 @@ const NavBar = ({ user, onLogout, guest = false }) => {
         .get(`${API_URL}/api/notifications`, { withCredentials: true })
         .then((res) => setNotifications(Array.isArray(res.data) ? res.data : []))
         .catch(() => setNotifications([]));
+    } else {
+      setNotifications([]);
     }
   }, [user]);
 
@@ -37,6 +39,10 @@ const NavBar = ({ user, onLogout, guest = false }) => {
         .get(`${API_URL}/api/profile/${user.username || user.id}`, { withCredentials: true })
         .then((res) => setUserInfo(res.data))
         .catch(() => setUserInfo(null));
+    } else {
+      // Clear the cached name/avatar on logout so it doesn't linger into a
+      // logged-out or guest session.
+      setUserInfo(null);
     }
   }, [user]);
 
