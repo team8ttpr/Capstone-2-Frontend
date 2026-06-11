@@ -57,6 +57,8 @@ const GenreCharts = ({ topGenres, artistsByGenre, onChartClick, chartType = "pie
 
   // call back for showing artists
   const pieOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       tooltip: {
         callbacks: {
@@ -81,6 +83,8 @@ const GenreCharts = ({ topGenres, artistsByGenre, onChartClick, chartType = "pie
   };
 
   const barOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       tooltip: {
         callbacks: {
@@ -110,13 +114,13 @@ const GenreCharts = ({ topGenres, artistsByGenre, onChartClick, chartType = "pie
 
   return (
     <div className="genre-charts-container">
-      {/* <div className="genre-charts-title">Top Genres</div> */}
-      {chartType === "pie" && (
-        <Pie data={pieData} options={pieOptions} width={chartSize} height={chartSize} />
-      )}
-      {chartType === "bar" && (
-        <Bar data={barData} options={barOptions} width={chartSize} height={chartSize} />
-      )}
+      {/* Fixed-size relative wrapper so Chart.js (responsive) has a real box to
+          measure — without this it measures the flex parent as 0 and draws an
+          empty canvas. */}
+      <div className="genre-chart-canvas-wrap">
+        {chartType === "pie" && <Pie data={pieData} options={pieOptions} />}
+        {chartType === "bar" && <Bar data={barData} options={barOptions} />}
+      </div>
     </div>
   );
 };

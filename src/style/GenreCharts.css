@@ -27,14 +27,23 @@
   align-items: center;
 }
 
-/* Chart.js canvas will inherit container size */
-.genre-charts-container canvas {
-  width: 400px !important;
-  height: 400px !important;
+/* Gives Chart.js a real, measurable box. The canvas fills this wrapper. */
+.genre-chart-canvas-wrap {
+  position: relative;
+  width: 360px;
+  height: 360px;
+  max-width: 100%;
   margin: 0 auto;
   background: #101c1c;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.genre-chart-canvas-wrap canvas {
+  width: 100% !important;
+  height: 100% !important;
 }
 
 /* Responsive */

@@ -17,6 +17,8 @@ const GenreDetail = ({ genre, artists, onClose }) => {
   };
 
   const barOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
     indexAxis: "y",
     scales: {
       x: {
@@ -42,7 +44,9 @@ const GenreDetail = ({ genre, artists, onClose }) => {
       <div className="genre-detail-content">
         <button className="genre-detail-close" onClick={onClose}>&times;</button>
         <h2>Artists for "{genre}"</h2>
-        <Bar data={barData} options={barOptions} height={220} />
+        <div className="genre-detail-chart-wrap">
+          <Bar data={barData} options={barOptions} />
+        </div>
       </div>
     </div>
   );
