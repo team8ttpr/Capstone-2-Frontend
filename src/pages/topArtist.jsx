@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import '../style/TopArtist.css';
 import MiniDrawer from '../components/MiniDrawer';
 import DemoBanner from '../components/DemoBanner';
+import { GridSkeleton } from '../components/Skeletons';
 import { DEMO_TOP_ARTISTS } from '../demoData';
 
 const TopArtist = ({ user, demo = false }) => {
@@ -74,7 +75,7 @@ const TopArtist = ({ user, demo = false }) => {
         <MiniDrawer />
         <div className="dashboard-main-content">
           <div className="top-artist-container">
-            <div className="loading">Loading your top artists...</div>
+            <GridSkeleton count={9} height={260} />
           </div>
         </div>
       </div>

@@ -1,0 +1,35 @@
+.spotter-spinner-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem;
+}
+
+.spotter-spinner-wrap.fullscreen {
+  min-height: 100vh;
+  width: 100%;
+}
+
+.spotter-spinner {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 4px solid rgba(29, 185, 84, 0.18);
+  border-top-color: #1db954;
+  animation: spotter-spin 0.8s linear infinite;
+}
+
+.spotter-spinner-label {
+  color: #b6ffb6;
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+}
+
+@keyframes spotter-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

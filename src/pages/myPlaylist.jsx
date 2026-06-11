@@ -6,6 +6,7 @@ import "../style/MyPlaylist.css";
 import MiniDrawer from "../components/MiniDrawer";
 import SpotifyEmbed from "../components/SpotifyEmbed";
 import DemoBanner from "../components/DemoBanner";
+import { GridSkeleton } from "../components/Skeletons";
 import { DEMO_PLAYLISTS } from "../demoData";
 
 const MyPlaylist = ({ user, demo = false }) => {
@@ -69,7 +70,7 @@ const MyPlaylist = ({ user, demo = false }) => {
         <MiniDrawer />
         <div className="dashboard-main-content">
           <div className="my-playlist-container">
-            <div className="loading">Loading your playlists...</div>
+            <GridSkeleton count={6} minWidth={240} height={360} />
           </div>
         </div>
       </div>

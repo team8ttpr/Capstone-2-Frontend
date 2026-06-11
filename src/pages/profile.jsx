@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import MiniDrawer from "../components/MiniDrawer";
 import ProfileComponent from "../components/ProfileComponent";
 import EditProfileModal from "../components/EditProfileModal";
+import { BlockSkeleton, GridSkeleton } from "../components/Skeletons";
 import { saveTheme, loadTheme } from "../utils/themeManager";
 
 const Profile = ({ user, guest = false }) => {
@@ -232,10 +233,10 @@ const fetchFollowersAndFollowing = async () => {
       <div className="dashboard-layout">
         <MiniDrawer />
         <div className="dashboard-main-content">
-          <div className="profile-container">
-            <div className="loading">
-              Loading your profile...
-            </div>
+          <div className="profile-container" style={{ padding: "1.5rem" }}>
+            <BlockSkeleton width="100%" height={180} borderRadius={16} />
+            <div style={{ height: 24 }} />
+            <GridSkeleton count={6} height={200} />
           </div>
         </div>
       </div>

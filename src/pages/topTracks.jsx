@@ -7,6 +7,7 @@ import MiniDrawer from "../components/MiniDrawer";
 import SearchComponent from "../components/SearchComponent";
 import SpotifyEmbed from "../components/SpotifyEmbed";
 import DemoBanner from "../components/DemoBanner";
+import { GridSkeleton } from "../components/Skeletons";
 import { DEMO_TOP_TRACKS } from "../demoData";
 
 const TopTracks = ({ user, demo = false }) => {
@@ -82,7 +83,7 @@ const TopTracks = ({ user, demo = false }) => {
         <MiniDrawer />
         <div className="dashboard-main-content">
           <div className="top-tracks-container">
-            <div className="loading">Loading your top tracks...</div>
+            <GridSkeleton count={9} height={170} />
           </div>
         </div>
       </div>

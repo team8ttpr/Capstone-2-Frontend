@@ -3,6 +3,7 @@ import axios from "axios";
 import { API_URL } from "../shared";
 import UserListeningHistoryEmbeds from "./UserListeningHistoryEmbeds";
 import { DEMO_RECENT_TRACKS } from "../demoData";
+import { RowSkeleton } from "./Skeletons";
 import '../style/UserListeningHistory.css';
 
 const UserListeningHistory = ({ demo = false }) => {
@@ -47,7 +48,16 @@ const UserListeningHistory = ({ demo = false }) => {
     return `${diffDay} days ago`;
   };
 
-  if (loading) return <div>Loading listening history...</div>;
+  if (loading) {
+    return (
+      <div>
+        <div className="user-listening-history-greeting">
+          ▼ Your Recent Listening History
+        </div>
+        <RowSkeleton count={5} />
+      </div>
+    );
+  }
   if (error) return <div>{error}</div>;
 
   return (

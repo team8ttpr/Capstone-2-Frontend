@@ -37,6 +37,9 @@ import RedirectSpotify from "./pages/RedirectSpotify";
 import SpotifyGuard from "./utils/SpotifyGuard";
 import ErrorBoundary from "./components/ErrorBoundary";
 import GuestBanner from "./components/GuestBanner";
+import Spinner from "./components/Spinner";
+import { SkeletonTheme } from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 // Placeholder identity so dashboard pages (which expect a `user`) render in
 // read-only demo mode for guests instead of bouncing to the login screen.
@@ -279,7 +282,7 @@ function App() {
   // real data, everyone else gets clearly-labeled demo data via the `demo` flag.
   const renderDashboard = (Component) => {
     if (!user && !isGuest) return <Navigate to="/auth" replace />;
-    if (user && !spotifyCheckDone) return <div className="app">Loading…</div>;
+    if (user && !spotifyCheckDone) return <Spinner fullscreen label="Loading…" />;
     // Guests (and logged-in users without Spotify) get clearly-labeled demo data.
     const demo = isGuest || !spotifyConnected;
     return (
@@ -288,11 +291,12 @@ function App() {
   };
 
   if (loading || auth0Loading) {
-    return <div>Loading...</div>;
+    return <Spinner fullscreen label="Loading Spotter…" />;
   }
 
   return (
     <PresenceContext.Provider value={{ online, setOnline, socket }}>
+      <SkeletonTheme baseColor="#1b2a22" highlightColor="#2c4a38">
       {!hideNavBar && (
         <NavBar user={user} onLogout={handleLogout} guest={isGuest} />
       )}
@@ -387,6 +391,7 @@ function App() {
         </Routes>
         </ErrorBoundary>
       </div>
+      </SkeletonTheme>
     </PresenceContext.Provider>
   );
 }

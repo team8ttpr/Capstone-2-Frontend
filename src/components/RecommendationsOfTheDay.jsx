@@ -3,6 +3,7 @@ import axios from "axios";
 import { API_URL } from "../shared";
 import SpotifyEmbed from "./SpotifyEmbed";
 import { DEMO_RECOMMENDATIONS } from "../demoData";
+import { BlockSkeleton } from "./Skeletons";
 import "../style/RecommendationsOfTheDay.css";
 
 const RecommendationsOfTheDay = ({ demo = false }) => {
@@ -42,14 +43,24 @@ const RecommendationsOfTheDay = ({ demo = false }) => {
       <div className="recommendations-day-ipod" style={{ position: 'relative', zIndex: 1, width: '420px', minHeight: '400px', borderRadius: '32px', padding: '1.5rem 1rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
         <div className="recommendations-day-ipod-title">Recommendations of the Day</div>
         <div className="recommendations-day-ipod-subtitle">AI-powered</div>
-        <div style={{ color: '#1db954', fontSize: '1.2rem', marginTop: '1rem', textAlign: 'center' }}>
-          Waiting for Gemini to cook up some recommendations 🔥...
+        <div style={{ marginTop: '1rem' }}>
+          <BlockSkeleton width={360} height={300} borderRadius={24} />
         </div>
       </div>
     );
   }
-  if (error) return <div>{error}</div>;
-  if (!tracks.length) return <div>No recommendations found.</div>;
+  if (error || !tracks.length) {
+    return (
+      <div className="recommendations-day-ipod" style={{ position: 'relative', zIndex: 1, width: '420px', minHeight: '400px', borderRadius: '32px', padding: '1.5rem 1rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
+        <div className="recommendations-day-ipod-title">Recommendations of the Day</div>
+        <div className="recommendations-day-ipod-subtitle">AI-powered</div>
+        <div style={{ fontSize: '2.5rem', marginTop: '1.5rem' }}>🎶</div>
+        <div style={{ color: '#cbd5c5', marginTop: '0.75rem', padding: '0 1rem' }}>
+          Fresh AI picks aren't available right now. Check back a bit later.
+        </div>
+      </div>
+    );
+  }
 
   const currentTrack = tracks[currentIndex];
 
