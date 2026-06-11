@@ -35,6 +35,7 @@ import AI from "./pages/AI";
 import { socket, PresenceContext } from "./ws";
 import RedirectSpotify from "./pages/RedirectSpotify";
 import SpotifyGuard from "./utils/SpotifyGuard";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -94,13 +95,6 @@ function App() {
   }, [user]);
 
   useEffect(() => {
-    if (user?.id) {
-      console.log("Registering socket for user:", user.id);
-      socket.emit("register", user.id);
-    }
-  }, [user]);
-
-  useEffect(() => {
     const requestInterceptor = axios.interceptors.request.use(
       (config) => {
         const token = localStorage.getItem("authToken");
@@ -131,15 +125,28 @@ function App() {
     };
   }, []);
 
-  const checkAuth = async () => {
+  const checkAuth = async (attempt = 0) => {
     try {
       const response = await axios.get(`${API_URL}/auth/me`, {
         withCredentials: true,
       });
-      if (response.data.user) {
-        setUser(response.data.user);
-      }
+      // A definitive answer from the server: trust it (user object or null).
+      setUser(response.data.user || null);
     } catch (error) {
+      const status = error.response?.status;
+      // 401/403 mean the token is genuinely invalid/expired -> log out.
+      if (status === 401 || status === 403) {
+        setUser(null);
+        return;
+      }
+      // No status (network error/timeout) or a 5xx usually means the backend
+      // is cold-starting, not that the session is gone. Retry with backoff so
+      // a refresh during a cold start doesn't kick the user out.
+      if (attempt < 4) {
+        const delay = 1000 * Math.pow(2, attempt); // 1s, 2s, 4s, 8s
+        await new Promise((r) => setTimeout(r, delay));
+        return checkAuth(attempt + 1);
+      }
       setUser(null);
     }
   };
@@ -237,6 +244,14 @@ function App() {
     }
   }, [user]);
 
+  // Dashboard pages are reachable without Spotify: connected users see their
+  // real data, everyone else gets clearly-labeled demo data via the `demo` flag.
+  const renderDashboard = (Component) => {
+    if (!user) return <Navigate to="/auth" replace />;
+    if (!spotifyCheckDone) return <div className="app">Loading…</div>;
+    return <Component user={user} demo={!spotifyConnected} />;
+  };
+
   if (loading || auth0Loading) {
     return <div>Loading...</div>;
   }
@@ -245,6 +260,7 @@ function App() {
     <PresenceContext.Provider value={{ online, setOnline, socket }}>
       {!hideNavBar && <NavBar user={user} onLogout={handleLogout} />}
       <div className="app">
+        <ErrorBoundary routeKey={location.pathname}>
         <Routes>
           <Route path="/auth" element={<Auth setUser={setUser} />} />
           <Route path="/" element={<Home />} />
@@ -256,66 +272,32 @@ function App() {
           <Route
             path="/dashboard"
             element={
-              <SpotifyGuard
-                user={user}
-                spotifyConnected={spotifyConnected}
-                spotifyCheckDone={spotifyCheckDone}
-              >
+              user ? (
                 <Navigate to="/dashboard/analytics" replace />
-              </SpotifyGuard>
+              ) : (
+                <Navigate to="/auth" replace />
+              )
             }
           />
 
           <Route
             path="/dashboard/analytics"
-            element={
-              <SpotifyGuard
-                user={user}
-                spotifyConnected={spotifyConnected}
-                spotifyCheckDone={spotifyCheckDone}
-              >
-                <Analytics user={user} />
-              </SpotifyGuard>
-            }
+            element={renderDashboard(Analytics)}
           />
 
           <Route
             path="/dashboard/topartist"
-            element={
-              <SpotifyGuard
-                user={user}
-                spotifyConnected={spotifyConnected}
-                spotifyCheckDone={spotifyCheckDone}
-              >
-                <TopArtist user={user} />
-              </SpotifyGuard>
-            }
+            element={renderDashboard(TopArtist)}
           />
 
           <Route
             path="/dashboard/toptracks"
-            element={
-              <SpotifyGuard
-                user={user}
-                spotifyConnected={spotifyConnected}
-                spotifyCheckDone={spotifyCheckDone}
-              >
-                <TopTracks user={user} />
-              </SpotifyGuard>
-            }
+            element={renderDashboard(TopTracks)}
           />
 
           <Route
             path="/dashboard/myplaylist"
-            element={
-              <SpotifyGuard
-                user={user}
-                spotifyConnected={spotifyConnected}
-                spotifyCheckDone={spotifyCheckDone}
-              >
-                <MyPlaylist user={user} />
-              </SpotifyGuard>
-            }
+            element={renderDashboard(MyPlaylist)}
           />
           <Route
             path="/social"
@@ -354,6 +336,7 @@ function App() {
 
           <Route path="*" element={<NotFound />} />
         </Routes>
+        </ErrorBoundary>
       </div>
     </PresenceContext.Provider>
   );

@@ -199,7 +199,14 @@ const Login = ({ setUser }) => {
           {/* Note about Spotify access */}
           <div className="spotify-note">
             <p className="spotify-note-text">
-              For full access to all features
+              Spotify sign-in is invite-only right now
+            </p>
+            <p className="spotify-note-subtext">
+              While the app is in Spotify's Development Mode, only a few
+              pre-approved Spotify accounts can connect. New here? Sign up with
+              an email below — you'll get the full social experience, and the
+              music dashboard will show sample data until your Spotify account
+              is approved.
             </p>
           </div>
 

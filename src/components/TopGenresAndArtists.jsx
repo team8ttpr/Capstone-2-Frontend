@@ -3,17 +3,24 @@ import axios from "axios";
 import { API_URL } from "../shared";
 import GenreCharts from "./GenreCharts";
 import GenreDetail from "./GenreDetail";
+import { DEMO_TOP_GENRES, DEMO_ARTISTS_BY_GENRE } from "../demoData";
 import "../style/TopGenresAndArtists.css";
 
-const TopGenresAndArtists = () => {
-  const [topGenres, setTopGenres] = useState([]);
-  const [artistsByGenre, setArtistsByGenre] = useState({});
-  const [loading, setLoading] = useState(true);
+const TopGenresAndArtists = ({ demo = false }) => {
+  const [topGenres, setTopGenres] = useState(demo ? DEMO_TOP_GENRES : []);
+  const [artistsByGenre, setArtistsByGenre] = useState(demo ? DEMO_ARTISTS_BY_GENRE : {});
+  const [loading, setLoading] = useState(!demo);
   const [error, setError] = useState(null);
   const [selectedGenre, setSelectedGenre] = useState(null);
   const [chartType, setChartType] = useState("pie");
 
   useEffect(() => {
+    if (demo) {
+      setTopGenres(DEMO_TOP_GENRES);
+      setArtistsByGenre(DEMO_ARTISTS_BY_GENRE);
+      setLoading(false);
+      return;
+    }
     axios
       .get(`${API_URL}/auth/spotify/history`, { withCredentials: true })
       .then((res) => {
@@ -31,7 +38,7 @@ const TopGenresAndArtists = () => {
         }
         setLoading(false);
       });
-  }, []);
+  }, [demo]);
 
   const handleChartClick = (genre) => {
     setSelectedGenre(genre);

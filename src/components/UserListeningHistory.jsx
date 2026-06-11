@@ -2,15 +2,21 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { API_URL } from "../shared";
 import UserListeningHistoryEmbeds from "./UserListeningHistoryEmbeds";
+import { DEMO_RECENT_TRACKS } from "../demoData";
 import '../style/UserListeningHistory.css';
 
-const UserListeningHistory = () => {
-  const [recentTracks, setRecentTracks] = useState([]);
-  const [loading, setLoading] = useState(true);
+const UserListeningHistory = ({ demo = false }) => {
+  const [recentTracks, setRecentTracks] = useState(demo ? DEMO_RECENT_TRACKS : []);
+  const [loading, setLoading] = useState(!demo);
   const [error, setError] = useState(null);
   const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
+    if (demo) {
+      setRecentTracks(DEMO_RECENT_TRACKS);
+      setLoading(false);
+      return;
+    }
     axios
       .get(`${API_URL}/auth/spotify/history`, { withCredentials: true })
       .then((res) => {
@@ -25,7 +31,7 @@ const UserListeningHistory = () => {
         }
         setLoading(false);
       });
-  }, []);
+  }, [demo]);
 
   const getTimeAgo = (dateString) => {
     const now = new Date();

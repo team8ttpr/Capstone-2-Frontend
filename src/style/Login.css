@@ -91,6 +91,14 @@
   color: #22c55e;
   text-align: center;
   font-size: 0.95rem;
+  font-weight: 600;
+}
+.spotify-note-subtext {
+  color: #cbd5c5;
+  text-align: center;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  margin-top: 0.4rem;
 }
 
 .oauth-section {

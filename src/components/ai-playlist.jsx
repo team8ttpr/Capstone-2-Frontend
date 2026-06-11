@@ -10,6 +10,15 @@ const ChatComponent = () => {
   const [aiTyping, setAiTyping] = useState("");
   const messagesEndRef = useRef(null);
   const textareaRef = useRef(null);
+  const typeIntervalRef = useRef(null);
+
+  // Clear the typewriter interval if the component unmounts mid-animation,
+  // otherwise it keeps calling setState on an unmounted component.
+  useEffect(() => {
+    return () => {
+      if (typeIntervalRef.current) clearInterval(typeIntervalRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -54,6 +63,7 @@ const ChatComponent = () => {
         i++;
         if (i > aiText.length) {
           clearInterval(typeInterval);
+          typeIntervalRef.current = null;
 
           setMessages((prev) => [...prev, { text: aiText, sender: "ai" }]);
 
@@ -68,6 +78,7 @@ const ChatComponent = () => {
           setLoading(false);
         }
       }, 18);
+      typeIntervalRef.current = typeInterval;
     } catch (err) {
       setMessages((prev) => [
         ...prev,

@@ -6,10 +6,12 @@ import "../style/TopTracks.css";
 import MiniDrawer from "../components/MiniDrawer";
 import SearchComponent from "../components/SearchComponent";
 import SpotifyEmbed from "../components/SpotifyEmbed";
+import DemoBanner from "../components/DemoBanner";
+import { DEMO_TOP_TRACKS } from "../demoData";
 
-const TopTracks = ({ user }) => {
-  const [topTracks, setTopTracks] = useState([]);
-  const [loading, setLoading] = useState(true);
+const TopTracks = ({ user, demo = false }) => {
+  const [topTracks, setTopTracks] = useState(demo ? DEMO_TOP_TRACKS : []);
+  const [loading, setLoading] = useState(!demo);
   const [error, setError] = useState("");
   const [timeRange, setTimeRange] = useState("medium_term");
   const navigate = useNavigate();
@@ -19,8 +21,13 @@ const TopTracks = ({ user }) => {
       navigate("/auth");
       return;
     }
+    if (demo) {
+      setTopTracks(DEMO_TOP_TRACKS);
+      setLoading(false);
+      return;
+    }
     fetchTopTracks();
-  }, [user, navigate, timeRange]);
+  }, [user, navigate, timeRange, demo]);
 
   const fetchTopTracks = async () => {
     try {
@@ -112,6 +119,8 @@ const TopTracks = ({ user }) => {
             </p>
           </div>
 
+          {demo && <DemoBanner feature="top tracks" />}
+
           {error && (
             <div className="error-message">
               <p>{error}</p>
@@ -160,11 +169,11 @@ const TopTracks = ({ user }) => {
                           <div className="fallback-content">
                             <h4>{track.name}</h4>
                             <p>
-                              {track.artists
+                              {(track.artists || [])
                                 .map((artist) => artist.name)
                                 .join(", ")}
                             </p>
-                            <p className="album-name">{track.album.name}</p>
+                            <p className="album-name">{track.album?.name}</p>
                             {track.external_urls?.spotify && (
                               <a
                                 href={track.external_urls.spotify}
