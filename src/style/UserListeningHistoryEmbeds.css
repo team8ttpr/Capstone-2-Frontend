@@ -7,8 +7,10 @@
   display: flex;
   gap: 16px;
   overflow-x: auto;
-  scrollbar-width: thin;
-  scrollbar-color: #888 #eee;
+  /* Horizontal carousel — keep it scrollable (wheel/trackpad/drag) but hide the
+     bar, which only showed up once there were enough tracks to overflow. */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* old Edge */
 }
 
 .embed-item {
@@ -31,14 +33,5 @@
 }
 
 .listening-history-embeds-scroll::-webkit-scrollbar {
-  height: 8px;
-}
-
-.listening-history-embeds-scroll::-webkit-scrollbar-thumb {
-  background: #14532d; /* green thumb */
-  border-radius: 4px;
-}
-
-.listening-history-embeds-scroll::-webkit-scrollbar-track {
-  background: #222;
+  display: none; /* Chrome/Safari/Edge */
 }
