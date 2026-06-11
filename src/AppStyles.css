@@ -9,6 +9,30 @@ body {
   background-color: #fff;
 }
 
+/* Slim, on-theme scrollbars across the whole app instead of the heavy default
+   OS bars that showed up on the dashboard, notifications, modals, etc. */
+* {
+  scrollbar-width: thin;                    /* Firefox */
+  scrollbar-color: rgba(29, 185, 84, 0.4) transparent;
+}
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(29, 185, 84, 0.35);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(29, 185, 84, 0.6);
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
 .title {
   color: #ffffff;
   font-size: 3rem;
