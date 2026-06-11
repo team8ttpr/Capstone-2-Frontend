@@ -5,10 +5,12 @@ import { useNavigate } from "react-router-dom";
 import "../style/MyPlaylist.css";
 import MiniDrawer from "../components/MiniDrawer";
 import SpotifyEmbed from "../components/SpotifyEmbed";
+import DemoBanner from "../components/DemoBanner";
+import { DEMO_PLAYLISTS } from "../demoData";
 
-const MyPlaylist = ({ user }) => {
-  const [playlists, setPlaylists] = useState([]);
-  const [loading, setLoading] = useState(true);
+const MyPlaylist = ({ user, demo = false }) => {
+  const [playlists, setPlaylists] = useState(demo ? DEMO_PLAYLISTS : []);
+  const [loading, setLoading] = useState(!demo);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -17,8 +19,13 @@ const MyPlaylist = ({ user }) => {
       navigate("/auth");
       return;
     }
+    if (demo) {
+      setPlaylists(DEMO_PLAYLISTS);
+      setLoading(false);
+      return;
+    }
     fetchPlaylists();
-  }, [user, navigate]);
+  }, [user, navigate, demo]);
 
   const fetchPlaylists = async () => {
     try {
@@ -95,6 +102,8 @@ const MyPlaylist = ({ user }) => {
             <p style={{ color: '#b6ffb6', fontWeight: 600 }}>Your personal music collections, {user.username}!</p>
           </div>
 
+          {demo && <DemoBanner feature="playlists" />}
+
           {error && (
             <div className="error-message">
               <p>{error}</p>
@@ -129,10 +138,10 @@ const MyPlaylist = ({ user }) => {
                                 "No description available"}
                             </p>
                             <p className="track-count">
-                              {playlist.tracks.total} tracks
+                              {playlist.tracks?.total ?? 0} tracks
                             </p>
                             <p className="owner">
-                              By: {playlist.owner.display_name}
+                              By: {playlist.owner?.display_name ?? "Unknown"}
                             </p>
                             {playlist.external_urls?.spotify && (
                               <a

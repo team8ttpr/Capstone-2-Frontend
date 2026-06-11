@@ -2,15 +2,21 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { API_URL } from "../shared";
 import SpotifyEmbed from "./SpotifyEmbed";
+import { DEMO_RECOMMENDATIONS } from "../demoData";
 import "../style/RecommendationsOfTheDay.css";
 
-const RecommendationsOfTheDay = () => {
-  const [tracks, setTracks] = useState([]);
-  const [loading, setLoading] = useState(true);
+const RecommendationsOfTheDay = ({ demo = false }) => {
+  const [tracks, setTracks] = useState(demo ? DEMO_RECOMMENDATIONS : []);
+  const [loading, setLoading] = useState(!demo);
   const [error, setError] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
+    if (demo) {
+      setTracks(DEMO_RECOMMENDATIONS);
+      setLoading(false);
+      return;
+    }
     axios
       .get(`${API_URL}/auth/spotify/ai-recommendations`, { withCredentials: true }) //add s
       .then((res) => {
@@ -21,7 +27,7 @@ const RecommendationsOfTheDay = () => {
         setError("Failed to fetch recommendations");
         setLoading(false);
       });
-  }, []);
+  }, [demo]);
 
   const handlePrev = () => {
     setCurrentIndex((prev) => (prev === 0 ? tracks.length - 1 : prev - 1));

@@ -1,0 +1,52 @@
+.demo-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  background: linear-gradient(90deg, rgba(29, 185, 84, 0.18) 0%, rgba(20, 83, 45, 0.18) 100%);
+  border: 1px solid rgba(29, 185, 84, 0.5);
+  border-radius: 10px;
+  padding: 0.7rem 1rem;
+  margin: 0 0 1.2rem 0;
+  color: #e0ffe0;
+  font-size: 0.95rem;
+}
+
+.demo-banner-badge {
+  flex: 0 0 auto;
+  background: #1db954;
+  color: #06210f;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+}
+
+.demo-banner-text {
+  flex: 1 1 240px;
+  line-height: 1.4;
+}
+
+.demo-banner-btn {
+  flex: 0 0 auto;
+  background: #1db954;
+  color: #06210f;
+  border: none;
+  border-radius: 999px;
+  padding: 0.45rem 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.demo-banner-btn:hover:not(:disabled) {
+  background: #1ed760;
+  transform: translateY(-1px);
+}
+
+.demo-banner-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}

@@ -4,10 +4,12 @@ import { API_URL } from '../shared';
 import { useNavigate } from 'react-router-dom';
 import '../style/TopArtist.css';
 import MiniDrawer from '../components/MiniDrawer';
+import DemoBanner from '../components/DemoBanner';
+import { DEMO_TOP_ARTISTS } from '../demoData';
 
-const TopArtist = ({ user }) => {
-  const [topArtists, setTopArtists] = useState([]);
-  const [loading, setLoading] = useState(true);
+const TopArtist = ({ user, demo = false }) => {
+  const [topArtists, setTopArtists] = useState(demo ? DEMO_TOP_ARTISTS : []);
+  const [loading, setLoading] = useState(!demo);
   const [error, setError] = useState('');
   const [timeRange, setTimeRange] = useState('medium_term');
   const navigate = useNavigate();
@@ -17,8 +19,13 @@ const TopArtist = ({ user }) => {
       navigate('/auth');
       return;
     }
+    if (demo) {
+      setTopArtists(DEMO_TOP_ARTISTS);
+      setLoading(false);
+      return;
+    }
     fetchTopArtists();
-  }, [user, navigate, timeRange]);
+  }, [user, navigate, timeRange, demo]);
 
   const fetchTopArtists = async () => {
     try {
@@ -100,6 +107,8 @@ const TopArtist = ({ user }) => {
             <p style={{ color: '#b6ffb6', fontWeight: 600 }}>Discover your most listened to artists, {user.username}!</p>
           </div>
 
+          {demo && <DemoBanner feature="top artists" />}
+
           {error && (
             <div className="error-message">
               <p>{error}</p>
@@ -143,14 +152,14 @@ const TopArtist = ({ user }) => {
                       )}
                       <h4 style={{ color: '#e0ffe0', margin: '0.5rem 0 0.2rem 0', fontWeight: 700 }}>{artist.name}</h4>
                       <div className="artist-genres">
-                        {artist.genres.slice(0, 3).map((genre, idx) => (
+                        {(artist.genres || []).slice(0, 3).map((genre, idx) => (
                           <span key={idx} className="genre-tag">
                             {genre}
                           </span>
                         ))}
                       </div>
                       <p className="popularity">Popularity: {artist.popularity}%</p>
-                      <p className="followers">{artist.followers.total.toLocaleString()} followers</p>
+                      <p className="followers">{artist.followers?.total?.toLocaleString() ?? "—"} followers</p>
                       {artist.external_urls?.spotify && (
                         <a 
                           href={artist.external_urls.spotify} 
