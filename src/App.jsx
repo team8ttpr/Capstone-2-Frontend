@@ -293,7 +293,9 @@ function App() {
 
   return (
     <PresenceContext.Provider value={{ online, setOnline, socket }}>
-      {!hideNavBar && <NavBar user={user} onLogout={handleLogout} />}
+      {!hideNavBar && (
+        <NavBar user={user} onLogout={handleLogout} guest={isGuest} />
+      )}
       {isGuest &&
         !hideNavBar &&
         location.pathname !== "/auth" &&

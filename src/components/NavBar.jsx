@@ -6,7 +6,7 @@ import "../style/NavBarStyles.css";
 import NotificationItem from "./NotificationItem";
 import axios from "axios";
 
-const NavBar = ({ user, onLogout }) => {
+const NavBar = ({ user, onLogout, guest = false }) => {
   const location = useLocation();
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState([]);
@@ -84,7 +84,7 @@ const NavBar = ({ user, onLogout }) => {
       </div>
 
       <div className="nav-center">
-        {user && (
+        {(user || guest) && (
           <>
             <div className="nav-section">
               <Link
@@ -108,16 +108,20 @@ const NavBar = ({ user, onLogout }) => {
               </Link>
             </div>
 
-            <div className="nav-section">
-              <Link
-                to="/ai"
-                className={`nav-link${
-                  location.pathname.startsWith("/ai") ? " active" : ""
-                }`}
-              >
-                AI Playlist
-              </Link>
-            </div>
+            {/* AI playlist creation needs a real Spotify connection, so it's
+                hidden for guests (it would just bounce them to login). */}
+            {!guest && (
+              <div className="nav-section">
+                <Link
+                  to="/ai"
+                  className={`nav-link${
+                    location.pathname.startsWith("/ai") ? " active" : ""
+                  }`}
+                >
+                  AI Playlist
+                </Link>
+              </div>
+            )}
 
             <div className="nav-section">
               <Link
