@@ -7,7 +7,7 @@ import ProfileComponent from "../components/ProfileComponent";
 import { loadUserTheme } from "../utils/themeManager";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
-const PublicProfile = ({ user }) => {
+const PublicProfile = ({ user, guest = false }) => {
   const [profile, setProfile] = useState(null);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -20,7 +20,7 @@ const PublicProfile = ({ user }) => {
   const [following, setFollowing] = useState([]);
 
   useEffect(() => {
-    if (!user) {
+    if (!user && !guest) {
       navigate("/auth");
       return;
     }
@@ -28,7 +28,7 @@ const PublicProfile = ({ user }) => {
       fetchPublicProfile();
       fetchUserPosts();
     }
-  }, [user, username, navigate]);
+  }, [user, guest, username, navigate]);
 
   const fetchPublicProfile = async () => {
     try {

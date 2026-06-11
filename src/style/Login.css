@@ -101,6 +101,26 @@
   margin-top: 0.4rem;
 }
 
+.guest-entry {
+  text-align: center;
+  margin-top: 1.25rem;
+}
+.guest-entry-btn {
+  background: transparent;
+  border: none;
+  color: #22c55e;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.4rem 0.6rem;
+  border-radius: 0.5rem;
+  transition: background 0.15s ease;
+}
+.guest-entry-btn:hover {
+  background: #22c55e14;
+  text-decoration: underline;
+}
+
 .oauth-section {
   margin-bottom: 1.5rem;
 }

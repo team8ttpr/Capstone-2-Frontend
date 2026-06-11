@@ -36,6 +36,11 @@ import { socket, PresenceContext } from "./ws";
 import RedirectSpotify from "./pages/RedirectSpotify";
 import SpotifyGuard from "./utils/SpotifyGuard";
 import ErrorBoundary from "./components/ErrorBoundary";
+import GuestBanner from "./components/GuestBanner";
+
+// Placeholder identity so dashboard pages (which expect a `user`) render in
+// read-only demo mode for guests instead of bouncing to the login screen.
+const GUEST_USER = { username: "guest", id: null, isGuest: true };
 
 function App() {
   const [user, setUser] = useState(null);
@@ -43,10 +48,36 @@ function App() {
   const [online, setOnline] = useState(new Set());
   const [spotifyConnected, setSpotifyConnected] = useState(false);
   const [spotifyCheckDone, setSpotifyCheckDone] = useState(false);
+  const [guest, setGuest] = useState(
+    () => localStorage.getItem("guestMode") === "1"
+  );
 
   const navigate = useNavigate();
   const location = useLocation();
   const hideNavBar = location.pathname.startsWith("/share/");
+
+  // Guest mode only applies while there's no real session.
+  const isGuest = guest && !user;
+
+  const enterGuest = () => {
+    localStorage.setItem("guestMode", "1");
+    setGuest(true);
+    navigate("/social/feed");
+  };
+
+  const exitGuest = () => {
+    localStorage.removeItem("guestMode");
+    setGuest(false);
+    navigate("/auth");
+  };
+
+  // A real login supersedes guest mode.
+  useEffect(() => {
+    if (user) {
+      setGuest(false);
+      localStorage.removeItem("guestMode");
+    }
+  }, [user]);
 
   const {
     isAuthenticated,
@@ -247,9 +278,13 @@ function App() {
   // Dashboard pages are reachable without Spotify: connected users see their
   // real data, everyone else gets clearly-labeled demo data via the `demo` flag.
   const renderDashboard = (Component) => {
-    if (!user) return <Navigate to="/auth" replace />;
-    if (!spotifyCheckDone) return <div className="app">Loading…</div>;
-    return <Component user={user} demo={!spotifyConnected} />;
+    if (!user && !isGuest) return <Navigate to="/auth" replace />;
+    if (user && !spotifyCheckDone) return <div className="app">Loading…</div>;
+    // Guests (and logged-in users without Spotify) get clearly-labeled demo data.
+    const demo = isGuest || !spotifyConnected;
+    return (
+      <Component user={user || GUEST_USER} demo={demo} guest={isGuest} />
+    );
   };
 
   if (loading || auth0Loading) {
@@ -259,11 +294,20 @@ function App() {
   return (
     <PresenceContext.Provider value={{ online, setOnline, socket }}>
       {!hideNavBar && <NavBar user={user} onLogout={handleLogout} />}
+      {isGuest &&
+        !hideNavBar &&
+        location.pathname !== "/auth" &&
+        location.pathname !== "/" && (
+          <GuestBanner onSignUp={() => navigate("/auth")} onExit={exitGuest} />
+        )}
       <div className="app">
         <ErrorBoundary routeKey={location.pathname}>
         <Routes>
-          <Route path="/auth" element={<Auth setUser={setUser} />} />
-          <Route path="/" element={<Home />} />
+          <Route
+            path="/auth"
+            element={<Auth setUser={setUser} onGuest={enterGuest} />}
+          />
+          <Route path="/" element={<Home onGuest={enterGuest} />} />
           <Route
             path="/callback/spotify"
             element={<SpotifyCallback setUser={setUser} />}
@@ -272,7 +316,7 @@ function App() {
           <Route
             path="/dashboard"
             element={
-              user ? (
+              user || isGuest ? (
                 <Navigate to="/dashboard/analytics" replace />
               ) : (
                 <Navigate to="/auth" replace />
@@ -312,10 +356,13 @@ function App() {
             path="/social/notifications"
             element={<Notifications user={user} />}
           />
-          <Route path="/profile" element={<Profile user={user} />} />
+          <Route
+            path="/profile"
+            element={<Profile user={user} guest={isGuest} />}
+          />
           <Route
             path="/profile/:username"
-            element={<PublicProfile user={user} />}
+            element={<PublicProfile user={user} guest={isGuest} />}
           />
           <Route path="/share/:username" element={<ShareProfile />} />
           <Route path="/post/:id" element={<SinglePostView user={user} />} />

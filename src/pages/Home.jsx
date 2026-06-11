@@ -47,7 +47,7 @@ const SNAPSHOTS = [
   },
 ];
 
-const Home = () => {
+const Home = ({ onGuest }) => {
   const navigate = useNavigate();
   const user = localStorage.getItem("authToken");
 
@@ -75,6 +75,25 @@ const Home = () => {
       <button className="get-started-btn" onClick={() => navigate("/auth")}>
         Get Started
       </button>
+      {!user && onGuest && (
+        <button
+          className="guest-link-btn"
+          onClick={onGuest}
+          style={{
+            display: "block",
+            margin: "0.75rem auto 0",
+            background: "transparent",
+            border: "none",
+            color: "#1db954",
+            fontWeight: 600,
+            fontSize: "0.95rem",
+            cursor: "pointer",
+            textDecoration: "underline",
+          }}
+        >
+          or continue as guest
+        </button>
+      )}
       <div className="home-snapshots">
         {SNAPSHOTS.map((snap) => (
           <div

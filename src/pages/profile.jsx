@@ -7,7 +7,7 @@ import ProfileComponent from "../components/ProfileComponent";
 import EditProfileModal from "../components/EditProfileModal";
 import { saveTheme, loadTheme } from "../utils/themeManager";
 
-const Profile = ({ user }) => {
+const Profile = ({ user, guest = false }) => {
   const [profile, setProfile] = useState(null);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,6 +23,11 @@ const Profile = ({ user }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (guest) {
+      // Guests have no profile of their own; show the locked state below.
+      setLoading(false);
+      return;
+    }
     if (!user) {
       navigate('/auth');
       return;
@@ -30,8 +35,8 @@ const Profile = ({ user }) => {
     fetchProfile();
     fetchUserPosts();
     fetchFollowersAndFollowing();
-    loadUserTheme(); 
-  }, [user, navigate]);
+    loadUserTheme();
+  }, [user, guest, navigate]);
 
 const fetchFollowersAndFollowing = async () => {
   try {
@@ -196,6 +201,31 @@ const fetchFollowersAndFollowing = async () => {
     }
   };
   const handleToggleMusicSelector = () => setShowMusicSelector(v => !v);
+
+  if (guest) {
+    return (
+      <div className="dashboard-layout">
+        <MiniDrawer />
+        <div className="dashboard-main-content">
+          <div className="profile-container">
+            <div
+              className="error-message"
+              style={{ textAlign: "center", color: "#e0ffe0" }}
+            >
+              <h2 style={{ color: "#1db954" }}>Profiles are for members</h2>
+              <p>
+                Create a free account to set up your own profile, add posts, and
+                customize your themes and stickers.
+              </p>
+              <button onClick={() => navigate("/auth")} className="retry-btn">
+                Create an account
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (

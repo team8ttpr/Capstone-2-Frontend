@@ -16,7 +16,7 @@ import "../style/Login.css";
 import { API_URL } from "../shared";
 import { useNavigate } from "react-router-dom";
 
-const Login = ({ setUser }) => {
+const Login = ({ setUser, onGuest }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -311,6 +311,18 @@ const Login = ({ setUser }) => {
               {isLogin ? "Sign up for Capstone-2" : "Log in here"}
             </button>
           </div>
+
+          {onGuest && (
+            <div className="guest-entry">
+              <button
+                type="button"
+                className="guest-entry-btn"
+                onClick={onGuest}
+              >
+                Want to look around first? Continue as guest →
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

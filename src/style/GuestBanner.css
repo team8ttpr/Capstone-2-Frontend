@@ -1,0 +1,109 @@
+.guest-island {
+  position: fixed;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 4000;
+  width: 280px;
+  background: rgba(16, 28, 28, 0.97);
+  border: 1px solid rgba(29, 185, 84, 0.55);
+  border-radius: 16px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+  padding: 1rem 1.1rem 1.1rem;
+  color: #e0ffe0;
+  text-align: center;
+  backdrop-filter: blur(4px);
+}
+
+.guest-island-min {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.55rem;
+  background: transparent;
+  border: none;
+  color: #9fb8a6;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 0.25rem;
+}
+.guest-island-min:hover {
+  color: #1db954;
+}
+
+.guest-island-emoji {
+  font-size: 1.6rem;
+}
+
+.guest-island-title {
+  font-weight: 700;
+  font-size: 1rem;
+  margin: 0.3rem 0 0.4rem;
+  color: #1db954;
+}
+
+.guest-island-text {
+  font-size: 0.83rem;
+  line-height: 1.45;
+  color: #cbd5c5;
+  margin-bottom: 0.9rem;
+}
+
+.guest-island-cta {
+  display: block;
+  width: 100%;
+  background: #1db954;
+  color: #06210f;
+  border: none;
+  border-radius: 999px;
+  padding: 0.55rem 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+.guest-island-cta:hover {
+  background: #1ed760;
+  transform: translateY(-1px);
+}
+
+.guest-island-exit {
+  background: transparent;
+  border: none;
+  color: #9fb8a6;
+  font-size: 0.78rem;
+  margin-top: 0.5rem;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.guest-island-exit:hover {
+  color: #e0ffe0;
+}
+
+.guest-pill {
+  position: fixed;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 4000;
+  background: #1db954;
+  color: #06210f;
+  border: none;
+  border-radius: 999px;
+  padding: 0.55rem 1.1rem;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.32);
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+.guest-pill:hover {
+  background: #1ed760;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 600px) {
+  .guest-island {
+    right: 0.75rem;
+    left: 0.75rem;
+    bottom: 0.75rem;
+    width: auto;
+  }
+}
