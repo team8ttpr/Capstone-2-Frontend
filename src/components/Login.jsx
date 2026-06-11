@@ -308,7 +308,7 @@ const Login = ({ setUser, onGuest }) => {
               onClick={() => setIsLogin(!isLogin)}
               className="auth-switch-btn"
             >
-              {isLogin ? "Sign up for Capstone-2" : "Log in here"}
+              {isLogin ? "Sign up for Spotter" : "Log in here"}
             </button>
           </div>
 

@@ -213,7 +213,7 @@ const handleRepost = async () => {
   // Share modal URLs
   const postUrl = `${window.location.origin}/post/${post.id}`;
   const shareText = encodeURIComponent(
-    `${post.title ? post.title + " - " : ""}Check out this post on Capstone-2!`
+    `${post.title ? post.title + " - " : ""}Check out this post on Spotter!`
   );
   const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
     postUrl
