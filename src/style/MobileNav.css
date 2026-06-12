@@ -1,0 +1,47 @@
+.mobile-nav { display: none; }
+
+@media (max-width: 768px) {
+  .mobile-nav {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    height: 56px;
+    padding: 0 14px;
+    background: linear-gradient(90deg, #1db954 0%, #181c1f 100%);
+    border-bottom: 2px solid #1db954;
+    position: sticky;
+    top: 0;
+    z-index: 200;
+  }
+}
+
+.mn-burger, .mn-close { background: none; border: none; color: #fff; display: flex; cursor: pointer; padding: 4px; }
+.mn-brand img { height: 34px; display: block; }
+.mn-bell { margin-left: auto; color: #fff; display: flex; }
+
+.mn-scrim { position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 250; }
+.mn-drawer {
+  position: fixed; top: 0; left: 0; bottom: 0; width: 78%; max-width: 300px;
+  background: linear-gradient(135deg, #181c1f 60%, #23272a 100%);
+  border-right: 1px solid #1db954; box-shadow: 0 2px 8px rgba(29,185,84,.12);
+  z-index: 260; transform: translateX(-100%); transition: transform .25s ease;
+  display: flex; flex-direction: column; padding-top: 8px;
+}
+.mn-drawer.open { transform: translateX(0); }
+.mn-drawer-head { display: flex; align-items: center; gap: 12px; padding: 14px 16px; }
+.mn-avatar { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg,#1db954,#14532d); border: 2px solid #1db954; }
+.mn-user { font-weight: 700; color: #fff; }
+.mn-status { font-size: .76rem; color: #b6ffb6; }
+.mn-close { margin-left: auto; color: #9fb8a6; }
+.mn-divider { border: none; border-top: 1px solid #2a2f33; margin: 4px 0 8px; }
+.mn-item {
+  display: flex; align-items: center; min-height: 48px; padding: 0 20px; margin: 2px 8px;
+  border-radius: 8px; color: #e6e6e6; text-decoration: none; background: none; border: none;
+  font: inherit; cursor: pointer; width: calc(100% - 16px);
+}
+.mn-ic { margin-right: 22px; display: flex; color: #1db954; }
+.mn-label { font-size: 14px; }
+.mn-item.active { background: #1db95444; color: #fff; }
+.mn-item.active .mn-ic { color: #fff; }
+.mn-item.active .mn-label { font-weight: 600; }
+.mn-logout .mn-ic { color: #ff8a65; }

@@ -36,6 +36,7 @@ import { socket, PresenceContext } from "./ws";
 import RedirectSpotify from "./pages/RedirectSpotify";
 import SpotifyGuard from "./utils/SpotifyGuard";
 import ErrorBoundary from "./components/ErrorBoundary";
+import MobileNav from "./components/MobileNav";
 import GuestBanner from "./components/GuestBanner";
 import Spinner from "./components/Spinner";
 import { SkeletonTheme } from "react-loading-skeleton";
@@ -298,7 +299,10 @@ function App() {
     <PresenceContext.Provider value={{ online, setOnline, socket }}>
       <SkeletonTheme baseColor="#1b2a22" highlightColor="#2c4a38">
       {!hideNavBar && (
-        <NavBar user={user} onLogout={handleLogout} guest={isGuest} />
+        <>
+          <NavBar user={user} onLogout={handleLogout} guest={isGuest} />
+          <MobileNav user={user} onLogout={handleLogout} guest={isGuest} />
+        </>
       )}
       {isGuest &&
         !hideNavBar &&
