@@ -281,8 +281,8 @@
 }
 
 .chat-header {
-  background-color: var(--spotify-black);
-  color: white;
+  background-color: #191414;
+  color: #fff;
   padding: 16px 20px;
   display: flex;
   align-items: center;
@@ -313,7 +313,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  background-color: var(--spotify-dark-gray);
+  background-color: #191414;
   padding: 1.2rem 1rem 1rem 1rem;
   margin-bottom: 90px;
 }
@@ -326,8 +326,8 @@
   word-wrap: break-word;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   align-self: flex-start;
-  background: var(--spotify-light-gray);
-  color: var(--spotify-text);
+  background: #282828;
+  color: #fff;
   font-size: 1.05rem;
   font-weight: 500;
   margin-bottom: 1.5rem;
@@ -337,17 +337,17 @@
 
 .ai-message {
   align-self: flex-start;
-  background-color: var(--spotify-light-gray);
-  border: 1px solid #333;
+  background-color: #282828;
+  border: 1px solid #2a2a2a;
   border-radius: 18px 18px 18px 4px;
   margin-right: auto;
-  color: var(--spotify-text);
+  color: #fff;
 }
 
 .user-message {
   align-self: flex-end;
-  background: linear-gradient(90deg, var(--spotify-green) 0%, var(--spotify-dark-green) 100%);
-  color: white;
+  background: #1db954;
+  color: #191414;
   border-radius: 18px 18px 4px 18px;
   margin-left: auto;
   font-weight: 600;
@@ -356,30 +356,30 @@
 .input-container {
   display: flex;
   padding: 15px;
-  border-top: 1px solid var(--spotify-light-gray);
-  background-color: var(--spotify-black);
+  border-top: 1px solid #2a2a2a;
+  background-color: #282828;
   align-items: flex-end;
   width: 100%;
-  background: rgba(16, 28, 28, 0.7); /* Made transparent */
+  background: #282828;
   padding: 1.5rem;
   border-bottom-left-radius: 18px;
   border-bottom-right-radius: 18px;
   position: absolute;
   left: 0;
   bottom: 0;
-  backdrop-filter: blur(10px); /* Added for frosted glass effect */
+  backdrop-filter: blur(10px);
 }
 
 .input-container textarea {
   flex: 1;
-  border: 1px solid rgba(51, 51, 51, 0.6); /* More transparent border */
+  border: 1px solid #2a2a2a;
   border-radius: 20px;
   padding: 14px 18px;
   font-size: 16px;
   resize: none;
   max-height: 150px;
-  background-color: rgba(42, 42, 42, 0.6); /* Made transparent */
-  color: var(--spotify-text);
+  background-color: #232323;
+  color: #fff;
   outline: none;
   overflow-y: auto;
   font-family: inherit;
@@ -531,17 +531,6 @@
 }
 
 @media (max-width: 768px) {
-  .chat-container {
-    width: 95vw;
-    height: 85vh;
-  }
-  
-  .message-bubble {
-    max-width: 90%;
-  }
-  
-  .chat-overlay {
-    top: 60px;
-    height: calc(100vh - 60px);
-  }
+  .chat-container { width: 100vw; height: calc(100vh - 56px); max-width: 100%; border-radius: 0; top: auto; left: auto; transform: none; position: static; }
+  .message-bubble { max-width: 88%; }
 }
