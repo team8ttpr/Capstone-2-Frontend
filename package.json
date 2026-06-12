@@ -7,7 +7,8 @@
     "build": "webpack --mode production",
     "vercel-build": "npm run build",
     "lint": "eslint src/**/*.{js,jsx}",
-    "start-dev": "webpack serve --mode development --open"
+    "start-dev": "webpack serve --mode development --open",
+    "mobile-check": "node scripts/mobile-check.js"
   },
   "keywords": [],
   "author": "",
@@ -42,6 +43,7 @@
     "eslint": "^9.29.0",
     "eslint-plugin-react": "^7.37.5",
     "globals": "^16.2.0",
+    "puppeteer-core": "^25.1.0",
     "style-loader": "^4.0.0",
     "webpack-dev-server": "^5.2.2"
   }
