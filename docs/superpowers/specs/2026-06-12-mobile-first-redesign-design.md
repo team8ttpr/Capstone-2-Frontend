@@ -42,9 +42,10 @@ desktop layout is untouched. All mobile rules live behind this media query.
   the desktop `MiniDrawer` sidebar is hidden ≤768px and replaced by a
   **horizontal, scrollable pill-tab strip** directly under the app bar.
   `.dashboard-main-content`'s `margin-left` is removed ≤768px.
-  - *Note:* the pill-tab strip is the one piece not yet prototyped; it can be
-    mocked before implementation if desired. Alternative considered: expandable
-    sub-sections inside the drawer (rejected — buries sub-pages behind two taps).
+  - The pill strip is prototyped for both the Dashboard and Social groups
+    (sticky under the app bar, scrolls horizontally when tabs overflow).
+    Alternative considered: expandable sub-sections inside the drawer (rejected —
+    buries sub-pages behind two taps).
 - **Chat views** (Messages, AI Playlist): contextual header (back + title),
   scrolling thread, bottom-pinned composer.
 
