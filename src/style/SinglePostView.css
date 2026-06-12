@@ -522,3 +522,9 @@
   transform: translateX(100%);
   pointer-events: none;
 }
+
+@media (max-width: 768px) {
+  .single-post-root { padding: 12px; max-width: 100%; overflow-x: hidden; }
+  .fullscreen-post { min-width: 0; max-width: 100%; margin: 0; padding: 8px; }
+  .fullscreen-post.comments-open { margin-right: 0; }
+}

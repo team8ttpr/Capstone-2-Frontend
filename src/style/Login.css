@@ -591,3 +591,9 @@
     flex: 1 1 100vw;
   }
 }
+
+@media (max-width: 768px) {
+  .login-container { flex-direction: column; }
+  .auth-panel { width: 100%; }
+  .carousel-panel { display: none; }
+}
