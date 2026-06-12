@@ -22,7 +22,7 @@ const Analytics = ({ demo = false }) => {
         </div>
         {demo && <DemoBanner feature="listening stats" />}
         <UserListeningHistory demo={demo} />
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'stretch', flexWrap: 'wrap', minHeight: '0' }}>
+        <div className="dash-split" style={{ display: 'flex', gap: '1rem', alignItems: 'stretch', flexWrap: 'wrap', minHeight: '0' }}>
           <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
             <TopGenresAndArtists demo={demo} />
           </div>

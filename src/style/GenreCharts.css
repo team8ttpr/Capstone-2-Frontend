@@ -52,3 +52,13 @@
     padding: 1rem 0.5rem;
   }
 }
+
+@media (max-width: 768px) {
+  .dash-split { flex-direction: column; }
+  .genre-charts-container { width: 100%; padding: 1rem; }
+  .genre-chart-canvas-wrap { width: 100%; max-width: 320px; height: 300px; }
+  .recommendations-day-ipod { width: 100% !important; }
+  .recommendations-day-ipod-screen { width: 100% !important; }
+  .dashboard-layout { width: 100%; max-width: 100%; overflow-x: hidden; }
+  .dashboard-main-content { max-width: 100%; overflow-x: hidden; }
+}
