@@ -474,3 +474,15 @@
   align-items: center;
   gap: 24px;
 }
+
+@media (max-width: 768px) {
+  .concept-post-card { padding: 16px; border-radius: 20px; }
+  .concept-main-content { flex-direction: column; gap: 14px; }
+  .post-text-section, .spotify-section { width: 100%; height: auto; }
+  .post-text-container { height: auto; max-height: 220px; }
+  .spotify-section { height: auto; }
+  .spotify-embed-container iframe { height: 152px !important; }
+  .post-title { font-size: 1.2rem; }
+  .concept-post-footer { flex-wrap: wrap; gap: 10px; }
+  .concept-actions { gap: 10px; }
+}
