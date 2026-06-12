@@ -55,7 +55,7 @@ desktop layout is untouched. All mobile rules live behind this media query.
 | Dashboard / Analytics | 2-col genres+recs flex row, fixed 340/420px panels | stack to 1 col; chart panel full-width with legend; history is a horizontal scroll row (done); compact `DemoBanner` |
 | Top Tracks / Artists / Playlists | grids behind sidebar | drop sidebar margin; `repeat(auto-fill, minmax(…))` grid; skeletons already in place |
 | Feed | post cards max-width 1000px, text + embed side-by-side | full-width cards; stack text over embed; action buttons wrap; search full-width |
-| Profile | 540px container, avatar row, post grid | fluid container; shorter cover; stats row kept; 2-col post grid |
+| Profile | **user-themed** card (e.g. sakura/pink), wallpaper cover, overlapping avatar, floating circular action buttons (Edit/View/Copy/Theme/Stickers/Add-Music), meta (Joined, Connected to Spotify), stats in posts/following/followers order, featured Spotify embeds; posts open in a **modal** (no inline grid) | fluid card; floating FAB column → horizontal action-button row; cover shorter; stack; featured embeds full-width. **Must preserve theming** — read `currentTheme`, do NOT hardcode dark colors |
 | Messages | friend list + thread split view | list and thread become separate mobile views; thread = bubbles + pinned composer |
 | AI Playlist | light/blue `GenerateUI.css` chat | **re-theme to dark Spotter style**; bubbles like Messages; playlist result as inline card |
 | Login / Auth | two-panel (form + carousel) | stack; carousel below form or hidden on small screens (verify existing CSS) |
