@@ -208,3 +208,33 @@
   background: linear-gradient(90deg, #c0392b 0%, #e74c3c 100%);
   transform: translateY(-2px) scale(1.04);
 }
+
+@media (max-width: 768px) {
+  .messages-theme .message-bubble { max-width: 80%; }
+  /* Full-height thread with pinned composer below the app bar + sub-tabs */
+  .messages-theme .message-thread { height: calc(100vh - 56px - 56px); }
+  .messages-theme .message-input { position: sticky; bottom: 0; }
+}
+
+@media (max-width: 768px) {
+  /* Stack the friend-list and thread panes vertically; override inline width/flex */
+  .messages-theme .dashboard-main-content {
+    flex-direction: column !important;
+    height: auto !important;
+    overflow-x: hidden;
+  }
+  /* Friend-list pane: full width, auto height */
+  .messages-theme .dashboard-main-content > div:first-child {
+    width: 100% !important;
+    min-width: 0 !important;
+    border-right: none !important;
+    border-bottom: 1px solid #333;
+    overflow-y: visible !important;
+  }
+  /* Thread pane: full width */
+  .messages-theme .dashboard-main-content > div:last-child {
+    flex: none !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+}
