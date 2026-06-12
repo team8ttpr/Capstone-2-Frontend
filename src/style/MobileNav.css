@@ -45,3 +45,7 @@
 .mn-item.active .mn-ic { color: #fff; }
 .mn-item.active .mn-label { font-weight: 600; }
 .mn-logout .mn-ic { color: #ff8a65; }
+
+@media (min-width: 769px) {
+  .mn-drawer, .mn-scrim { display: none; }
+}

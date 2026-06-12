@@ -212,7 +212,7 @@
 @media (max-width: 768px) {
   .messages-theme .message-bubble { max-width: 80%; }
   /* Full-height thread with pinned composer below the app bar + sub-tabs */
-  .messages-theme .message-thread { height: calc(100vh - 56px - 56px); }
+  .messages-theme .message-thread { height: calc(100dvh - 56px - 52px); }
   .messages-theme .message-input { position: sticky; bottom: 0; }
 }
 

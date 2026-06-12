@@ -11,6 +11,8 @@
     position: sticky;
     top: 56px;
     z-index: 190;
+    height: 52px;
+    box-sizing: border-box;
   }
   .subtabs::-webkit-scrollbar { display: none; }
 }
