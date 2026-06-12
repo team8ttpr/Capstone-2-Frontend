@@ -371,3 +371,8 @@
     height: 80px;
   }
 }
+
+@media (max-width: 768px) {
+  .artists-embed-list { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .header-section h1 { font-size: 1.6rem; }
+}

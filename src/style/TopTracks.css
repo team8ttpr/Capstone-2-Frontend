@@ -420,10 +420,15 @@
     max-width: 300px;
     height: 152px;
   }
-  
+
   .embed-fallback {
     width: 100%;
     max-width: 300px;
     height: 152px;
   }
+}
+
+@media (max-width: 768px) {
+  .tracks-embed-list { grid-template-columns: 1fr; gap: 12px; }
+  .header-section h1 { font-size: 1.6rem; }
 }
