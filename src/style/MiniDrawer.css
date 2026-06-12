@@ -148,3 +148,14 @@
 .dashboard-layout:has(.dashboard-drawer.collapsed) {
   --sidebar-width: 64px;
 }
+
+@media (max-width: 768px) {
+  .dashboard-drawer { display: none; }
+  .dashboard-layout { display: block; --sidebar-width: 0px; }
+  .dashboard-main-content {
+    margin-left: 0;
+    margin-top: 0;
+    padding: 16px;
+    min-height: auto;
+  }
+}

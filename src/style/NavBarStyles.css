@@ -221,3 +221,7 @@ body {
     height: 24px;
   }
 }
+
+@media (max-width: 768px) {
+  .navbar { display: none; }
+}
