@@ -37,6 +37,7 @@ import RedirectSpotify from "./pages/RedirectSpotify";
 import SpotifyGuard from "./utils/SpotifyGuard";
 import ErrorBoundary from "./components/ErrorBoundary";
 import MobileNav from "./components/MobileNav";
+import SubTabs from "./components/SubTabs";
 import GuestBanner from "./components/GuestBanner";
 import Spinner from "./components/Spinner";
 import { SkeletonTheme } from "react-loading-skeleton";
@@ -304,6 +305,7 @@ function App() {
           <MobileNav user={user} onLogout={handleLogout} guest={isGuest} />
         </>
       )}
+      {!hideNavBar && <SubTabs />}
       {isGuest &&
         !hideNavBar &&
         location.pathname !== "/auth" &&

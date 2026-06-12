@@ -1,0 +1,22 @@
+.subtabs { display: none; }
+
+@media (max-width: 768px) {
+  .subtabs {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 10px 14px;
+    background: #11160f;
+    border-bottom: 1px solid #1c2f27;
+    position: sticky;
+    top: 56px;
+    z-index: 190;
+  }
+  .subtabs::-webkit-scrollbar { display: none; }
+}
+.subtab {
+  flex: 0 0 auto; color: #e0ffe0; background: rgba(29,185,84,.10);
+  padding: 8px 15px; border-radius: 25px; font-weight: 600; font-size: .85rem;
+  white-space: nowrap; text-decoration: none;
+}
+.subtab.active { background: #1db954; color: #06210f; }
