@@ -797,3 +797,31 @@
     grid-template-columns: 1fr 1fr;
   }
 }
+
+@media (max-width: 768px) {
+  .profile-container { max-width: 100%; padding: 0; border-radius: 0; }
+  .profile-cover { height: 130px; padding: 1rem; }
+  .profile-avatar { width: 88px; height: 88px; margin-bottom: -44px; }
+  .profile-info { padding: 3rem 1.1rem 1.5rem; }
+  .display-name { font-size: 1.6rem; }
+
+  /* Floating FAB column -> horizontal scrollable row pinned under the app bar */
+  .profile-action-buttons {
+    position: sticky;
+    top: 56px;
+    left: 0;
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 0.5rem;
+    padding: 10px 14px;
+    background: rgba(0,0,0,0.25);
+    z-index: 180;
+  }
+  .profile-action-buttons::-webkit-scrollbar { display: none; }
+  .circular-action-btn { width: 44px; height: 44px; flex: 0 0 44px; }
+  .circular-action-btn:hover { width: 44px; border-radius: 50%; padding-left: 15px; }
+  .circular-action-btn .btn-tooltip { display: none; }
+
+  .profile-stats { gap: 0; }
+  .spotify-items-list iframe { width: 100% !important; }
+}
